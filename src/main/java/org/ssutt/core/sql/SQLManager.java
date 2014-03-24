@@ -21,7 +21,9 @@ package org.ssutt.core.sql;
 
 import javax.naming.NamingException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 
 /**
@@ -31,23 +33,24 @@ import java.sql.SQLException;
 public class SQLManager {
     private static SQLManager sqlm;
     private static Connection conn;
+
     /**
      * Generates singleton instance
      */
-    private SQLManager()  {
+    private SQLManager() {
     }
 
     /**
      * Creates an instance of SQLManager for the library user
+     *
      * @param java.sql.Connection conn - connection from JNDI from API module
      * @return org.ssutt.core.sql.SQLManager instance (should be singleton some day)
      */
-    public static SQLManager getInstance(Connection conn) throws SQLException, NamingException {
+    public static SQLManager getInstance(Connection conn) {
         if (sqlm == null) {
-            sqlm =new SQLManager();
+            sqlm = new SQLManager();
             SQLManager.conn = conn;
         }
-        return sqlm;
+            return sqlm;
     }
-
 }
