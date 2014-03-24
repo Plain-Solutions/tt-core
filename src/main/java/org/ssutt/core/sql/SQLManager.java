@@ -16,30 +16,38 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.ssutt.sql;
+package org.ssutt.core.sql;
 
+
+import javax.naming.NamingException;
 import java.sql.Connection;
+import java.sql.SQLException;
+
 
 /**
  * Manages data in h2 database and
  * executes queries
  */
 public class SQLManager {
+    private static SQLManager sqlm;
     private static Connection conn;
-
     /**
-     * Connects to Tomcat DataSource
-     * @throws java.lang.NullPointerException
+     * Generates singleton instance
      */
-    private SQLManager() {
+    private SQLManager()  {
     }
 
     /**
      * Creates an instance of SQLManager for the library user
-     * @throws java.lang.NullPointerException
+     * @param java.sql.Connection conn - connection from JNDI from API module
+     * @return org.ssutt.core.sql.SQLManager instance (should be singleton some day)
      */
-    public static Connection conn() {
-        return null;
+    public static SQLManager getInstance(Connection conn) throws SQLException, NamingException {
+        if (sqlm == null) {
+            sqlm =new SQLManager();
+            SQLManager.conn = conn;
+        }
+        return sqlm;
     }
 
 }

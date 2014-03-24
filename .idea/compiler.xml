@@ -25,6 +25,9 @@
         <module name="tt-core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="tt-core" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 
