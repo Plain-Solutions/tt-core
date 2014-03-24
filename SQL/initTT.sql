@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS departments(
   PRIMARY KEY (ID)
 );
 CREATE TABLE IF NOT EXISTS groups(
-  id TINYINT NOT NULL auto_increment,
+  id VARCHAR(30) NOT NULL,
   department_id TINYINT,
   name CHAR(30),
   PRIMARY KEY (id),
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS lessons_datetimes(
 );
 
 CREATE TABLE IF NOT EXISTS lesson_records(
-  group_id TINYINT NOT NULL auto_increment,
+  group_id VARCHAR(30) NOT NULL,
   datetime_id MEDIUMINT,
   subject_id MEDIUMINT,
   FOREIGN KEY (group_id) REFERENCES groups(id),
