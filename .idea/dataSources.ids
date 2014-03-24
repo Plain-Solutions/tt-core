@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source source="LOCAL" name="H2 - Testing" uuid="4f7c8f2a-3a14-47bf-b2f6-be4faa35a872">
+    <database-info product="H2" version="1.3.170 (2012-11-30)" jdbc-version="4.0" driver-name="H2 JDBC Driver" driver-version="1.3.170 (2012-11-30)">
+      <identifier-quote-string>&quot;</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact"/>
+    <schema name="PUBLIC" catalog="TIMETABLES.H2.DB"/>
+  </data-source>
+</component>
