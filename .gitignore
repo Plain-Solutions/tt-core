@@ -1,5 +1,5 @@
 *.class
-
+/.idea/workspace.xml
 # Package Files #
 *.jar
 *.war
