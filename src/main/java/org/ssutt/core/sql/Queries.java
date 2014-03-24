@@ -16,11 +16,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package org.ssutt.core.dm;
+package org.ssutt.core.sql;
 
-import org.apache.logging.log4j.LogManager;
-
-public interface DataManager {
-    static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(DataManager.class.getName());
-    public String putDepartmentsToDB();
+public abstract class Queries {
+    public static final String putDepartments = "INSERT INTO departments (name, tag) VALUES ('%s','%s');";
 }

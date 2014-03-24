@@ -19,7 +19,10 @@ limitations under the License.
 package org.ssutt.core.sql;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 
 /**
@@ -37,6 +40,7 @@ public class SSUSQLManager implements SQLManager {
      */
     public SSUSQLManager(Connection conn) {
         SSUSQLManager.conn = conn;
+        logger.info("SSU SQLManager initialized with JNDI DB (H2) correctly.");
     }
 
 
@@ -67,10 +71,30 @@ public class SSUSQLManager implements SQLManager {
     }
 
     @Override
-    public String fillDepartments(HashMap<String, String> departments) {
-        return null;
+    public boolean fillDepartments(HashMap<String, String> departments) {
+        boolean state = true;
+        for (String key: new TreeSet<>(departments.keySet()))
+        {
+            if (pushExecutioner(
+                    String.format(Queries.putDepartments,
+                            key,
+                            departments.get(key))))
+                state = true;
+            else state = false;
+        }
+        return state;
     }
-    /**
-     * Fill Departments with information from sgu.ru
-     */
+
+    @Override
+    public boolean pushExecutioner(String query) {
+        boolean isScriptExecuted = false;
+        try (Statement stmt = conn.createStatement();) {
+            stmt.executeUpdate(query);
+            stmt.close();
+        }   catch (SQLException e) {
+            logger.fatal("On query: "+ e);
+        }
+
+        return isScriptExecuted;
+    }
 }
