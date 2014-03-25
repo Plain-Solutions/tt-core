@@ -22,8 +22,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 
 /**
@@ -41,8 +44,13 @@ public class SSUSQLManager implements SQLManager {
 
 
     @Override
-    public void putDepartments(Map<String, String> departments) {
-
+    public void putDepartments(Map<String, String> departments) throws SQLException {
+        Statement stmt = conn.createStatement();
+        String addDepartment = "INSERT INTO departments(name,tag) VALUES('%s','%s');";
+        for (String d : new TreeSet<>(departments.keySet())) {
+             stmt.executeUpdate(String.format(addDepartment, d, departments.get(d)));
+        }
+        stmt.close();
     }
 
     @Override

@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS departments(
-  id TINYINT NOT NULL auto_increment,
+  ID TINYINT auto_increment NOT NULL,
   name VARCHAR(100),
   tag CHAR(10),
-  PRIMARY KEY (ID)
+  PRIMARY KEY (id)
 );
 CREATE TABLE IF NOT EXISTS groups(
   id TINYINT NOT NULL auto_increment,

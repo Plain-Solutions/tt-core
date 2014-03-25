@@ -18,12 +18,13 @@
  */
 package org.ssutt.core.sql;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 public interface SQLManager {
 
-    public void putDepartments(Map<String, String> departments);
+    public void putDepartments(Map<String, String> departments) throws SQLException;
 
     public String getDepartmentTag(String name);
 

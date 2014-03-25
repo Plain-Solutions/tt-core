@@ -63,7 +63,6 @@ public class TestDM {
     }
 
     private Connection createConnection() throws SQLException, ClassNotFoundException {
-        System.out.println(System.getProperty("user.dir"));
         Class.forName("org.h2.Driver");
         return DriverManager.
                 getConnection("jdbc:h2:mem:test;INIT=RUNSCRIPT FROM './src/main/resources/initTT.sql'", "sa", "");

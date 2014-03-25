@@ -33,7 +33,7 @@ import java.util.*;
 
 public class SSUDataFetcher implements DataFetcher {
     private static final Logger logger = LogManager.getLogger(SSUDataFetcher.class.getName());
-    private static List<String> exclusions = new ArrayList<>();
+    private List<String> exclusions = new ArrayList<>();
     private static  String globalScheduleURL = "";
 
     /**

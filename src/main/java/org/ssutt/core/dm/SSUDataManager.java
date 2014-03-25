@@ -26,8 +26,7 @@ import org.ssutt.core.sql.SQLManager;
 import org.ssutt.core.sql.SSUSQLManager;
 
 import java.sql.Connection;
-import java.util.Map;
-import java.util.TreeSet;
+import java.sql.SQLException;
 
 public class SSUDataManager implements DataManager {
     private static final Logger logger = LogManager.getLogger(SSUDataManager.class.getName());
@@ -56,10 +55,12 @@ public class SSUDataManager implements DataManager {
 
     @Override
     public String putDepartments() {
-        Map<String, String> res = df.getDepartments();
-        for (String g : new TreeSet<>(res.keySet())) {
-            System.out.println(g+ " "+ res.get(g));
+        try {
+            sqlm.putDepartments(df.getDepartments());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
         return null;
     }
 }

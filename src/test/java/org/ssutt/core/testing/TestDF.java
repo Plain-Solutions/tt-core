@@ -27,25 +27,24 @@ import org.ssutt.core.fetch.SSUDataFetcher;
 
 import java.util.Map;
 
-/**
- * Created by fau on 24/03/14.
- */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDF {
     private String[] exclusions = {"kgl", "cre", "el"};
     private String globalScheduleURL = "http://www.sgu.ru/schedule";
 
-
+    private DataFetcher df;
 
     @Test
     public void aTestObjectCreation() {
-        DataFetcher df = new SSUDataFetcher(globalScheduleURL, exclusions);
-        Assert.assertArrayEquals("DataFetcher(SSU) creation - failed",exclusions, df.getExclusions());
+        if (df == null)
+            df = new SSUDataFetcher(globalScheduleURL, exclusions);
+        Assert.assertArrayEquals("DataFetcher(SSU) creation - failed", exclusions, df.getExclusions());
     }
 
     @Test
-    public void bTestGetingDataFromSSU() {
-        DataFetcher df =  new SSUDataFetcher(globalScheduleURL, exclusions);
+    public void bTestGettingDataFromSSU() {
+        if (df == null)
+            df = new SSUDataFetcher(globalScheduleURL, exclusions);
         Map<String, String> res = df.getDepartments();
 
         Assert.assertNotNull("DataFetcher(SSU) getting departments - failed", res);
