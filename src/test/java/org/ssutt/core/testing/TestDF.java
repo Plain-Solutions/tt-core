@@ -43,7 +43,7 @@ public class TestDF {
         if (df == null)
             df = new SSUDataFetcher(globalScheduleURL, exclusions);
 
-        Assert.assertArrayEquals("DataFetcher creation - failed",exclusions, df.getExclusions());
+        Assert.assertArrayEquals("DataFetcher(SSU) creation - failed",exclusions, df.getExclusions());
 
     }
 

@@ -18,5 +18,43 @@
  */
 package org.ssutt.core.testing;
 
+import junit.framework.Assert;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+import org.ssutt.core.dm.DataManager;
+import org.ssutt.core.dm.SSUDataManager;
+import org.ssutt.core.fetch.DataFetcher;
+import org.ssutt.core.sql.SQLManager;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDM {
+    private DataManager dm;
+    private SQLManager sqlm;
+    private DataFetcher df;
+
+    @Test
+    public void aObjectCreation(){
+        dm = new SSUDataManager();
+        Assert.assertNotNull("DataManager(SSU) init - failed",dm);
+    }
+
+    @Test
+    public void bTestProviders() throws SQLException, ClassNotFoundException {
+        if (dm==null)
+            dm = new SSUDataManager();
+
+        dm.deliverDataFetcherProvider();
+        dm.deliverDBProvider(createConnection());
+    }
+
+    private Connection createConnection() throws SQLException, ClassNotFoundException {
+        Class.forName("org.h2.Driver");
+        return DriverManager.
+                getConnection("jdbc:h2:/Library/Tomcat/bin/timetable", "sa", "");
+    }
 }

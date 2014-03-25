@@ -42,6 +42,6 @@ public class TestDB {
     @Test
     public void TestSSUSQLManager(){
         this.sqlm = new SSUSQLManager(conn);
-        Assert.assertNotNull("Testing SQLManager (SSU) - failed", this.sqlm);
+        Assert.assertNotNull("Testing SQLManager(SSU) - failed", this.sqlm);
     }
 }
