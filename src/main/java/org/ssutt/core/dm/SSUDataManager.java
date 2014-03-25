@@ -26,6 +26,7 @@ import org.ssutt.core.sql.SQLManager;
 import org.ssutt.core.sql.SSUSQLManager;
 
 import java.sql.Connection;
+import java.util.Map;
 
 public class SSUDataManager implements DataManager {
     private static final Logger logger = LogManager.getLogger(SSUDataManager.class.getName());
@@ -50,5 +51,11 @@ public class SSUDataManager implements DataManager {
     public void deliverDataFetcherProvider() {
         df = new SSUDataFetcher(globalScheduleURL, exclusions);
         logger.info("DataManager: DataFetcher: SSUDataFetcher");
+    }
+
+    @Override
+    public String putDepartments() {
+        Map<String, String> res = df.getDepartments();
+        return null;
     }
 }

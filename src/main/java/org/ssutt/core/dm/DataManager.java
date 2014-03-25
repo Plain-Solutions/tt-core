@@ -23,4 +23,6 @@ import java.sql.Connection;
 public interface DataManager {
     public void deliverDBProvider(Connection conn);
     public void deliverDataFetcherProvider();
+
+    public String putDepartments();
 }

@@ -55,6 +55,6 @@ public class TestDM {
     private Connection createConnection() throws SQLException, ClassNotFoundException {
         Class.forName("org.h2.Driver");
         return DriverManager.
-                getConnection("jdbc:h2:/Library/Tomcat/bin/timetable", "sa", "");
+                getConnection("jdbc:h2:mem:test", "sa", "");
     }
 }

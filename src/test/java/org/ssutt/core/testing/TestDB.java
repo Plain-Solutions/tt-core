@@ -35,7 +35,7 @@ public class TestDB {
     public void TestSQLConnection() throws SQLException, ClassNotFoundException {
         Class.forName("org.h2.Driver");
         this.conn = DriverManager.
-                getConnection("jdbc:h2:/Library/Tomcat/bin/timetable", "sa", "");
+                getConnection("jdbc:h2:mem:test", "sa", "");
         Assert.assertNotNull("Testing JDBC connection to Tomcat timetable.h2.db - failed",this.conn);
     }
 
