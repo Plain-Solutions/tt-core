@@ -54,13 +54,15 @@ public class SSUDataManager implements DataManager {
     }
 
     @Override
-    public String putDepartments() {
+    public boolean putDepartments() {
+        boolean state = false;
         try {
             sqlm.putDepartments(df.getDepartments());
+            state = true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.fatal(e);
         }
 
-        return null;
+        return state;
     }
 }

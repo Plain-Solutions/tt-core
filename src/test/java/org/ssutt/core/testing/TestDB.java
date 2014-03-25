@@ -18,6 +18,8 @@
  */
 package org.ssutt.core.testing;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.ssutt.core.sql.SQLManager;
@@ -29,9 +31,11 @@ import java.sql.SQLException;
 
 
 public class TestDB {
+    static final Logger logger = LogManager.getLogger(TestDB.class.getName());
     private Connection conn;
     @Test
     public void TestSQLConnection() throws SQLException, ClassNotFoundException {
+        logger.info("test");
         Class.forName("org.h2.Driver");
         this.conn = DriverManager.
                 getConnection("jdbc:h2:mem:test", "sa", "");
