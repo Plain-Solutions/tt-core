@@ -30,7 +30,6 @@ import java.sql.SQLException;
 
 public class TestDB {
     private Connection conn;
-    private SQLManager sqlm;
     @Test
     public void TestSQLConnection() throws SQLException, ClassNotFoundException {
         Class.forName("org.h2.Driver");
@@ -41,7 +40,7 @@ public class TestDB {
 
     @Test
     public void TestSSUSQLManager(){
-        this.sqlm = new SSUSQLManager(conn);
-        Assert.assertNotNull("Testing SQLManager(SSU) - failed", this.sqlm);
+        SQLManager sqlm = new SSUSQLManager(conn);
+        Assert.assertNotNull("Testing SQLManager(SSU) - failed", sqlm);
     }
 }

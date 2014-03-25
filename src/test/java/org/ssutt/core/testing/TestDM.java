@@ -53,7 +53,12 @@ public class TestDM {
     }
 
     @Test
-    public void cTestDepartments() {
+    public void cTestDepartments() throws SQLException, ClassNotFoundException {
+        dm = new SSUDataManager();
+
+        dm.deliverDataFetcherProvider();
+        dm.deliverDBProvider(createConnection());
+
         dm.putDepartments();
     }
 
