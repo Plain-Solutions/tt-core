@@ -19,10 +19,18 @@
 package org.ssutt.core.dm;
 
 import java.sql.Connection;
+import java.util.List;
+import java.util.Map;
 
 public interface DataManager {
-    public void deliverDBProvider(Connection conn);
-    public void deliverDataFetcherProvider();
+    void deliverDBProvider(Connection conn);
+    void deliverDataFetcherProvider();
 
-    public boolean putDepartments();
+    boolean putDepartments();
+
+    Map<String, String> getDepartments();
+
+    List<String> getDepartmentTags();
+
+    boolean putGroups();
 }

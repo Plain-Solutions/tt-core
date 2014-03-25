@@ -82,4 +82,30 @@ public class SSUDataFetcher implements DataFetcher {
 
         return result;
     }
+
+    @Override
+    public Map<String, String> getGroups(String department) {
+        Map<String, String> result = new HashMap<>();
+
+        String url = globalScheduleURL + '/' + department;
+
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(url).get();
+        } catch (IOException e) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(4);
+        }
+
+        Elements links = doc.select("a[href]");
+        for (Element link : links) {
+            if (link.attr("href").startsWith("/schedule/" + department + "/do/")) {
+                String[] esc = link.attr("abs:href").split("/");
+
+                result.put(link.ownText(),  esc[esc.length - 1]);
+            }
+
+        }
+        return result;
+    }
 }

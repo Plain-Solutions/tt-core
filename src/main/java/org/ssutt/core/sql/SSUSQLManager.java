@@ -22,11 +22,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 
 /**
@@ -48,10 +47,50 @@ public class SSUSQLManager implements SQLManager {
         Statement stmt = conn.createStatement();
         String addDepartment = "INSERT INTO departments(name,tag) VALUES('%s','%s');";
         for (String d : new TreeSet<>(departments.keySet())) {
-             stmt.executeUpdate(String.format(addDepartment, d, departments.get(d)));
+            stmt.executeUpdate(String.format(addDepartment, d, departments.get(d)));
         }
         stmt.close();
     }
+
+    @Override
+    public Map<String, String> getDepartments() throws SQLException {
+        Map<String, String> result = new HashMap<>();
+
+        Statement stmt = conn.createStatement();
+        String getDepartments = "SELECT name,tag FROM departments";
+        ResultSet rs = stmt.executeQuery(getDepartments);
+
+        while (rs.next()) {
+            result.put(rs.getString("name"), rs.getString("tag"));
+        }
+        return result;
+    }
+
+    @Override
+    public List<String> getDepartmentTags() throws SQLException {
+        List<String> result = new ArrayList<>();
+        Statement stmt = conn.createStatement();
+        String getTags = "SELECT tag FROM departments";
+
+        ResultSet rs = stmt.executeQuery(getTags);
+        while (rs.next())
+            result.add(rs.getString("tag"));
+        return result;
+    }
+
+    @Override
+    public void putGroups(Map<String, String> groups, String department) throws SQLException {
+        Statement stmt = conn.createStatement();
+        String addGroup = "INSERT INTO GROUPS(department_id, name, unesc) VALUES" +
+        "((SELECT id FROM DEPARTMENTS WHERE tag='%s'),'%s', '%s') ";
+
+        for (String g : new TreeSet<>(groups.keySet())) {
+            stmt.executeUpdate(String.format(addGroup, department,g,groups.get(g)));
+        }
+        stmt.close();
+
+    }
+
 
     @Override
     public String getDepartmentTag(String name) {
@@ -63,9 +102,5 @@ public class SSUSQLManager implements SQLManager {
         return null;
     }
 
-    @Override
-    public HashMap<String, String> getDepartments() {
-        return null;
-    }
 
 }

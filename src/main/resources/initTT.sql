@@ -5,9 +5,10 @@ CREATE TABLE IF NOT EXISTS departments(
   PRIMARY KEY (id)
 );
 CREATE TABLE IF NOT EXISTS groups(
-  id TINYINT NOT NULL auto_increment,
+  id MEDIUMINT auto_increment NOT NULL,
   department_id TINYINT,
   name CHAR(30),
+  unesc CHAR(30),
   PRIMARY KEY (id),
   FOREIGN KEY (department_id) REFERENCES departments(id)
 );

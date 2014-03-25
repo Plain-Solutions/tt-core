@@ -27,6 +27,8 @@ import org.ssutt.core.sql.SSUSQLManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 public class SSUDataManager implements DataManager {
     private static final Logger logger = LogManager.getLogger(SSUDataManager.class.getName());
@@ -65,4 +67,43 @@ public class SSUDataManager implements DataManager {
 
         return state;
     }
+
+    @Override
+    public Map<String, String> getDepartments() {
+        Map<String, String> result;
+        try {
+            result = sqlm.getDepartments();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return result;
+    }
+
+    @Override
+    public List<String> getDepartmentTags() {
+        List<String> result;
+        try {
+            result = sqlm.getDepartmentTags();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean putGroups() {
+        boolean state = false;
+        try {
+            for (String department: new String[]{"bf","gf"})
+                sqlm.putGroups(df.getGroups(department),department);
+            state = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return state;
+    }
+
+
 }

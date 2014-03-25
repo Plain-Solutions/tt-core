@@ -24,42 +24,87 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.ssutt.core.dm.DataManager;
 import org.ssutt.core.dm.SSUDataManager;
-import org.ssutt.core.fetch.DataFetcher;
-import org.ssutt.core.sql.SQLManager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDM {
-    private DataManager dm;
-    private SQLManager sqlm;
-    private DataFetcher df;
 
     @Test
     public void aObjectCreation(){
-        dm = new SSUDataManager();
+        DataManager dm = null;
+        try {
+            dm = createInstance();
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         Assert.assertNotNull("DataManager(SSU) init - failed",dm);
     }
 
     @Test
-    public void bTestProviders() throws SQLException, ClassNotFoundException {
-        if (dm==null)
-            dm = new SSUDataManager();
+    public void bTestProviders(){
+        DataManager dm = null;
 
-        dm.deliverDataFetcherProvider();
-        dm.deliverDBProvider(createConnection());
+        try {
+            dm = createInstance();
+            assert(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            assert(false);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            assert(false);
+        }
     }
 
     @Test
-    public void cTestDepartments() throws SQLException, ClassNotFoundException {
-        dm = new SSUDataManager();
+    public void cTestDepartments(){
+        DataManager dm = null;
+        try {
+            dm = createInstance();
+            assert(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            assert(false);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            assert(false);
+        }
+
+        dm.putDepartments();
+
+        Map<String, String> result = dm.getDepartments();
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void dTestGroups() {
+        DataManager dm = null;
+        try {
+            dm = createInstance();
+            assert (true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            assert (false);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            assert (false);
+        }
+
+        dm.putGroups();
+
+    }
+
+    private DataManager createInstance() throws SQLException, ClassNotFoundException {
+        DataManager dm = new SSUDataManager();
 
         dm.deliverDataFetcherProvider();
         dm.deliverDBProvider(createConnection());
-
-        dm.putDepartments();
+        return dm;
     }
 
     private Connection createConnection() throws SQLException, ClassNotFoundException {

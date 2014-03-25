@@ -19,18 +19,24 @@
 package org.ssutt.core.sql;
 
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public interface SQLManager {
 
-    public void putDepartments(Map<String, String> departments) throws SQLException;
+    void putDepartments(Map<String, String> departments) throws SQLException;
 
-    public String getDepartmentTag(String name);
+    Map<String, String> getDepartments() throws SQLException;
 
-    public String getDepartmentName(String tag);
+    List<String> getDepartmentTags() throws SQLException;
 
-    public HashMap<String, String> getDepartments();
+    void putGroups(Map<String, String> groups, String department) throws SQLException;
+
+    String getDepartmentTag(String name);
+
+    String getDepartmentName(String tag);
+
+
 
 //    public String getGroups(String departmentCode);
 

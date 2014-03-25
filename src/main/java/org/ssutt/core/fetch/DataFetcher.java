@@ -21,6 +21,9 @@ package org.ssutt.core.fetch;
 import java.util.Map;
 
 public interface DataFetcher {
-    public String[] getExclusions();
-    public Map<String, String> getDepartments();
+    String[] getExclusions();
+
+    Map<String, String> getDepartments();
+
+    Map<String, String> getGroups(String department);
 }
