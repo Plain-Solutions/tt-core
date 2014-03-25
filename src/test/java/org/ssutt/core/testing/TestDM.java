@@ -29,6 +29,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.TreeSet;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDM {
@@ -95,7 +96,17 @@ public class TestDM {
             assert (false);
         }
 
+
+        for (String s: dm.getDepartmentTags()) System.out.println(s);;
         dm.putGroups();
+
+        Map<String, String> deps = dm.getDepartments();
+        for (String d: new TreeSet<>(deps.keySet())) {
+            Map<String, String> result = dm.getGroups(deps.get(d));
+            for (String gr: new TreeSet<>(result.keySet())) {
+                System.out.println(gr);
+            }
+        }
 
     }
 

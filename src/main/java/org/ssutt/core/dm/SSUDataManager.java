@@ -33,8 +33,8 @@ import java.util.Map;
 public class SSUDataManager implements DataManager {
     private static final Logger logger = LogManager.getLogger(SSUDataManager.class.getName());
 
-    private static String[] exclusions = {"kgl","cre","el"} ;
-    private static  String globalScheduleURL = "http://www.sgu.ru/schedule";
+    private String[] exclusions = {"kgl","cre","el"} ;
+    private String globalScheduleURL = "http://www.sgu.ru/schedule";
 
     private static DataFetcher df;
     private static SQLManager sqlm;
@@ -96,13 +96,25 @@ public class SSUDataManager implements DataManager {
     public boolean putGroups() {
         boolean state = false;
         try {
-            for (String department: new String[]{"bf","gf"})
+            for (String department: getDepartmentTags())
                 sqlm.putGroups(df.getGroups(department),department);
             state = true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return state;
+    }
+
+    @Override
+    public Map<String, String> getGroups(String departmentTag) {
+        Map<String, String> result;
+        try{
+            result = sqlm.getGroups(departmentTag);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return result;
     }
 
 

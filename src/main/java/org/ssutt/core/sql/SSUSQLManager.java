@@ -81,26 +81,27 @@ public class SSUSQLManager implements SQLManager {
     @Override
     public void putGroups(Map<String, String> groups, String department) throws SQLException {
         Statement stmt = conn.createStatement();
-        String addGroup = "INSERT INTO GROUPS(department_id, name, unesc) VALUES" +
-        "((SELECT id FROM DEPARTMENTS WHERE tag='%s'),'%s', '%s') ";
+        String addGroups = "INSERT INTO GROUPS(department_id, name, unesc) VALUES" +
+        "((SELECT id FROM DEPARTMENTS WHERE tag='%s'),'%s', '%s'); ";
 
         for (String g : new TreeSet<>(groups.keySet())) {
-            stmt.executeUpdate(String.format(addGroup, department,g,groups.get(g)));
+            stmt.executeUpdate(String.format(addGroups, department,g,groups.get(g)));
         }
         stmt.close();
 
     }
 
-
     @Override
-    public String getDepartmentTag(String name) {
-        return null;
-    }
+    public Map<String, String> getGroups(String departmentTag) throws SQLException {
+        Map<String,String> result = new HashMap<>();
+        Statement stmt = conn.createStatement();
+        String getGroups = "SELECT gr.name, gr.unesc FROM groups as gr, departments as dp WHERE gr.department_id = dp.id AND dp.tag = '%s';";
+        ResultSet rs = stmt.executeQuery(String.format(getGroups,departmentTag));
 
-    @Override
-    public String getDepartmentName(String tag) {
-        return null;
-    }
+        while (rs.next())
+            result.put(rs.getString("name"),rs.getString("unesc"));
+        return result;
 
+    }
 
 }

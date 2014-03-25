@@ -22,7 +22,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public interface SQLManager {
+public interface SQLManager{
 
     void putDepartments(Map<String, String> departments) throws SQLException;
 
@@ -32,12 +32,6 @@ public interface SQLManager {
 
     void putGroups(Map<String, String> groups, String department) throws SQLException;
 
-    String getDepartmentTag(String name);
-
-    String getDepartmentName(String tag);
-
-
-
-//    public String getGroups(String departmentCode);
+    Map<String, String> getGroups(String departmentTag) throws SQLException;
 
 }

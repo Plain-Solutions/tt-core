@@ -33,4 +33,6 @@ public interface DataManager {
     List<String> getDepartmentTags();
 
     boolean putGroups();
+
+    Map<String, String> getGroups(String departmentTag);
 }
