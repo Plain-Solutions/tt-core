@@ -52,9 +52,15 @@ public class TestDM {
         dm.deliverDBProvider(createConnection());
     }
 
+    @Test
+    public void cTestDepartments() {
+        dm.putDepartments();
+    }
+
     private Connection createConnection() throws SQLException, ClassNotFoundException {
+        System.out.println(System.getProperty("user.dir"));
         Class.forName("org.h2.Driver");
         return DriverManager.
-                getConnection("jdbc:h2:mem:test", "sa", "");
+                getConnection("jdbc:h2:mem:test;INIT=RUNSCRIPT FROM './src/main/resources/initTT.sql'", "sa", "");
     }
 }

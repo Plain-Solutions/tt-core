@@ -56,6 +56,7 @@ public class SSUDataManager implements DataManager {
     @Override
     public String putDepartments() {
         Map<String, String> res = df.getDepartments();
+
         return null;
     }
 }
