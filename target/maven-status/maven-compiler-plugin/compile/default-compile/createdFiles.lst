@@ -1,4 +1,3 @@
-org/ssutt/core/sql/Queries.class
 org/ssutt/core/dm/DataManager.class
 org/ssutt/core/sql/SQLManager.class
 org/ssutt/core/fetch/SSUDataFetcher.class
