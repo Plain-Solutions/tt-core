@@ -29,7 +29,6 @@ public interface SQLManager {
     void putDepartments(Map<String, String> departments) throws SQLException;
 
     Map<String, String> getDepartments() throws SQLException;
-
     List<String> getDepartmentTags() throws SQLException;
 
     boolean departmentExists(String departmentTag) throws SQLException;

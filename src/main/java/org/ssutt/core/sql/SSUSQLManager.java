@@ -151,23 +151,37 @@ public class SSUSQLManager implements SQLManager {
     @Override
     public int putDateTime(int weekID, int sequence, int dayID) throws SQLException {
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetDateTime(), weekID, sequence, dayID));
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetDateTimeID(), weekID, sequence, dayID));
         int id =0;
 
         while (rs.next()) id = rs.getInt("id");
 
-        if (id==0)
-             stmt.executeUpdate(String.format(qrs.qAddDateTime(), weekID, sequence, dayID));
-             id = getLastID("lessons_datetimes");
-
-        stmt.close();
+        if (id==0) {
+            stmt.executeUpdate(String.format(qrs.qAddDateTime(), weekID, sequence, dayID));
+            stmt.close();
+            id = getLastID("lessons_datetimes");
+        }
 
         return id;
     }
 
     @Override
     public int putSubject(String info) throws SQLException {
-        return 0;
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetSubjectID(), info));
+        int id =0;
+
+        while (rs.next()) id = rs.getInt("id");
+
+        if (id==0) {
+            stmt.executeUpdate(String.format(qrs.qAddSubject(), info));
+            stmt.close();
+
+            id = getLastID("subjects");
+        }
+
+
+        return id;
     }
 
     @Override

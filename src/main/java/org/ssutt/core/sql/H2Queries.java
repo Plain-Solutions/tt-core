@@ -86,13 +86,18 @@ public class H2Queries implements Queries {
     }
 
     @Override
-    public String qGetDateTime() {
+    public String qGetDateTimeID() {
         return "SELECT id FROM lessons_datetimes WHERE week_id=%d AND sequence=%d AND day_id=%d;";
     }
 
     @Override
     public String qAddSubject() {
         return "INSERT INTO subjects(info) VALUES ('%s');";
+    }
+
+    @Override
+    public String qGetSubjectID() {
+        return "SELECT id FROM subjects WHERE info='%s';";
     }
 
     @Override

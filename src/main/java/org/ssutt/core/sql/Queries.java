@@ -38,9 +38,10 @@ public interface Queries {
     String qGroupExists();
 
     String qAddDateTime();
-    String qGetDateTime();
+    String qGetDateTimeID();
 
     String qAddSubject();
+    String qGetSubjectID();
 
     String qAddLessonRecord();
 }
