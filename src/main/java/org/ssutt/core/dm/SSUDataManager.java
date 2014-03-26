@@ -25,6 +25,7 @@ import org.ssutt.core.fetch.SSUDataFetcher;
 import org.ssutt.core.sql.SQLManager;
 import org.ssutt.core.sql.SSUSQLManager;
 
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -119,9 +120,15 @@ public class SSUDataManager implements DataManager {
 
     @Override
     public boolean putTT(String departmentID, String groupName) {
+        //first, we get timetable
 
 
         return false;
+    }
+
+
+    private URL formatURL(String departmentID, String groupName) {
+        return null;
     }
 
 

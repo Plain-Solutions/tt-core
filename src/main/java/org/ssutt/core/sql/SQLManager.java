@@ -34,4 +34,6 @@ public interface SQLManager{
 
     List<String> getGroups(String departmentTag) throws SQLException;
 
+ //   void putTT(List<>)
+
 }

@@ -38,6 +38,17 @@ public class H2Queries implements Queries {
     }
 
     @Override
+    public String qGetDepartmentTagByID() {
+        return "SELECT tag FROM departments WHERE id=%d";
+    }
+
+    @Override
+    public String qGetDepartmentNameByID() {
+        return "SELECT name FROM departments WHERE id=%d";
+    }
+
+
+    @Override
     public String qAddGroups() {
         return "INSERT INTO GROUPS(department_id, name) VALUES" +
                 "((SELECT id FROM DEPARTMENTS WHERE tag='%s'),'%s'); ";

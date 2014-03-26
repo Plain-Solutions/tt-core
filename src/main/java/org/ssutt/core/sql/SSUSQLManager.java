@@ -85,7 +85,7 @@ public class SSUSQLManager implements SQLManager {
     @Override
     public void putGroups(List<String> groups, String department) throws SQLException {
         Statement stmt = conn.createStatement();
-
+        Collections.sort(groups);
         for (String g : groups) {
             stmt.executeUpdate(String.format(qrs.qAddGroups(), department,g));
         }
