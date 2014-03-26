@@ -83,27 +83,53 @@ public class SSUSQLManager implements SQLManager {
     }
 
     @Override
-    public void putGroups(List<String> groups, String department) throws SQLException {
+    public boolean departmentExists(String departmentTag) throws SQLException {
         Statement stmt = conn.createStatement();
-        Collections.sort(groups);
-        for (String g : groups) {
-            stmt.executeUpdate(String.format(qrs.qAddGroups(), department,g));
-        }
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qDepartmentExists(), departmentTag));
+        int id = 0;
+        while (rs.next()) id = rs.getInt("id");
 
-        stmt.close();
+        return (id != 0) ? true : false;
+    }
+
+    @Override
+    public void putGroups(List<String> groups, String departmentTag) throws SQLException {
+        if (departmentExists(departmentTag)) {
+            Statement stmt = conn.createStatement();
+            Collections.sort(groups);
+            for (String g : groups) {
+                stmt.executeUpdate(String.format(qrs.qAddGroups(), departmentTag, g));
+            }
+
+            stmt.close();
+        }
+        else throw new SQLException("no department found with such tag");
     }
 
     @Override
     public List<String> getGroups(String departmentTag) throws SQLException {
-        List<String> result = new ArrayList<>();
+        if (departmentExists(departmentTag)) {
+            List<String> result = new ArrayList<>();
 
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroups(), departmentTag));
+
+            while (rs.next())
+                result.add(rs.getString("name"));
+            return result;
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean groupExists(String departmentTag, String groupName) throws SQLException {
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroups(),departmentTag));
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGroupExists(), departmentTag, groupName));
+        int id = 0;
+        while (rs.next()) id = rs.getInt("id");
 
-        while (rs.next())
-            result.add(rs.getString("name"));
-        return result;
-
+        return (id != 0) ? true : false;
     }
 
 }

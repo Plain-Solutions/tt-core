@@ -26,7 +26,12 @@ public interface Queries {
     String qGetDepartmentTagByID();
     String qGetDepartmentNameByID();
 
+    String qGetDepartmentTagByName();
+
+    String qDepartmentExists();
 
     String qAddGroups();
     String qGetGroups();
+
+    String qGroupExists();
 }

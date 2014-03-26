@@ -107,7 +107,9 @@ public class TestDM {
             List<String> result = dm.getGroups(deps.get(d));
             Assert.assertNotNull(result);
         }
-     //   removeTestDB();
+
+        dm.putTT("knt","151");
+        removeTestDB();
     }
 
     private DataManager createInstance() throws SQLException, ClassNotFoundException {

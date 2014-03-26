@@ -47,6 +47,16 @@ public class H2Queries implements Queries {
         return "SELECT name FROM departments WHERE id=%d";
     }
 
+    @Override
+    public String qGetDepartmentTagByName() {
+        return "SELECT tag FROM departments WHERE name='%s'";
+    }
+
+    @Override
+    public String qDepartmentExists() {
+        return "SELECT id FROM departments WHERE tag='%s'";
+    }
+
 
     @Override
     public String qAddGroups() {
@@ -58,5 +68,11 @@ public class H2Queries implements Queries {
     public String qGetGroups() {
         return "SELECT gr.name FROM groups as gr, departments as dp " +
                 "WHERE gr.department_id = dp.id AND dp.tag = '%s';";
+    }
+
+    @Override
+    public String qGroupExists() {
+        return "SELECT gr.id FROM groups as gr, departments as dp " +
+                "WHERE gr.department_id = dp.id AND dp.tag = '%s' AND gr.name = '%s'";
     }
 }
