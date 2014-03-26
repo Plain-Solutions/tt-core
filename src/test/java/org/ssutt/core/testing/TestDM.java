@@ -24,6 +24,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.ssutt.core.dm.DataManager;
 import org.ssutt.core.dm.SSUDataManager;
+import org.ssutt.core.sql.ex.NoSuchDepartmentException;
+import org.ssutt.core.sql.ex.NoSuchGroupException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -80,9 +82,18 @@ public class TestDM {
             assert(false);
         }
 
-        dm.putDepartments();
+        try {
+            dm.putDepartments();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        Map<String, String> result = dm.getDepartments();
+        Map<String, String> result = null;
+        try {
+            result = dm.getDepartments();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Assert.assertNotNull(result);
     }
 
@@ -100,13 +111,52 @@ public class TestDM {
             assert (false);
         }
 
-        dm.putGroups();
+        try {
+            dm.putGroups();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NoSuchDepartmentException e) {
+            e.printStackTrace();
+        }
 
-        Map<String, String> deps = dm.getDepartments();
+        Map<String, String> deps = null;
+        try {
+            deps = dm.getDepartments();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         for (String d: new TreeSet<>(deps.keySet())) {
-            List<String> result = dm.getGroups(deps.get(d));
-            for (String g: result)
-                dm.putTT(deps.get(d),g);
+            List<String> result = null;
+            try {
+                result = dm.getGroups(deps.get(d));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (NoSuchDepartmentException e) {
+                e.printStackTrace();
+            }
+//            for (String g: result)
+//                try {
+//                    dm.putTT(deps.get(d),g);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                } catch (NoSuchDepartmentException e) {
+//                    e.printStackTrace();
+//                } catch (NoSuchGroupException e) {
+//                    e.printStackTrace();
+//                }
+        }
+        try {
+            dm.putTT("knt", dm.getGroupID("knt","151"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NoSuchDepartmentException e) {
+            e.printStackTrace();
+        } catch (NoSuchGroupException e) {
+            e.printStackTrace();
         }
 
         //removeTestDB();

@@ -47,6 +47,8 @@ public interface Queries {
 
     String qGetGroupID();
 
+    String qGetGroupName();
+
     String qGetDateTimeID();
 
     String qGetSubjectID();

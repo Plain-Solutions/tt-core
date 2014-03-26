@@ -82,6 +82,12 @@ public class H2Queries implements Queries {
     }
 
     @Override
+    public String qGetGroupName() {
+        return "SELECT gr.name FROM groups as gr, departments as dp " +
+                "WHERE gr.department_id = dp.id AND dp.tag = '%s' AND gr.id = %d";
+    }
+
+    @Override
     public String qAddDateTime() {
         return "INSERT INTO lessons_datetimes(week_id, sequence, day_id) VALUES(%d,%d,%d);";
     }

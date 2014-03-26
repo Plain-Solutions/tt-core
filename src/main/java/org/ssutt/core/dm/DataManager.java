@@ -18,7 +18,13 @@
  */
 package org.ssutt.core.dm;
 
+import org.ssutt.core.sql.ex.NoSuchDepartmentException;
+import org.ssutt.core.sql.ex.NoSuchGroupException;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -27,19 +33,24 @@ public interface DataManager {
 
     void deliverDataFetcherProvider();
 
-    void putDepartments();
 
-    void putGroups();
+    void putDepartments() throws SQLException;
 
-    void putTT(String departmentTag, String groupName);
+    void putGroups() throws SQLException, NoSuchDepartmentException;
+
+    void putTT(String departmentTag, int groupID) throws MalformedURLException, IOException, SQLException,
+            NoSuchDepartmentException, NoSuchGroupException;
     //switch too later
-    //boolean putTT(String departmentTag, String groupID);
+    //void putTT(String departmentTag, String groupID);
 
-    Map<String, String> getDepartments();
+    Map<String, String> getDepartments() throws SQLException;
 
-    List getDepartmentTags();
+    List getDepartmentTags() throws SQLException;
 
-    List<String> getGroups(String departmentTag);
+    List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
+
+    int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException,
+            NoSuchGroupException;
 
     //SomeTimeTableEntity getTT(String departmentTag, String groupID)
 

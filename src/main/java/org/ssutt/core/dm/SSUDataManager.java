@@ -18,8 +18,6 @@
  */
 package org.ssutt.core.dm;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.ssutt.core.fetch.DataFetcher;
 import org.ssutt.core.fetch.SSUDataFetcher;
 import org.ssutt.core.sql.SQLManager;
@@ -32,13 +30,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class SSUDataManager implements DataManager {
-    private static final Logger logger = LogManager.getLogger(SSUDataManager.class.getName());
-
     private String[] exclusions = {"kgl", "cre", "el"};
     private String globalScheduleURL = "http://www.sgu.ru/schedule";
 
@@ -46,98 +41,70 @@ public class SSUDataManager implements DataManager {
     private SQLManager sqlm;
 
     public SSUDataManager() {
-        logger.info("DataManager (SSU) was created");
     }
 
     @Override
     public void deliverDBProvider(Connection conn) {
         sqlm = new SSUSQLManager(conn);
-        logger.info("DataManager: DBManager: SSUSQLManager");
     }
 
     @Override
     public void deliverDataFetcherProvider() {
         df = new SSUDataFetcher(globalScheduleURL, exclusions);
-        logger.info("DataManager: DataFetcher: SSUDataFetcher");
     }
 
     @Override
-    public void putDepartments() {
-        try {
-            sqlm.putDepartments(df.getDepartments());
-        } catch (SQLException e) {
-            logger.fatal(e);
-        }
+    public void putDepartments() throws SQLException {
+        sqlm.putDepartments(df.getDepartments());
     }
 
     @Override
-    public Map<String, String> getDepartments() {
-        Map<String, String> result;
-        try {
-            result = sqlm.getDepartments();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return Collections.emptyMap();
-        }
-        return result;
+    public Map<String, String> getDepartments() throws SQLException {
+        return sqlm.getDepartments();
     }
 
     @Override
-    public List<String> getDepartmentTags() {
-        List<String> result;
-        try {
-            result = sqlm.getDepartmentTags();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return Collections.EMPTY_LIST;
-        }
-        return result;
+    public List<String> getDepartmentTags() throws SQLException {
+        return sqlm.getDepartmentTags();
     }
 
     @Override
-    public void putGroups() {
-        try {
-            for (String department : getDepartmentTags())
-                sqlm.putGroups(df.getGroups(department), department);
-        } catch (SQLException | NoSuchDepartmentException e) {
-            e.printStackTrace();
-        }
+    public void putGroups() throws SQLException, NoSuchDepartmentException {
+        for (String department : getDepartmentTags())
+            sqlm.putGroups(df.getGroups(department), department);
     }
 
     @Override
-    public List<String> getGroups(String departmentTag) {
-        List<String> result;
-        try {
-            result = sqlm.getGroups(departmentTag);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return Collections.EMPTY_LIST;
-        } catch (NoSuchDepartmentException e) {
-            e.printStackTrace();
-            return Collections.EMPTY_LIST;
-        }
-        return result;
+    public List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException {
+        return sqlm.getGroups(departmentTag);
     }
 
     @Override
-    public void putTT(String departmentTag, String groupName) {
-        try {
-            //first, we get timetable url
-            if (sqlm.groupExists(departmentTag, groupName)) {
-                String groupAddress =
-                        (df.getNonNumericalGroups().containsKey(groupName)) ?
-                                df.getNonNumericalGroups().get(groupName) : groupName;
+    public int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
+        return sqlm.getGroupID(departmentTag, groupName);
+    }
 
-                String url = String.format("%s/%s/%s/%s", globalScheduleURL, departmentTag, "do", groupAddress);
-                System.out.println(url);
-                //and its contents
-                String[][] table = df.getTT(new URL(url));
-                for (int i = 0; i < 8; i++) {
-                    for (int j = 0; j < 6; j++) {
-                        //we swap row and column as in any timetable rows are classes and columns are days
-                        //but in the df.getTT it's vice verse
-                        CellEntity ce = TableParser.parseCell(table[i][j], i, j);
-                        for (Record r : ce.getCell()) {
+    @Override
+    public void putTT(String departmentTag, int groupID) throws MalformedURLException, IOException, SQLException,
+            NoSuchDepartmentException, NoSuchGroupException {
+        //first, we get timetable url
+        String groupName = sqlm.getGroupName(departmentTag, groupID);
+
+        if (sqlm.groupExists(departmentTag, groupName)) {
+            String groupAddress =
+                    (df.getNonNumericalGroups().containsKey(groupName)) ?
+                            df.getNonNumericalGroups().get(groupName) : groupName;
+
+            String url = String.format("%s/%s/%s/%s", globalScheduleURL, departmentTag, "do", groupAddress);
+            System.out.println(url);
+            //and its contents
+            String[][] table = df.getTT(new URL(url));
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 6; j++) {
+                    //we swap row and column as in any timetable rows are classes and columns are days
+                    //but in the df.getTT it's vice verse
+                    CellEntity ce = TableParser.parseCell(table[i][j], i, j);
+                    for (Record r : ce.getCell()) {
                            /*
                            We need to clarify one thing
                            DataManager works only RAW data, that's why we pass RAW data to
@@ -147,28 +114,17 @@ public class SSUDataManager implements DataManager {
                            tt-platform and its task: convert raw data for end-user
                            */
 
-                            //skip empty classes
-                            if (r.getInfo().length() != 0) {
-                                int grpID = sqlm.getGroupID(departmentTag, groupName);
-                                int dtID = sqlm.putDateTime(r.getWeekID(), r.getSequence(), r.getDayID());
-                                int subjID = sqlm.putSubject(r.getInfo());
-                                sqlm.putLessonRecord(grpID, dtID, subjID);
-                            }
+                        //skip empty classes
+                        if (r.getInfo().length() != 0) {
+                            int grpID = sqlm.getGroupID(departmentTag, groupName);
+                            int dtID = sqlm.putDateTime(r.getWeekID(), r.getSequence(), r.getDayID());
+                            int subjID = sqlm.putSubject(r.getInfo());
+                            sqlm.putLessonRecord(grpID, dtID, subjID);
                         }
                     }
                 }
-                System.out.println(url + " passed");
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NoSuchGroupException e) {
-            e.printStackTrace();
-        } catch (NoSuchDepartmentException e) {
-            e.printStackTrace();
+            System.out.println(url + " passed");
         }
     }
 

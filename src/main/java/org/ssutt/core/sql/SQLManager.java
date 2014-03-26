@@ -45,8 +45,11 @@ public interface SQLManager {
 
     List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
 
-    int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
+    int getGroupID(String departmentTag, String groupName) throws SQLException,
+            NoSuchDepartmentException, NoSuchGroupException;
 
+    String getGroupName(String departmentTag, int groupID) throws SQLException,
+            NoSuchDepartmentException, NoSuchGroupException;
 
     boolean departmentExists(String departmentTag) throws SQLException;
 

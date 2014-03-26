@@ -20,8 +20,6 @@
  */
 package org.ssutt.core.fetch;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -32,7 +30,6 @@ import java.net.URL;
 import java.util.*;
 
 public class SSUDataFetcher implements DataFetcher {
-    private static final Logger logger = LogManager.getLogger(SSUDataFetcher.class.getName());
     private List<String> exclusions = new ArrayList<>();
 
     private Map<String, String> nonNumericalGroups;
@@ -44,9 +41,6 @@ public class SSUDataFetcher implements DataFetcher {
         nonNumericalGroups = new HashMap<>();
 
         this.exclusions.addAll(Arrays.asList(exclusions));
-
-        logger.info("SSU DataFetcher Initialized correctly.");
-
     }
 
     public String[] getExclusions() {

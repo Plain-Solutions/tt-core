@@ -18,8 +18,6 @@
  */
 package org.ssutt.core.sql;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -35,15 +33,12 @@ import java.util.*;
  * executes queries
  */
 public class SSUSQLManager implements SQLManager {
-    static final Logger logger = LogManager.getLogger(SQLManager.class.getName());
     private static Connection conn;
     private static Queries qrs;
 
     public SSUSQLManager(Connection conn) {
         SSUSQLManager.conn = conn;
         qrs = new H2Queries();
-
-        logger.info("SSU SQLManager initialized with JNDI DB (H2) correctly.");
     }
 
 
@@ -134,13 +129,12 @@ public class SSUSQLManager implements SQLManager {
                 result.add(rs.getString("name"));
             stmt.close();
             return result;
-        }
-        else throw new NoSuchDepartmentException();
+        } else throw new NoSuchDepartmentException();
     }
 
     @Override
-    public int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
-
+    public int getGroupID(String departmentTag, String groupName) throws SQLException,
+            NoSuchDepartmentException, NoSuchGroupException {
         if (departmentExists(departmentTag)) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroupID(), departmentTag, groupName));
@@ -148,9 +142,25 @@ public class SSUSQLManager implements SQLManager {
             while (rs.next()) id = rs.getInt("id");
             stmt.close();
 
-            if (id==0) throw new NoSuchGroupException();
+            if (id == 0) throw new NoSuchGroupException();
 
             return id;
+        } else throw new NoSuchDepartmentException();
+    }
+
+    @Override
+    public String getGroupName(String departmentTag, int groupID) throws SQLException,
+            NoSuchDepartmentException, NoSuchGroupException {
+        if (departmentExists(departmentTag)) {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroupName(), departmentTag, groupID));
+            String name = "";
+            while (rs.next()) name = rs.getString("name");
+            stmt.close();
+
+            if (name.length()==0) throw new NoSuchGroupException();
+
+            return name;
         }
         else throw new NoSuchDepartmentException();
     }
