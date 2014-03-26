@@ -35,9 +35,12 @@ import java.util.*;
 public class SSUSQLManager implements SQLManager {
     static final Logger logger = LogManager.getLogger(SQLManager.class.getName());
     private static Connection conn;
+    private static Queries qrs;
 
     public SSUSQLManager(Connection conn) {
         SSUSQLManager.conn = conn;
+        qrs = new H2Queries();
+
         logger.info("SSU SQLManager initialized with JNDI DB (H2) correctly.");
     }
 
@@ -45,10 +48,11 @@ public class SSUSQLManager implements SQLManager {
     @Override
     public void putDepartments(Map<String, String> departments) throws SQLException {
         Statement stmt = conn.createStatement();
-        String addDepartment = "INSERT INTO departments(name,tag) VALUES('%s','%s');";
+
         for (String d : new TreeSet<>(departments.keySet())) {
-            stmt.executeUpdate(String.format(addDepartment, d, departments.get(d)));
+            stmt.executeUpdate(String.format(qrs.qAddDepartment(), d, departments.get(d)));
         }
+
         stmt.close();
     }
 
@@ -57,8 +61,7 @@ public class SSUSQLManager implements SQLManager {
         Map<String, String> result = new HashMap<>();
 
         Statement stmt = conn.createStatement();
-        String getDepartments = "SELECT name,tag FROM departments";
-        ResultSet rs = stmt.executeQuery(getDepartments);
+        ResultSet rs = stmt.executeQuery(qrs.qGetDepartments());
 
         while (rs.next()) {
             result.put(rs.getString("name"), rs.getString("tag"));
@@ -69,34 +72,34 @@ public class SSUSQLManager implements SQLManager {
     @Override
     public List<String> getDepartmentTags() throws SQLException {
         List<String> result = new ArrayList<>();
-        Statement stmt = conn.createStatement();
-        String getTags = "SELECT tag FROM departments";
 
-        ResultSet rs = stmt.executeQuery(getTags);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(qrs.qGetDepartmentTags());
+
         while (rs.next())
             result.add(rs.getString("tag"));
+
         return result;
     }
 
     @Override
     public void putGroups(Map<String, String> groups, String department) throws SQLException {
         Statement stmt = conn.createStatement();
-        String addGroups = "INSERT INTO GROUPS(department_id, name, unesc) VALUES" +
-        "((SELECT id FROM DEPARTMENTS WHERE tag='%s'),'%s', '%s'); ";
+
 
         for (String g : new TreeSet<>(groups.keySet())) {
-            stmt.executeUpdate(String.format(addGroups, department,g,groups.get(g)));
+            stmt.executeUpdate(String.format(qrs.qAddGroups(), department,g,groups.get(g)));
         }
-        stmt.close();
 
+        stmt.close();
     }
 
     @Override
     public Map<String, String> getGroups(String departmentTag) throws SQLException {
         Map<String,String> result = new HashMap<>();
+
         Statement stmt = conn.createStatement();
-        String getGroups = "SELECT gr.name, gr.unesc FROM groups as gr, departments as dp WHERE gr.department_id = dp.id AND dp.tag = '%s';";
-        ResultSet rs = stmt.executeQuery(String.format(getGroups,departmentTag));
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroups(),departmentTag));
 
         while (rs.next())
             result.put(rs.getString("name"),rs.getString("unesc"));
