@@ -1,6 +1,8 @@
-org/ssutt/core/dm/DataManager.class
+org/ssutt/core/sql/Queries.class
+org/ssutt/core/sql/H2Queries.class
 org/ssutt/core/sql/SQLManager.class
 org/ssutt/core/fetch/SSUDataFetcher.class
 org/ssutt/core/dm/SSUDataManager.class
 org/ssutt/core/sql/SSUSQLManager.class
+org/ssutt/core/dm/DataManager.class
 org/ssutt/core/fetch/DataFetcher.class

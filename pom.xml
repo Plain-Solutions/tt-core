@@ -14,6 +14,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     <build>
+        <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -38,13 +39,6 @@
                 <version>2.17</version>
                 <configuration>
                     <skip>false</skip>
-                    <systemProperties>
-                        <property>
-                            <name>-Dlog4j.configuration</name>
-                            <value>file:src/main/resources/log4j.properties</value>
-                        </property>
-                    </systemProperties>
-
                 </configuration>
             </plugin>
         </plugins>

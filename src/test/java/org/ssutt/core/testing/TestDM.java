@@ -25,6 +25,9 @@ import org.junit.runners.MethodSorters;
 import org.ssutt.core.dm.DataManager;
 import org.ssutt.core.dm.SSUDataManager;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -104,6 +107,7 @@ public class TestDM {
             List<String> result = dm.getGroups(deps.get(d));
             Assert.assertNotNull(result);
         }
+     //   removeTestDB();
     }
 
     private DataManager createInstance() throws SQLException, ClassNotFoundException {
@@ -118,5 +122,15 @@ public class TestDM {
         Class.forName("org.h2.Driver");
         return DriverManager.
                 getConnection("jdbc:h2:file:localtest;INIT=RUNSCRIPT FROM './src/main/resources/initTT.sql'", "sa", "");
+    }
+
+    private void removeTestDB() {
+        try {
+            Files.delete(Paths.get("localtest.h2.db"));
+            Files.delete(Paths.get("localtest.trace.db"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -37,7 +37,7 @@ public class SSUDataFetcher implements DataFetcher {
 
     private Map<String, String> nonNumericalGroups;
 
-    private static String globalScheduleURL = "http://www.sgu.ru/schedule";
+    private String globalScheduleURL = "";
 
     public SSUDataFetcher(String url, String... exclusions) {
         globalScheduleURL = url;
@@ -100,7 +100,7 @@ public class SSUDataFetcher implements DataFetcher {
                 String[] esc = link.attr("abs:href").split("/");
 
                 result.add(link.ownText());
-                if (!(numExclusion(link.ownText())))
+                if (numExclusion(link.ownText()))
                     nonNumericalGroups.put(link.ownText(),esc[esc.length - 1]);
             }
 
@@ -126,8 +126,9 @@ public class SSUDataFetcher implements DataFetcher {
     }
 
     private boolean numExclusion(String test) {
-        String regex = "\\d+";
-        return test.matches(regex);
+        String regex = "[0-9]+";
+
+        return (!(test.matches(regex)));
     }
 
     public Map<String, String> getNonNumericalGroups() {

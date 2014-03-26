@@ -25,6 +25,8 @@ import org.junit.runners.MethodSorters;
 import org.ssutt.core.fetch.DataFetcher;
 import org.ssutt.core.fetch.SSUDataFetcher;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -58,12 +60,10 @@ public class TestDF {
 
         Map<String, String> res = df.getDepartments();
 
+        List<List<String>> r = new ArrayList<>();
         for (String d : new TreeSet<>(res.keySet()))
-            df.getGroups(d);
+            r.add(df.getGroups(d));
 
-        Map<String, String> excl = df.getNonNumericalGroups();
-
-        for (String s : new TreeSet<>(excl.keySet()))
-            System.out.println(s + " " + excl.get(s));
+        Assert.assertNotNull("DataFetcher(SSU) getting groups - failed", r);
     }
 }
