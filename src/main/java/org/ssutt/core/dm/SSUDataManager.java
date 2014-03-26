@@ -122,9 +122,8 @@ public class SSUDataManager implements DataManager {
 
     @Override
     public boolean putTT(String departmentTag, String groupName) {
-        //first, we get timetable
-
         try {
+            //first, we get timetable url
             if (sqlm.groupExists(departmentTag, groupName)) {
                 String groupAddress =
                         (df.getNonNumericalGroups().containsKey(groupName)) ?
@@ -132,7 +131,14 @@ public class SSUDataManager implements DataManager {
 
                 String url = String.format("%s/%s/%s/%s", globalScheduleURL, departmentTag, "do", groupAddress);
                 System.out.println(url);
+                //and its contents
                 String[][] table = df.getTT(new URL(url));
+                for (int i=0; i<8; i++)
+                    for (int j=0;j<6;j++) {
+                        //we swap row and column as in timetable rows are classes and columns are days
+                        //but in the df.getTT it's vice verse
+                        CellEntity ce = TableParser.parseCell(table[i][j], j, i);
+                    }
             }
             else return false;
         } catch (MalformedURLException e) {

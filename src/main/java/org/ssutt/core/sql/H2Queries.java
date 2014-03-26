@@ -57,7 +57,6 @@ public class H2Queries implements Queries {
         return "SELECT id FROM departments WHERE tag='%s'";
     }
 
-
     @Override
     public String qAddGroups() {
         return "INSERT INTO GROUPS(department_id, name) VALUES" +

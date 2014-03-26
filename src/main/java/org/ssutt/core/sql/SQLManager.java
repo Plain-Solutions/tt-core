@@ -38,6 +38,6 @@ public interface SQLManager {
 
     boolean groupExists(String departmentTag, String groupName) throws SQLException;
 
-    //   void putTT(List<>)
+    //boolean putTT(String subject,)
 
 }

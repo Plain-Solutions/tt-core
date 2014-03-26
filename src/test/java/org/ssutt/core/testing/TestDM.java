@@ -108,8 +108,8 @@ public class TestDM {
             Assert.assertNotNull(result);
         }
 
-        dm.putTT("knt","151");
-        removeTestDB();
+       // dm.putTT("knt","151");
+       // removeTestDB();
     }
 
     private DataManager createInstance() throws SQLException, ClassNotFoundException {
