@@ -96,17 +96,15 @@ public class TestDM {
             assert (false);
         }
 
-
-        for (String s: dm.getDepartmentTags()) System.out.println(s);;
         dm.putGroups();
 
         Map<String, String> deps = dm.getDepartments();
         for (String d: new TreeSet<>(deps.keySet())) {
             Map<String, String> result = dm.getGroups(deps.get(d));
-            for (String gr: new TreeSet<>(result.keySet())) {
-                System.out.println(gr);
-            }
+            Assert.assertNotNull(result);
         }
+
+
 
     }
 

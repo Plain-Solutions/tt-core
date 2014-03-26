@@ -36,8 +36,8 @@ public class SSUDataManager implements DataManager {
     private String[] exclusions = {"kgl","cre","el"} ;
     private String globalScheduleURL = "http://www.sgu.ru/schedule";
 
-    private static DataFetcher df;
-    private static SQLManager sqlm;
+    private DataFetcher df;
+    private SQLManager sqlm;
 
     public SSUDataManager() {
          logger.info("DataManager (SSU) was created");
