@@ -133,14 +133,29 @@ public class SSUDataManager implements DataManager {
                 System.out.println(url);
                 //and its contents
                 String[][] table = df.getTT(new URL(url));
-                for (int i=0; i<8; i++)
-                    for (int j=0;j<6;j++) {
-                        //we swap row and column as in timetable rows are classes and columns are days
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 6; j++) {
+                        //we swap row and column as in any timetable rows are classes and columns are days
                         //but in the df.getTT it's vice verse
-                        CellEntity ce = TableParser.parseCell(table[i][j], j, i);
+                        CellEntity ce = TableParser.parseCell(table[i][j], i, j);
+                        for (Record r : ce.getCell()) {
+                           /*
+                           We need to clarify one thing
+                           DataManager works only RAW data, that's why we pass RAW data to
+                           SQLManager, though we can pass Record, but
+                           the level of abstraction on DB site should be as high as it can be
+                           That's why you won't see JSON Parser in DataManger, it's a part of
+                           tt-platform and its task: convert raw data for end-user
+                           */
+
+                            //skip empty classes
+                            if (r.getInfo().length() != 0) {
+                                System.out.println(sqlm.putDateTime(r.getWeek_id(), r.getSequence(), r.getDay_id()));
+                            }
+                        }
                     }
-            }
-            else return false;
+                }
+            } else return false;
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return false;

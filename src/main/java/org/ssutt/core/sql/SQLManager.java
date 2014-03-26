@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface SQLManager {
+    int getLastID(String table) throws SQLException;
+
 
     void putDepartments(Map<String, String> departments) throws SQLException;
 
@@ -32,12 +34,19 @@ public interface SQLManager {
 
     boolean departmentExists(String departmentTag) throws SQLException;
 
+
     void putGroups(List<String> groups, String departmentTag) throws SQLException;
 
     List<String> getGroups(String departmentTag) throws SQLException;
 
     boolean groupExists(String departmentTag, String groupName) throws SQLException;
 
-    //boolean putTT(String subject,)
+
+    int putDateTime(int weekID, int sequence, int dayID) throws SQLException;
+
+    int putSubject(String info) throws SQLException;
+
+    boolean putLessonRecord(int groupID, int dateTimeID, int subjectID);
+
 
 }

@@ -19,6 +19,8 @@
 package org.ssutt.core.sql;
 
 public interface Queries {
+    String getLastID();
+
     String qAddDepartment();
     String qGetDepartments();
     String qGetDepartmentTags();
@@ -34,4 +36,11 @@ public interface Queries {
     String qGetGroups();
 
     String qGroupExists();
+
+    String qAddDateTime();
+    String qGetDateTime();
+
+    String qAddSubject();
+
+    String qAddLessonRecord();
 }

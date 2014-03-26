@@ -27,11 +27,11 @@ public class CellEntity {
     public CellEntity() {
     }
 
-    public void addRecord(int week_id, int order, int day_id, String info) {
+    public void addRecord(int week_id, int sequence, int day_id, String info) {
         Record r = new Record();
 
         r.setWeek_id(week_id);
-        r.setOrder(order);
+        r.setSequence(sequence);
         r.setDay_id(day_id);
         r.setInfo(info);
 

@@ -36,30 +36,30 @@ public abstract class TableParser {
         //do we need two records?
         if (parsed.contains("even")) {
             int week_id = 1;
-            int order = row+1;
+            int sequence = row+1;
             int day_id = column+1;
             String info = parsed.get(0);
 
-            ce.addRecord(week_id, order, day_id, info);
+            ce.addRecord(week_id, sequence, day_id, info);
 
             return ce;
         }
         if (parsed.contains("odd"))  {
             int week_id = 2;
-            int order = row+1;
+            int sequence = row+1;
             int day_id = column+1;
             String info = parsed.get(0);
 
-            ce.addRecord(week_id, order, day_id, info);
+            ce.addRecord(week_id, sequence, day_id, info);
             return ce;
         }
         if (parsed.contains("eq")) {
             int week_id = 3;
-            int order = row+1;
+            int sequence = row+1;
             int day_id = column+1;
             String info = parsed.get(0);
 
-            ce.addRecord(week_id, order, day_id, info);
+            ce.addRecord(week_id, sequence, day_id, info);
             return ce;
         }
 
@@ -126,7 +126,7 @@ public abstract class TableParser {
 
         //has no markers, both weeks
         result.add(cell);
-        result.add("both");
+        result.add("eq");
         return result;
     }
 

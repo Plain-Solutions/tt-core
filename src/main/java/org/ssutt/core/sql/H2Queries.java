@@ -23,6 +23,11 @@ public class H2Queries implements Queries {
     public H2Queries() {}
 
     @Override
+    public String getLastID() {
+        return "SELECT MAX(id) FROM %s";
+    }
+
+    @Override
     public String qAddDepartment() {
         return "INSERT INTO departments(name,tag) VALUES('%s','%s');";
     }
@@ -73,5 +78,25 @@ public class H2Queries implements Queries {
     public String qGroupExists() {
         return "SELECT gr.id FROM groups as gr, departments as dp " +
                 "WHERE gr.department_id = dp.id AND dp.tag = '%s' AND gr.name = '%s'";
+    }
+
+    @Override
+    public String qAddDateTime() {
+        return "INSERT INTO lessons_datetimes(week_id, sequence, day_id) VALUES(%d,%d,%d);";
+    }
+
+    @Override
+    public String qGetDateTime() {
+        return "SELECT id FROM lessons_datetimes WHERE week_id=%d AND sequence=%d AND day_id=%d;";
+    }
+
+    @Override
+    public String qAddSubject() {
+        return "INSERT INTO subjects(info) VALUES ('%s');";
+    }
+
+    @Override
+    public String qAddLessonRecord() {
+        return "INSERT INTO lesson_records(group_id, datetime_id,subject_id) VALUES(%d,%d,%d);";
     }
 }

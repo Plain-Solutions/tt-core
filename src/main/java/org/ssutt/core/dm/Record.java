@@ -20,7 +20,7 @@ package org.ssutt.core.dm;
 
 public class Record {
     private int week_id;
-    private int order;
+    private int sequence;
     private int day_id;
 
     private String info;
@@ -37,12 +37,12 @@ public class Record {
         this.week_id = week_id;
     }
 
-    public int getOrder() {
-        return order;
+    public int getSequence() {
+        return sequence;
     }
 
-    public void setOrder(int order) {
-        this.order = order;
+    public void setSequence(int order) {
+        this.sequence = order;
     }
 
     public int getDay_id() {

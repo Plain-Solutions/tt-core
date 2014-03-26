@@ -46,6 +46,17 @@ public class SSUSQLManager implements SQLManager {
 
 
     @Override
+    public int getLastID(String table) throws SQLException {
+        Statement stmt = conn.createStatement();
+
+        ResultSet rs = stmt.executeQuery(String.format(qrs.getLastID(), table));
+        int id = 0;
+        while (rs.next())
+            id = rs.getInt("MAX(id)");
+        return id;
+    }
+
+    @Override
     public void putDepartments(Map<String, String> departments) throws SQLException {
         Statement stmt = conn.createStatement();
 
@@ -66,6 +77,8 @@ public class SSUSQLManager implements SQLManager {
         while (rs.next()) {
             result.put(rs.getString("name"), rs.getString("tag"));
         }
+
+        stmt.close();
         return result;
     }
 
@@ -79,6 +92,7 @@ public class SSUSQLManager implements SQLManager {
         while (rs.next())
             result.add(rs.getString("tag"));
 
+        stmt.close();
         return result;
     }
 
@@ -89,6 +103,7 @@ public class SSUSQLManager implements SQLManager {
         int id = 0;
         while (rs.next()) id = rs.getInt("id");
 
+        stmt.close();
         return (id != 0) ? true : false;
     }
 
@@ -116,6 +131,7 @@ public class SSUSQLManager implements SQLManager {
 
             while (rs.next())
                 result.add(rs.getString("name"));
+            stmt.close();
             return result;
         }
 
@@ -128,8 +144,35 @@ public class SSUSQLManager implements SQLManager {
         ResultSet rs = stmt.executeQuery(String.format(qrs.qGroupExists(), departmentTag, groupName));
         int id = 0;
         while (rs.next()) id = rs.getInt("id");
-
+        stmt.close();
         return (id != 0) ? true : false;
+    }
+
+    @Override
+    public int putDateTime(int weekID, int sequence, int dayID) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetDateTime(), weekID, sequence, dayID));
+        int id =0;
+
+        while (rs.next()) id = rs.getInt("id");
+
+        if (id==0)
+             stmt.executeUpdate(String.format(qrs.qAddDateTime(), weekID, sequence, dayID));
+             id = getLastID("lessons_datetimes");
+
+        stmt.close();
+
+        return id;
+    }
+
+    @Override
+    public int putSubject(String info) throws SQLException {
+        return 0;
+    }
+
+    @Override
+    public boolean putLessonRecord(int groupID, int dateTimeID, int subjectID) {
+        return false;
     }
 
 }

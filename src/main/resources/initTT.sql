@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS departments(
-  ID TINYINT auto_increment NOT NULL,
+  id TINYINT auto_increment NOT NULL,
   name VARCHAR(100),
   tag CHAR(10),
   PRIMARY KEY (id)
