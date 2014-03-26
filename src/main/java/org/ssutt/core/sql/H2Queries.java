@@ -39,13 +39,13 @@ public class H2Queries implements Queries {
 
     @Override
     public String qAddGroups() {
-        return "INSERT INTO GROUPS(department_id, name, unesc) VALUES" +
-                "((SELECT id FROM DEPARTMENTS WHERE tag='%s'),'%s', '%s'); ";
+        return "INSERT INTO GROUPS(department_id, name) VALUES" +
+                "((SELECT id FROM DEPARTMENTS WHERE tag='%s'),'%s'); ";
     }
 
     @Override
     public String qGetGroups() {
-        return "SELECT gr.name, gr.unesc FROM groups as gr, departments as dp " +
+        return "SELECT gr.name FROM groups as gr, departments as dp " +
                 "WHERE gr.department_id = dp.id AND dp.tag = '%s';";
     }
 }

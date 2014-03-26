@@ -34,5 +34,7 @@ public interface DataManager {
 
     boolean putGroups();
 
-    Map<String, String> getGroups(String departmentTag);
+    List<String> getGroups(String departmentTag);
+
+    boolean putTT(String departmentID, String groupName);
 }

@@ -83,26 +83,25 @@ public class SSUSQLManager implements SQLManager {
     }
 
     @Override
-    public void putGroups(Map<String, String> groups, String department) throws SQLException {
+    public void putGroups(List<String> groups, String department) throws SQLException {
         Statement stmt = conn.createStatement();
 
-
-        for (String g : new TreeSet<>(groups.keySet())) {
-            stmt.executeUpdate(String.format(qrs.qAddGroups(), department,g,groups.get(g)));
+        for (String g : groups) {
+            stmt.executeUpdate(String.format(qrs.qAddGroups(), department,g));
         }
 
         stmt.close();
     }
 
     @Override
-    public Map<String, String> getGroups(String departmentTag) throws SQLException {
-        Map<String,String> result = new HashMap<>();
+    public List<String> getGroups(String departmentTag) throws SQLException {
+        List<String> result = new ArrayList<>();
 
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroups(),departmentTag));
 
         while (rs.next())
-            result.put(rs.getString("name"),rs.getString("unesc"));
+            result.add(rs.getString("name"));
         return result;
 
     }

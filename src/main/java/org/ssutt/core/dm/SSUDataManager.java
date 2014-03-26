@@ -106,8 +106,8 @@ public class SSUDataManager implements DataManager {
     }
 
     @Override
-    public Map<String, String> getGroups(String departmentTag) {
-        Map<String, String> result;
+    public List<String> getGroups(String departmentTag) {
+        List<String> result;
         try{
             result = sqlm.getGroups(departmentTag);
         } catch (SQLException e) {
@@ -115,6 +115,13 @@ public class SSUDataManager implements DataManager {
             return null;
         }
         return result;
+    }
+
+    @Override
+    public boolean putTT(String departmentID, String groupName) {
+
+
+        return false;
     }
 
 

@@ -30,8 +30,8 @@ public interface SQLManager{
 
     List<String> getDepartmentTags() throws SQLException;
 
-    void putGroups(Map<String, String> groups, String department) throws SQLException;
+    void putGroups(List<String> groups, String department) throws SQLException;
 
-    Map<String, String> getGroups(String departmentTag) throws SQLException;
+    List<String> getGroups(String departmentTag) throws SQLException;
 
 }

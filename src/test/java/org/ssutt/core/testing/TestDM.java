@@ -28,6 +28,7 @@ import org.ssutt.core.dm.SSUDataManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -100,12 +101,9 @@ public class TestDM {
 
         Map<String, String> deps = dm.getDepartments();
         for (String d: new TreeSet<>(deps.keySet())) {
-            Map<String, String> result = dm.getGroups(deps.get(d));
+            List<String> result = dm.getGroups(deps.get(d));
             Assert.assertNotNull(result);
         }
-
-
-
     }
 
     private DataManager createInstance() throws SQLException, ClassNotFoundException {
@@ -119,6 +117,6 @@ public class TestDM {
     private Connection createConnection() throws SQLException, ClassNotFoundException {
         Class.forName("org.h2.Driver");
         return DriverManager.
-                getConnection("jdbc:h2:mem:test;INIT=RUNSCRIPT FROM './src/main/resources/initTT.sql'", "sa", "");
+                getConnection("jdbc:h2:file:localtest;INIT=RUNSCRIPT FROM './src/main/resources/initTT.sql'", "sa", "");
     }
 }

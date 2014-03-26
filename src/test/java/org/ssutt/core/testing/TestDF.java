@@ -26,6 +26,7 @@ import org.ssutt.core.fetch.DataFetcher;
 import org.ssutt.core.fetch.SSUDataFetcher;
 
 import java.util.Map;
+import java.util.TreeSet;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDF {
@@ -50,4 +51,19 @@ public class TestDF {
         Assert.assertNotNull("DataFetcher(SSU) getting departments - failed", res);
     }
 
+    @Test
+    public void cTestGettingGroups() {
+        if (df == null)
+            df = new SSUDataFetcher(globalScheduleURL, exclusions);
+
+        Map<String, String> res = df.getDepartments();
+
+        for (String d : new TreeSet<>(res.keySet()))
+            df.getGroups(d);
+
+        Map<String, String> excl = df.getNonNumericalGroups();
+
+        for (String s : new TreeSet<>(excl.keySet()))
+            System.out.println(s + " " + excl.get(s));
+    }
 }

@@ -48,7 +48,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <defaultGoal>package</defaultGoal>
         <finalName>tt-core-lib</finalName>
     </build>
     <dependencies>
