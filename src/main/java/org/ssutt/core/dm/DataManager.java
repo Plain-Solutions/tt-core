@@ -27,17 +27,17 @@ public interface DataManager {
 
     void deliverDataFetcherProvider();
 
-    boolean putDepartments();
+    void putDepartments();
 
-    boolean putGroups();
+    void putGroups();
 
-    boolean putTT(String departmentTag, String groupName);
+    void putTT(String departmentTag, String groupName);
     //switch too later
     //boolean putTT(String departmentTag, String groupID);
 
     Map<String, String> getDepartments();
 
-    List<String> getDepartmentTags();
+    List getDepartmentTags();
 
     List<String> getGroups(String departmentTag);
 

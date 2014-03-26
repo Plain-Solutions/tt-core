@@ -24,6 +24,8 @@ import org.ssutt.core.fetch.DataFetcher;
 import org.ssutt.core.fetch.SSUDataFetcher;
 import org.ssutt.core.sql.SQLManager;
 import org.ssutt.core.sql.SSUSQLManager;
+import org.ssutt.core.sql.ex.NoSuchDepartmentException;
+import org.ssutt.core.sql.ex.NoSuchGroupException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -60,16 +62,12 @@ public class SSUDataManager implements DataManager {
     }
 
     @Override
-    public boolean putDepartments() {
-        boolean state = false;
+    public void putDepartments() {
         try {
             sqlm.putDepartments(df.getDepartments());
-            state = true;
         } catch (SQLException e) {
             logger.fatal(e);
         }
-
-        return state;
     }
 
     @Override
@@ -97,16 +95,13 @@ public class SSUDataManager implements DataManager {
     }
 
     @Override
-    public boolean putGroups() {
-        boolean state = false;
+    public void putGroups() {
         try {
             for (String department : getDepartmentTags())
                 sqlm.putGroups(df.getGroups(department), department);
-            state = true;
-        } catch (SQLException e) {
+        } catch (SQLException | NoSuchDepartmentException e) {
             e.printStackTrace();
         }
-        return state;
     }
 
     @Override
@@ -117,12 +112,15 @@ public class SSUDataManager implements DataManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return Collections.EMPTY_LIST;
+        } catch (NoSuchDepartmentException e) {
+            e.printStackTrace();
+            return Collections.EMPTY_LIST;
         }
         return result;
     }
 
     @Override
-    public boolean putTT(String departmentTag, String groupName) {
+    public void putTT(String departmentTag, String groupName) {
         try {
             //first, we get timetable url
             if (sqlm.groupExists(departmentTag, groupName)) {
@@ -160,20 +158,18 @@ public class SSUDataManager implements DataManager {
                     }
                 }
                 System.out.println(url + " passed");
-            } else return false;
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            return false;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+        } catch (NoSuchGroupException e) {
+            e.printStackTrace();
+        } catch (NoSuchDepartmentException e) {
+            e.printStackTrace();
         }
-
-
-        return true;
     }
 
 }

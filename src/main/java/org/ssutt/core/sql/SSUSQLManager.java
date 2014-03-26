@@ -20,6 +20,8 @@ package org.ssutt.core.sql;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.ssutt.core.sql.ex.NoSuchDepartmentException;
+import org.ssutt.core.sql.ex.NoSuchGroupException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -108,7 +110,7 @@ public class SSUSQLManager implements SQLManager {
     }
 
     @Override
-    public void putGroups(List<String> groups, String departmentTag) throws SQLException {
+    public void putGroups(List<String> groups, String departmentTag) throws SQLException, NoSuchDepartmentException {
         if (departmentExists(departmentTag)) {
             Statement stmt = conn.createStatement();
             Collections.sort(groups);
@@ -117,11 +119,11 @@ public class SSUSQLManager implements SQLManager {
             }
 
             stmt.close();
-        } else throw new SQLException("no department found with such tag");
+        } else throw new NoSuchDepartmentException();
     }
 
     @Override
-    public List<String> getGroups(String departmentTag) throws SQLException {
+    public List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException {
         if (departmentExists(departmentTag)) {
             List<String> result = new ArrayList<>();
 
@@ -133,22 +135,24 @@ public class SSUSQLManager implements SQLManager {
             stmt.close();
             return result;
         }
-
-        return null;
+        else throw new NoSuchDepartmentException();
     }
 
     @Override
-    public int getGroupID(String departmentTag, String groupName) throws SQLException {
-        int id = 0;
+    public int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
+
         if (departmentExists(departmentTag)) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroupID(), departmentTag, groupName));
-
+            int id = 0;
             while (rs.next()) id = rs.getInt("id");
             stmt.close();
 
+            if (id==0) throw new NoSuchGroupException();
+
+            return id;
         }
-        return id;
+        else throw new NoSuchDepartmentException();
     }
 
     @Override

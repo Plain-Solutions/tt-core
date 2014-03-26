@@ -18,6 +18,9 @@
  */
 package org.ssutt.core.sql;
 
+import org.ssutt.core.sql.ex.NoSuchDepartmentException;
+import org.ssutt.core.sql.ex.NoSuchGroupException;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +30,7 @@ public interface SQLManager {
 
     void putDepartments(Map<String, String> departments) throws SQLException;
 
-    void putGroups(List<String> groups, String departmentTag) throws SQLException;
+    void putGroups(List<String> groups, String departmentTag) throws SQLException, NoSuchDepartmentException;
 
     int putDateTime(int weekID, int sequence, int dayID) throws SQLException;
 
@@ -40,9 +43,9 @@ public interface SQLManager {
 
     List<String> getDepartmentTags() throws SQLException;
 
-    List<String> getGroups(String departmentTag) throws SQLException;
+    List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
 
-    int getGroupID(String departmentTag, String groupName) throws SQLException;
+    int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
 
     boolean departmentExists(String departmentTag) throws SQLException;
