@@ -101,7 +101,7 @@ public class SSUDataFetcher implements DataFetcher {
 
                 result.add(link.ownText());
                 if (numExclusion(link.ownText()))
-                    nonNumericalGroups.put(link.ownText(),esc[esc.length - 1]);
+                    nonNumericalGroups.put(link.ownText(), esc[esc.length - 1]);
             }
 
         }
@@ -110,19 +110,38 @@ public class SSUDataFetcher implements DataFetcher {
 
     @Override
     public String[][] getTT(URL url) throws IOException {
-        String[][] table = new String[8][6];
+        //see comment later. we need table with empty cells, not empty table
+        String[][] table = createEmptyTable();
+
 
         Document doc = Jsoup.parse(url, 5000);
         Elements tr = doc.getElementsByTag("tr");
 
         for (int i = 1; i < 9; ++i) {
-            Elements data = tr.get(i).getElementsByTag("td");
+            Elements data = null;
+            try {
+                data = tr.get(i).getElementsByTag("td");
+            } catch (IndexOutOfBoundsException ex) {
+                //we have some fucking links in SSU structure that don't take us to timetable
+                //DEAL WITH it
+                return table; //should be empty or so
+            }
             for (int j = 0; j < data.size(); j++) {
                 table[i - 1][j] = data.get(j).text();
             }
         }
 
         return table;
+    }
+
+    private String[][] createEmptyTable() {
+        String[][] result = new String[8][6];
+
+        for (int i = 0; i < 8; ++i)
+            for (int j = 0; j < 6; ++j)
+                result[i][j] = "";
+
+        return result;
     }
 
     private boolean numExclusion(String test) {

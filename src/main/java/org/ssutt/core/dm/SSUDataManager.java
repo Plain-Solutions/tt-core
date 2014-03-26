@@ -130,6 +130,7 @@ public class SSUDataManager implements DataManager {
                                 df.getNonNumericalGroups().get(groupName) : groupName;
 
                 String url = String.format("%s/%s/%s/%s", globalScheduleURL, departmentTag, "do", groupAddress);
+                System.out.println(url);
                 //and its contents
                 String[][] table = df.getTT(new URL(url));
                 for (int i = 0; i < 8; i++) {
@@ -149,13 +150,17 @@ public class SSUDataManager implements DataManager {
 
                             //skip empty classes
                             if (r.getInfo().length() != 0) {
+                                int grpID = sqlm.getGroupID(departmentTag, groupName);
                                 int dtID = sqlm.putDateTime(r.getWeek_id(), r.getSequence(), r.getDay_id());
-                                int SubjID = sqlm.putSubject(r.getInfo());
+                                int subjID = sqlm.putSubject(r.getInfo());
+                                sqlm.putLessonRecord(grpID, dtID, subjID);
                             }
                         }
                     }
                 }
-            } else return false;
+                System.out.println(url+" passed");
+            }
+            else return false;
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return false;

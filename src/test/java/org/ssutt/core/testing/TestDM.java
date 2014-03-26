@@ -105,10 +105,10 @@ public class TestDM {
         Map<String, String> deps = dm.getDepartments();
         for (String d: new TreeSet<>(deps.keySet())) {
             List<String> result = dm.getGroups(deps.get(d));
-            Assert.assertNotNull(result);
+            for (String g: result)
+                dm.putTT(deps.get(d),g);
         }
 
-        dm.putTT("knt","151");
         //removeTestDB();
     }
 

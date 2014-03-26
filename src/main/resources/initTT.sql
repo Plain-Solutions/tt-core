@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS day(
 );
 CREATE TABLE IF NOT EXISTS subjects(
   id MEDIUMINT NOT NULL auto_increment,
-  info LONGVARCHAR(500),
+  info LONGVARCHAR(1200),
   PRIMARY KEY (id)
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS lessons_datetimes(
 );
 
 CREATE TABLE IF NOT EXISTS lesson_records(
-  group_id TINYINT NOT NULL auto_increment,
+  group_id MEDIUMINT NOT NULL auto_increment,
   datetime_id MEDIUMINT,
   subject_id MEDIUMINT,
   FOREIGN KEY (group_id) REFERENCES groups(id),

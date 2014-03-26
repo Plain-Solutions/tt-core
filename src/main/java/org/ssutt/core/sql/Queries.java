@@ -27,7 +27,6 @@ public interface Queries {
 
     String qGetDepartmentTagByID();
     String qGetDepartmentNameByID();
-
     String qGetDepartmentTagByName();
 
     String qDepartmentExists();
@@ -35,7 +34,7 @@ public interface Queries {
     String qAddGroups();
     String qGetGroups();
 
-    String qGroupExists();
+    String qGetGroupID();
 
     String qAddDateTime();
     String qGetDateTimeID();
@@ -44,4 +43,5 @@ public interface Queries {
     String qGetSubjectID();
 
     String qAddLessonRecord();
+    String qSubjectExists();
 }

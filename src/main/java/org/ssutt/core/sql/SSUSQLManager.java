@@ -117,8 +117,7 @@ public class SSUSQLManager implements SQLManager {
             }
 
             stmt.close();
-        }
-        else throw new SQLException("no department found with such tag");
+        } else throw new SQLException("no department found with such tag");
     }
 
     @Override
@@ -139,24 +138,38 @@ public class SSUSQLManager implements SQLManager {
     }
 
     @Override
+    public int getGroupID(String departmentTag, String groupName) throws SQLException {
+        int id = 0;
+        if (departmentExists(departmentTag)) {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroupID(), departmentTag, groupName));
+
+            while (rs.next()) id = rs.getInt("id");
+            stmt.close();
+
+        }
+        return id;
+    }
+
+    @Override
     public boolean groupExists(String departmentTag, String groupName) throws SQLException {
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qGroupExists(), departmentTag, groupName));
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroupID(), departmentTag, groupName));
         int id = 0;
         while (rs.next()) id = rs.getInt("id");
         stmt.close();
-        return (id != 0) ? true : false;
+        return (id != 0);
     }
 
     @Override
     public int putDateTime(int weekID, int sequence, int dayID) throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(String.format(qrs.qGetDateTimeID(), weekID, sequence, dayID));
-        int id =0;
+        int id = 0;
 
         while (rs.next()) id = rs.getInt("id");
 
-        if (id==0) {
+        if (id == 0) {
             stmt.executeUpdate(String.format(qrs.qAddDateTime(), weekID, sequence, dayID));
             stmt.close();
             id = getLastID("lessons_datetimes");
@@ -169,11 +182,11 @@ public class SSUSQLManager implements SQLManager {
     public int putSubject(String info) throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(String.format(qrs.qGetSubjectID(), info));
-        int id =0;
+        int id = 0;
 
         while (rs.next()) id = rs.getInt("id");
 
-        if (id==0) {
+        if (id == 0) {
             stmt.executeUpdate(String.format(qrs.qAddSubject(), info));
             stmt.close();
 
@@ -185,8 +198,26 @@ public class SSUSQLManager implements SQLManager {
     }
 
     @Override
-    public boolean putLessonRecord(int groupID, int dateTimeID, int subjectID) {
-        return false;
+    public void putLessonRecord(int groupID, int dateTimeID, int subjectID) throws SQLException {
+        Statement stmt = conn.createStatement();
+        if (!lessonExists(groupID, dateTimeID, subjectID))
+            stmt.executeUpdate(String.format(qrs.qAddLessonRecord(), groupID, dateTimeID, subjectID));
+
+        stmt.close();
     }
 
+    @Override
+    public boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qSubjectExists(), groupID, dateTimeID, subjectID));
+        int id = 0;
+
+        while (rs.next()) id = rs.getInt("group_id");
+
+        return id != 0;
+    }
+
+
 }
+
+

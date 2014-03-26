@@ -20,7 +20,8 @@ package org.ssutt.core.sql;
 
 public class H2Queries implements Queries {
 
-    public H2Queries() {}
+    public H2Queries() {
+    }
 
     @Override
     public String getLastID() {
@@ -75,7 +76,7 @@ public class H2Queries implements Queries {
     }
 
     @Override
-    public String qGroupExists() {
+    public String qGetGroupID() {
         return "SELECT gr.id FROM groups as gr, departments as dp " +
                 "WHERE gr.department_id = dp.id AND dp.tag = '%s' AND gr.name = '%s'";
     }
@@ -102,6 +103,14 @@ public class H2Queries implements Queries {
 
     @Override
     public String qAddLessonRecord() {
+        //some strange bug during deployment and maven packaging on IDEA
         return "INSERT INTO lesson_records(group_id, datetime_id,subject_id) VALUES(%d,%d,%d);";
     }
+
+    @Override
+    public String qSubjectExists() {
+        return "SELECT group_id FROM lesson_records WHERE group_id=%d AND datetime_id=%d AND subject_id=%d;";
+    }
+
+
 }
