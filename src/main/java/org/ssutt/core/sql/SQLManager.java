@@ -25,30 +25,29 @@ import java.util.Map;
 public interface SQLManager {
     int getLastID(String table) throws SQLException;
 
-    //=============DEPARTMENTS=============
     void putDepartments(Map<String, String> departments) throws SQLException;
 
-    Map<String, String> getDepartments() throws SQLException;
-
-    List<String> getDepartmentTags() throws SQLException;
-
-    boolean departmentExists(String departmentTag) throws SQLException;
-
-    //===============GROUPS=================
     void putGroups(List<String> groups, String departmentTag) throws SQLException;
 
-    List<String> getGroups(String departmentTag) throws SQLException;
-
-    int getGroupID(String departmentTag, String groupName) throws SQLException;
-
-    boolean groupExists(String departmentTag, String groupName) throws SQLException;
-
-    //=============TIMETABLES===============
     int putDateTime(int weekID, int sequence, int dayID) throws SQLException;
 
     int putSubject(String info) throws SQLException;
 
     void putLessonRecord(int groupID, int dateTimeID, int subjectID) throws SQLException;
+
+
+    Map<String, String> getDepartments() throws SQLException;
+
+    List<String> getDepartmentTags() throws SQLException;
+
+    List<String> getGroups(String departmentTag) throws SQLException;
+
+    int getGroupID(String departmentTag, String groupName) throws SQLException;
+
+
+    boolean departmentExists(String departmentTag) throws SQLException;
+
+    boolean groupExists(String departmentTag, String groupName) throws SQLException;
 
     boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException;
 

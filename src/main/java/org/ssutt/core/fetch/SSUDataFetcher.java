@@ -43,9 +43,8 @@ public class SSUDataFetcher implements DataFetcher {
         globalScheduleURL = url;
         nonNumericalGroups = new HashMap<>();
 
-        for (String s : exclusions) {
-            this.exclusions.add(s);
-        }
+        this.exclusions.addAll(Arrays.asList(exclusions));
+
         logger.info("SSU DataFetcher Initialized correctly.");
 
     }
@@ -56,7 +55,7 @@ public class SSUDataFetcher implements DataFetcher {
 
     @Override
     public Map<String, String> getDepartments() {
-        Map result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         Document doc = null;
 
         try {
@@ -118,7 +117,7 @@ public class SSUDataFetcher implements DataFetcher {
         Elements tr = doc.getElementsByTag("tr");
 
         for (int i = 1; i < 9; ++i) {
-            Elements data = null;
+            Elements data;
             try {
                 data = tr.get(i).getElementsByTag("td");
             } catch (IndexOutOfBoundsException ex) {

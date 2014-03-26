@@ -27,12 +27,12 @@ public class CellEntity {
     public CellEntity() {
     }
 
-    public void addRecord(int week_id, int sequence, int day_id, String info) {
+    public void addRecord(int weekID, int sequence, int dayID, String info) {
         Record r = new Record();
 
-        r.setWeek_id(week_id);
+        r.setWeekID(weekID);
         r.setSequence(sequence);
-        r.setDay_id(day_id);
+        r.setDayID(dayID);
         r.setInfo(info);
 
         cell.add(r);
@@ -41,5 +41,4 @@ public class CellEntity {
     public List<Record> getCell() {
         return cell;
     }
-
 }

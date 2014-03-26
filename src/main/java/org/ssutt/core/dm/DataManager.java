@@ -24,17 +24,23 @@ import java.util.Map;
 
 public interface DataManager {
     void deliverDBProvider(Connection conn);
+
     void deliverDataFetcherProvider();
 
     boolean putDepartments();
+
+    boolean putGroups();
+
+    boolean putTT(String departmentTag, String groupName);
+    //switch too later
+    //boolean putTT(String departmentTag, String groupID);
 
     Map<String, String> getDepartments();
 
     List<String> getDepartmentTags();
 
-    boolean putGroups();
-
     List<String> getGroups(String departmentTag);
 
-    boolean putTT(String departmentTag, String groupName);
+    //SomeTimeTableEntity getTT(String departmentTag, String groupID)
+
 }

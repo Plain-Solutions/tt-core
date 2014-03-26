@@ -104,7 +104,7 @@ public class SSUSQLManager implements SQLManager {
         while (rs.next()) id = rs.getInt("id");
 
         stmt.close();
-        return (id != 0) ? true : false;
+        return id != 0;
     }
 
     @Override

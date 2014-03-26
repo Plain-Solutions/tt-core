@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -78,7 +79,7 @@ public class SSUDataManager implements DataManager {
             result = sqlm.getDepartments();
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return Collections.emptyMap();
         }
         return result;
     }
@@ -90,7 +91,7 @@ public class SSUDataManager implements DataManager {
             result = sqlm.getDepartmentTags();
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return Collections.EMPTY_LIST;
         }
         return result;
     }
@@ -115,7 +116,7 @@ public class SSUDataManager implements DataManager {
             result = sqlm.getGroups(departmentTag);
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return Collections.EMPTY_LIST;
         }
         return result;
     }
@@ -151,16 +152,15 @@ public class SSUDataManager implements DataManager {
                             //skip empty classes
                             if (r.getInfo().length() != 0) {
                                 int grpID = sqlm.getGroupID(departmentTag, groupName);
-                                int dtID = sqlm.putDateTime(r.getWeek_id(), r.getSequence(), r.getDay_id());
+                                int dtID = sqlm.putDateTime(r.getWeekID(), r.getSequence(), r.getDayID());
                                 int subjID = sqlm.putSubject(r.getInfo());
                                 sqlm.putLessonRecord(grpID, dtID, subjID);
                             }
                         }
                     }
                 }
-                System.out.println(url+" passed");
-            }
-            else return false;
+                System.out.println(url + " passed");
+            } else return false;
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return false;

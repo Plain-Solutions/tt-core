@@ -19,9 +19,9 @@
 package org.ssutt.core.dm;
 
 public class Record {
-    private int week_id;
+    private int weekID;
     private int sequence;
-    private int day_id;
+    private int dayID;
 
     private String info;
 
@@ -29,12 +29,12 @@ public class Record {
 
     }
 
-    public int getWeek_id() {
-        return week_id;
+    public int getWeekID() {
+        return weekID;
     }
 
-    public void setWeek_id(int week_id) {
-        this.week_id = week_id;
+    public void setWeekID(int week_id) {
+        this.weekID = week_id;
     }
 
     public int getSequence() {
@@ -45,12 +45,12 @@ public class Record {
         this.sequence = order;
     }
 
-    public int getDay_id() {
-        return day_id;
+    public int getDayID() {
+        return dayID;
     }
 
-    public void setDay_id(int day_id) {
-        this.day_id = day_id;
+    public void setDayID(int day_id) {
+        this.dayID = day_id;
     }
 
     public String getInfo() {

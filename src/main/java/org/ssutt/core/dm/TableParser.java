@@ -31,49 +31,30 @@ public abstract class TableParser {
     public static CellEntity parseCell(String cell, int row, int column) {
         List<String> parsed = splitCell(cell);
 
-        CellEntity ce = new CellEntity();
-
         //do we need two records?
         if (parsed.contains("even")) {
-            int week_id = 1;
-            int sequence = row+1;
-            int day_id = column+1;
-            String info = parsed.get(0);
-
-            ce.addRecord(week_id, sequence, day_id, info);
-
-            return ce;
+            return createEntity(1, row + 1, column + 1, parsed.get(0));
         }
-        if (parsed.contains("odd"))  {
-            int week_id = 2;
-            int sequence = row+1;
-            int day_id = column+1;
-            String info = parsed.get(0);
-
-            ce.addRecord(week_id, sequence, day_id, info);
-            return ce;
+        if (parsed.contains("odd")) {
+            return createEntity(2, row + 1, column + 1, parsed.get(0));
         }
         if (parsed.contains("eq")) {
-            int week_id = 3;
-            int sequence = row+1;
-            int day_id = column+1;
-            String info = parsed.get(0);
-
-            ce.addRecord(week_id, sequence, day_id, info);
-            return ce;
+            return createEntity(3, row + 1, column + 1, parsed.get(0));
         }
 
-        int week_id = 1;
-        int order = row+1;
-        int day_id = column+1;
-        String info = parsed.get(0);
+        CellEntity ce = new CellEntity();
 
-        ce.addRecord(week_id, order, day_id, info);
+        /*
+            params of addRecord;
+            int week_id
+            int order
+            int day_id
+            String info
+        */
 
-        week_id = 2;
-        info = parsed.get(1);
+        ce.addRecord(1, row + 1, column + 1, parsed.get(0));
 
-        ce.addRecord(week_id, order, day_id, info);
+        ce.addRecord(2, row + 1, column + 1, parsed.get(1));
 
         return ce;
     }
@@ -81,7 +62,7 @@ public abstract class TableParser {
     private static List<String> splitCell(String cell) {
         List<String> result = new ArrayList<>();
 
-        if (((cell.indexOf(ev)) != -1) && (cell.indexOf(od) != -1)) {
+        if (((cell.indexOf(ev)) != -1) && (cell.contains(od))) {
             if (cell.indexOf(od) > cell.indexOf(ev)) {
                 result.add(cell.substring(0, cell.indexOf(od)).replace(ev, ""));
                 result.add(cell.substring(cell.indexOf(od), cell.length() - 1).replace(od, ""));
@@ -93,7 +74,7 @@ public abstract class TableParser {
             }
         }
 
-        if ((cell.indexOf(ev) != -1)) {
+        if ((cell.contains(ev))) {
             //has even marker, in the beggining of the cell and has no odd marker
             if ((cell.indexOf(ev) == 0) && (cell.indexOf(od)) == -1) {
                 result.add(cell.replace(ev, ""));
@@ -109,15 +90,15 @@ public abstract class TableParser {
         }
 
         //same for odd
-        if ((cell.indexOf(od) != -1)) {
+        if ((cell.contains(od))) {
             //has even marker, in the beggining of the cell and has no odd marker
-            if ((cell.indexOf(od) == 0) && (cell.indexOf(ev)) == -1) {
+            if ((cell.indexOf(od) == 0) && (cell.contains(ev))) {
                 result.add(cell.replace(od, ""));
                 result.add("odd");
                 return result;
             }
             //FAGGOT MODE: has only odd marker, although classes are even/odd  (found @ bf/211 as well)
-            if ((cell.indexOf(od) != 0) && (cell.indexOf(ev)) == -1) {
+            if ((cell.indexOf(od) != 0) && (cell.contains(ev))) {
                 result.add(cell.substring(cell.indexOf(od), cell.length() - 1).replace(od, ""));
                 result.add(cell.substring(0, cell.indexOf(od)));
                 return result;
@@ -130,5 +111,9 @@ public abstract class TableParser {
         return result;
     }
 
-
+    private static CellEntity createEntity(int weekID, int sequence, int dayID, String info) {
+        CellEntity ce = new CellEntity();
+        ce.addRecord(weekID, sequence, dayID, info);
+        return ce;
+    }
 }

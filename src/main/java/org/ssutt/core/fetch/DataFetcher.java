@@ -26,11 +26,13 @@ import java.util.Map;
 public interface DataFetcher {
     String[] getExclusions();
 
+    Map<String, String> getNonNumericalGroups();
+
     Map<String, String> getDepartments();
 
     List<String> getGroups(String department);
 
     String[][] getTT(URL url) throws IOException;
 
-    Map<String,String> getNonNumericalGroups();
+
 }

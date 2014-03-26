@@ -22,26 +22,36 @@ public interface Queries {
     String getLastID();
 
     String qAddDepartment();
+
+    String qAddGroups();
+
+    String qAddDateTime();
+
+    String qAddSubject();
+
+    String qAddLessonRecord();
+
+
     String qGetDepartments();
+
     String qGetDepartmentTags();
 
     String qGetDepartmentTagByID();
+
     String qGetDepartmentNameByID();
+
     String qGetDepartmentTagByName();
 
-    String qDepartmentExists();
 
-    String qAddGroups();
     String qGetGroups();
 
     String qGetGroupID();
 
-    String qAddDateTime();
     String qGetDateTimeID();
 
-    String qAddSubject();
     String qGetSubjectID();
 
-    String qAddLessonRecord();
+    String qDepartmentExists();
+
     String qSubjectExists();
 }
