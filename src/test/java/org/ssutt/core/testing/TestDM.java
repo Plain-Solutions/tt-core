@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.ssutt.core.dm.DataManager;
 import org.ssutt.core.dm.SSUDataManager;
+import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -96,7 +97,7 @@ public class TestDM {
     }
 
     @Test
-    public void dTestGroups() {
+    public void dTestGroupsAndTTs() {
         DataManager dm = null;
         try {
             dm = createInstance();
@@ -114,11 +115,14 @@ public class TestDM {
             for (String d: dm.getDepartmentTags())
                 for (String g: dm.getGroups(d))
                     dm.putTT(d, dm.getGroupID(d, g));
+            dm.getTT(dm.getGroupID("knt","151"));
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (NoSuchDepartmentException e) {
             e.printStackTrace();
         } catch (NoSuchGroupException e) {
+            e.printStackTrace();
+        } catch (EmptyTableException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

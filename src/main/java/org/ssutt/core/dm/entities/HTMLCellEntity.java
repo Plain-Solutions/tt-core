@@ -21,14 +21,14 @@ package org.ssutt.core.dm.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CellEntity {
-    private List<Record> cell = new ArrayList<>();
+public class HTMLCellEntity {
+    private List<HTMLRecord> cell = new ArrayList<>();
 
-    public CellEntity() {
+    public HTMLCellEntity() {
     }
 
     public void addRecord(int weekID, int sequence, int dayID, String info) {
-        Record r = new Record();
+        HTMLRecord r = new HTMLRecord();
 
         r.setWeekID(weekID);
         r.setSequence(sequence);
@@ -38,7 +38,7 @@ public class CellEntity {
         cell.add(r);
     }
 
-    public List<Record> getCell() {
+    public List<HTMLRecord> getCell() {
         return cell;
     }
 }

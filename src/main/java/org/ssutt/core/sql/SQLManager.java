@@ -18,6 +18,7 @@
  */
 package org.ssutt.core.sql;
 
+import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -51,9 +52,13 @@ public interface SQLManager {
     String getGroupName(String departmentTag, int groupID) throws SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
 
+    List<String[]> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
+
     boolean departmentExists(String departmentTag) throws SQLException;
 
-    boolean groupExists(String departmentTag, String groupName) throws SQLException;
+    boolean groupExistsInDepartment(String departmentTag, String groupName) throws SQLException;
+
+    boolean groupExistsAsID(int groupID) throws SQLException;
 
     boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException;
 

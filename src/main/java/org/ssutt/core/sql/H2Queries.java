@@ -64,6 +64,11 @@ public class H2Queries implements Queries {
     }
 
     @Override
+    public String qGroupIDExists() {
+        return "SELECT gr.id FROM groups as gr WHERE id=%d";
+    }
+
+    @Override
     public String qAddGroups() {
         return "INSERT INTO GROUPS(department_id, name) VALUES" +
                 "((SELECT id FROM DEPARTMENTS WHERE tag='%s'),'%s'); ";
@@ -105,6 +110,18 @@ public class H2Queries implements Queries {
     @Override
     public String qGetSubjectID() {
         return "SELECT id FROM subjects WHERE info='%s';";
+    }
+
+    @Override
+    public String qGetTT() {
+        return "SELECT ws.state, d.name, ldt.sequence, s.info " +
+                "FROM week_states as ws " +
+                "JOIN lessons_datetimes as ldt on ldt.week_id=ws.id " +
+                "JOIN days as d on d.id=ldt.day_id " +
+                "JOIN lessons_records as lr on lr.datetime_id = ldt.id " +
+                "JOIN subjects as s on s.id = lr.subject_id " +
+                "JOIN groups as g on g.id = lr.group_id AND g.id=%d " +
+                "ORDER BY d.id ASC, ldt.sequence ASC ";
     }
 
     @Override

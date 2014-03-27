@@ -18,6 +18,7 @@
  */
 package org.ssutt.core.sql;
 
+import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -166,9 +167,40 @@ public class SSUSQLManager implements SQLManager {
     }
 
     @Override
-    public boolean groupExists(String departmentTag, String groupName) throws SQLException {
+    public List<String[]> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException {
+        if (groupExistsAsID(groupID)) {
+            List<String[]> table = new ArrayList<>();
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTT(),groupID));
+            while (rs.next()) {
+                String[] element = new String[4];
+                element[0]=rs.getString("state");
+                element[1]=rs.getString("name");
+                element[2]=String.valueOf(rs.getInt("sequence"));
+                element[3]=rs.getString("info");
+                table.add(element);
+            }
+
+            return table;
+        }
+        else throw new NoSuchGroupException();
+    }
+
+    @Override
+    public boolean groupExistsInDepartment(String departmentTag, String groupName) throws SQLException {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroupID(), departmentTag, groupName));
+        int id = 0;
+        while (rs.next()) id = rs.getInt("id");
+        stmt.close();
+        return (id != 0);
+    }
+
+    @Override
+    public boolean groupExistsAsID(int groupID) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGroupIDExists(), groupID));
         int id = 0;
         while (rs.next()) id = rs.getInt("id");
         stmt.close();

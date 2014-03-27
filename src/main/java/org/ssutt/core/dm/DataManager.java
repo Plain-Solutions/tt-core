@@ -18,6 +18,7 @@
  */
 package org.ssutt.core.dm;
 
+import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -51,6 +52,6 @@ public interface DataManager {
     int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException,
             NoSuchGroupException;
 
-    //SomeTimeTableEntity getTT(String departmentTag, String groupID)
+    void getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
 
 }

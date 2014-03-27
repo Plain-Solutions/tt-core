@@ -20,7 +20,7 @@
  */
 package org.ssutt.core.dm;
 
-import org.ssutt.core.dm.entities.CellEntity;
+import org.ssutt.core.dm.entities.HTMLCellEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public abstract class TableParser {
     private static final String ev = "чис.";
     private static final String od = "знам.";
 
-    public static CellEntity parseCell(String cell, int row, int column) {
+    public static HTMLCellEntity parseCell(String cell, int row, int column) {
         List<String> parsed = splitCell(cell);
 
         //do we need two records?
@@ -44,7 +44,7 @@ public abstract class TableParser {
             return createEntity(3, row + 1, column + 1, parsed.get(0));
         }
 
-        CellEntity ce = new CellEntity();
+        HTMLCellEntity ce = new HTMLCellEntity();
 
         /*
             params of addRecord;
@@ -113,8 +113,8 @@ public abstract class TableParser {
         return result;
     }
 
-    private static CellEntity createEntity(int weekID, int sequence, int dayID, String info) {
-        CellEntity ce = new CellEntity();
+    private static HTMLCellEntity createEntity(int weekID, int sequence, int dayID, String info) {
+        HTMLCellEntity ce = new HTMLCellEntity();
         ce.addRecord(weekID, sequence, dayID, info);
         return ce;
     }

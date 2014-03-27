@@ -53,7 +53,11 @@ public interface Queries {
 
     String qGetSubjectID();
 
+    String qGetTT();
+
     String qDepartmentExists();
+
+    String qGroupIDExists();
 
     String qSubjectExists();
 }

@@ -18,12 +18,13 @@
  */
 package org.ssutt.core.dm;
 
-import org.ssutt.core.dm.entities.CellEntity;
-import org.ssutt.core.dm.entities.Record;
+import org.ssutt.core.dm.entities.HTMLCellEntity;
+import org.ssutt.core.dm.entities.HTMLRecord;
 import org.ssutt.core.fetch.DataFetcher;
 import org.ssutt.core.fetch.SSUDataFetcher;
 import org.ssutt.core.sql.SQLManager;
 import org.ssutt.core.sql.SSUSQLManager;
+import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -91,12 +92,19 @@ public class SSUDataManager implements DataManager {
     }
 
     @Override
+    public void getTT(int groupID) throws EmptyTableException, SQLException, NoSuchGroupException {
+        List<List<String>> table = sqlm.getTT(groupID);
+
+        System.out.println();
+    }
+
+    @Override
     public void putTT(String departmentTag, int groupID) throws IOException, SQLException,
             NoSuchDepartmentException, NoSuchGroupException {
         //first, we get timetable url
         String groupName = sqlm.getGroupName(departmentTag, groupID);
 
-        if (sqlm.groupExists(departmentTag, groupName)) {
+        if (sqlm.groupExistsInDepartment(departmentTag, groupName)) {
             String groupAddress =
                     (df.getNonNumericalGroups().containsKey(groupName)) ?
                             df.getNonNumericalGroups().get(groupName) : groupName;
@@ -109,8 +117,8 @@ public class SSUDataManager implements DataManager {
                 for (int j = 0; j < 6; j++) {
                     //we swap row and column as in any timetable rows are classes and columns are days
                     //but in the df.getTT it's vice verse
-                    CellEntity ce = TableParser.parseCell(table[i][j], i, j);
-                    for (Record r : ce.getCell()) {
+                    HTMLCellEntity ce = TableParser.parseCell(table[i][j], i, j);
+                    for (HTMLRecord r : ce.getCell()) {
                            /*
                            We need to clarify one thing
                            DataManager works only RAW data, that's why we pass RAW data to

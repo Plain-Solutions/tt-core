@@ -18,46 +18,15 @@
  */
 package org.ssutt.core.dm.entities;
 
-public class Record {
-    private int weekID;
-    private int sequence;
-    private int dayID;
+public class SSUTableEntity implements TableEntity{
 
-    private String info;
-
-    public Record() {
+    @Override
+    public void putClass(String info) {
 
     }
 
-    public int getWeekID() {
-        return weekID;
-    }
+    @Override
+    public void putEmptyClass() {
 
-    public void setWeekID(int week_id) {
-        this.weekID = week_id;
-    }
-
-    public int getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(int order) {
-        this.sequence = order;
-    }
-
-    public int getDayID() {
-        return dayID;
-    }
-
-    public void setDayID(int day_id) {
-        this.dayID = day_id;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
     }
 }
