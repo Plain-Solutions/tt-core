@@ -35,14 +35,16 @@ public interface DataManager {
 
     void putDepartments() throws SQLException;
 
-    void putGroups() throws SQLException, NoSuchDepartmentException;
+    void putDepartmentGroups(String departmentTag) throws  SQLException, NoSuchDepartmentException;
+
+    void putAllGroups() throws SQLException, NoSuchDepartmentException;
 
     void putTT(String departmentTag, int groupID) throws IOException, SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
 
     Map<String, String> getDepartments() throws SQLException;
 
-    List getDepartmentTags() throws SQLException;
+    List<String> getDepartmentTags() throws SQLException;
 
     List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
 

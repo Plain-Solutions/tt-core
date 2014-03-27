@@ -60,6 +60,11 @@ public class SSUDataManager implements DataManager {
     }
 
     @Override
+    public void putDepartmentGroups(String departmentTag) throws SQLException, NoSuchDepartmentException {
+         sqlm.putGroups(df.getGroups(departmentTag), departmentTag);
+    }
+
+    @Override
     public Map<String, String> getDepartments() throws SQLException {
         return sqlm.getDepartments();
     }
@@ -70,9 +75,9 @@ public class SSUDataManager implements DataManager {
     }
 
     @Override
-    public void putGroups() throws SQLException, NoSuchDepartmentException {
-        for (String department : getDepartmentTags())
-            sqlm.putGroups(df.getGroups(department), department);
+    public void putAllGroups() throws SQLException, NoSuchDepartmentException {
+        for (String departmentTag : getDepartmentTags())
+            putDepartmentGroups(departmentTag);
     }
 
     @Override
