@@ -1,6 +1,5 @@
 TT Core Library
 =======
-----
 [![Build Status](https://travis-ci.org/Plain-Solutions/tt-core.svg?branch=dev)](https://travis-ci.org/Plain-Solutions/tt-core)
 
 General
