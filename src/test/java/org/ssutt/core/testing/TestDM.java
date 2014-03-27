@@ -148,6 +148,7 @@ public class TestDM {
 //                }
         }
         try {
+            System.out.println(dm.getGroupID("knt","151"));
             dm.putTT("knt", dm.getGroupID("knt","151"));
         } catch (IOException e) {
             e.printStackTrace();

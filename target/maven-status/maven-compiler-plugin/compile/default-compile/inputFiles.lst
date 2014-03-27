@@ -5,7 +5,9 @@
 /Users/fau/tt-core/src/main/java/org/ssutt/core/sql/H2Queries.java
 /Users/fau/tt-core/src/main/java/org/ssutt/core/dm/Record.java
 /Users/fau/tt-core/src/main/java/org/ssutt/core/dm/TableParser.java
+/Users/fau/tt-core/src/main/java/org/ssutt/core/sql/ex/NoSuchGroupException.java
 /Users/fau/tt-core/src/main/java/org/ssutt/core/sql/Queries.java
 /Users/fau/tt-core/src/main/java/org/ssutt/core/fetch/SSUDataFetcher.java
 /Users/fau/tt-core/src/main/java/org/ssutt/core/dm/DataManager.java
+/Users/fau/tt-core/src/main/java/org/ssutt/core/sql/ex/NoSuchDepartmentException.java
 /Users/fau/tt-core/src/main/java/org/ssutt/core/sql/SSUSQLManager.java
