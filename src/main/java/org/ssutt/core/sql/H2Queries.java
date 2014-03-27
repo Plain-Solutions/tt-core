@@ -110,12 +110,12 @@ public class H2Queries implements Queries {
     @Override
     public String qAddLessonRecord() {
         //some strange bug during deployment and maven packaging on IDEA
-        return "INSERT INTO lesson_records(group_id, datetime_id,subject_id) VALUES(%d,%d,%d);";
+        return "INSERT INTO lessons_records(group_id, datetime_id,subject_id) VALUES(%d,%d,%d);";
     }
 
     @Override
     public String qSubjectExists() {
-        return "SELECT group_id FROM lesson_records WHERE group_id=%d AND datetime_id=%d AND subject_id=%d;";
+        return "SELECT group_id FROM lessons_records WHERE group_id=%d AND datetime_id=%d AND subject_id=%d;";
     }
 
 

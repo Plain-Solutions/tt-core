@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS week_states(
   state CHAR(4),
   PRIMARY KEY (id)
 );
-CREATE TABLE IF NOT EXISTS day(
+CREATE TABLE IF NOT EXISTS days(
   id TINYINT NOT NULL auto_increment,
   name CHAR(3),
   PRIMARY KEY (id)
@@ -34,11 +34,11 @@ CREATE TABLE IF NOT EXISTS lessons_datetimes(
   day_id TINYINT,
   PRIMARY KEY (id),
   FOREIGN KEY (week_id) REFERENCES week_states(id),
-  FOREIGN KEY (day_id) REFERENCES day(id),
+  FOREIGN KEY (day_id) REFERENCES days(id),
   CONSTRAINT dateinfo UNIQUE (week_id, sequence, day_id)
 );
 
-CREATE TABLE IF NOT EXISTS lesson_records(
+CREATE TABLE IF NOT EXISTS lessons_records(
   group_id MEDIUMINT NOT NULL auto_increment,
   datetime_id MEDIUMINT,
   subject_id MEDIUMINT,
@@ -75,33 +75,33 @@ INSERT INTO week_states (state)
   ) LIMIT 1;
 
 
-INSERT INTO day (name)
+INSERT INTO days (name)
   SELECT * FROM (SELECT 'mon') AS tmp
   WHERE NOT EXISTS (
-      SELECT name FROM day WHERE name = 'mon'
+      SELECT name FROM days WHERE name = 'mon'
   ) LIMIT 1;
-INSERT INTO day (name)
+INSERT INTO days (name)
   SELECT * FROM (SELECT 'tue') AS tmp
   WHERE NOT EXISTS (
-      SELECT name FROM day WHERE name = 'tue'
+      SELECT name FROM days WHERE name = 'tue'
   ) LIMIT 1;
-INSERT INTO day (name)
+INSERT INTO days (name)
   SELECT * FROM (SELECT 'wed') AS tmp
   WHERE NOT EXISTS (
-      SELECT name FROM day WHERE name = 'wed'
+      SELECT name FROM days WHERE name = 'wed'
   ) LIMIT 1;
-INSERT INTO day (name)
+INSERT INTO days (name)
   SELECT * FROM (SELECT 'thu') AS tmp
   WHERE NOT EXISTS (
-      SELECT name FROM day WHERE name = 'thu'
+      SELECT name FROM days WHERE name = 'thu'
   ) LIMIT 1;
-INSERT INTO day (name)
+INSERT INTO days (name)
   SELECT * FROM (SELECT 'fri') AS tmp
   WHERE NOT EXISTS (
-      SELECT name FROM day WHERE name = 'fri'
+      SELECT name FROM days WHERE name = 'fri'
   ) LIMIT 1;
-INSERT INTO day (name)
+INSERT INTO days (name)
   SELECT * FROM (SELECT 'sat') AS tmp
   WHERE NOT EXISTS (
-      SELECT name FROM day WHERE name = 'sat'
+      SELECT name FROM days WHERE name = 'sat'
   ) LIMIT 1;

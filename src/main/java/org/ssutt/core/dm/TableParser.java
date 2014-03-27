@@ -94,7 +94,7 @@ public abstract class TableParser {
         //same for odd
         if ((cell.contains(od))) {
             //has even marker, in the beggining of the entities and has no odd marker
-            if ((cell.indexOf(od) == 0) && (cell.contains(ev))) {
+            if ((cell.indexOf(od) == 0) && (!cell.contains(ev))) {
                 result.add(cell.replace(od, ""));
                 result.add("odd");
                 return result;

@@ -112,8 +112,7 @@ public class TestDM {
         try {
             String tag = "knt";
             dm.putGroups();
-            for (String name: dm.getGroups(tag))
-                    dm.putTT(tag, dm.getGroupID(tag, name));
+            dm.putTT(tag, dm.getGroupID(tag, "151"));
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (NoSuchDepartmentException e) {
