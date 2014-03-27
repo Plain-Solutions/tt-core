@@ -33,9 +33,7 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDM {
@@ -112,51 +110,17 @@ public class TestDM {
         }
 
         try {
+            String tag = "knt";
             dm.putGroups();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NoSuchDepartmentException e) {
-            e.printStackTrace();
-        }
-
-        Map<String, String> deps = null;
-        try {
-            deps = dm.getDepartments();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        for (String d: new TreeSet<>(deps.keySet())) {
-            List<String> result = null;
-            try {
-                result = dm.getGroups(deps.get(d));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (NoSuchDepartmentException e) {
-                e.printStackTrace();
-            }
-//            for (String g: result)
-//                try {
-//                    dm.putTT(deps.get(d),g);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                } catch (NoSuchDepartmentException e) {
-//                    e.printStackTrace();
-//                } catch (NoSuchGroupException e) {
-//                    e.printStackTrace();
-//                }
-        }
-        try {
-            System.out.println(dm.getGroupID("knt","151"));
-            dm.putTT("knt", dm.getGroupID("knt","151"));
-        } catch (IOException e) {
-            e.printStackTrace();
+            for (String name: dm.getGroups(tag))
+                    dm.putTT(tag, dm.getGroupID(tag, name));
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (NoSuchDepartmentException e) {
             e.printStackTrace();
         } catch (NoSuchGroupException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

@@ -22,7 +22,6 @@ import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -38,10 +37,8 @@ public interface DataManager {
 
     void putGroups() throws SQLException, NoSuchDepartmentException;
 
-    void putTT(String departmentTag, int groupID) throws MalformedURLException, IOException, SQLException,
+    void putTT(String departmentTag, int groupID) throws IOException, SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
-    //switch too later
-    //void putTT(String departmentTag, String groupID);
 
     Map<String, String> getDepartments() throws SQLException;
 

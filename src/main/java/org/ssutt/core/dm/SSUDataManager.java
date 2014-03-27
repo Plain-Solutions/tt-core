@@ -18,6 +18,8 @@
  */
 package org.ssutt.core.dm;
 
+import org.ssutt.core.dm.entities.CellEntity;
+import org.ssutt.core.dm.entities.Record;
 import org.ssutt.core.fetch.DataFetcher;
 import org.ssutt.core.fetch.SSUDataFetcher;
 import org.ssutt.core.sql.SQLManager;
@@ -26,7 +28,6 @@ import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -85,7 +86,7 @@ public class SSUDataManager implements DataManager {
     }
 
     @Override
-    public void putTT(String departmentTag, int groupID) throws MalformedURLException, IOException, SQLException,
+    public void putTT(String departmentTag, int groupID) throws IOException, SQLException,
             NoSuchDepartmentException, NoSuchGroupException {
         //first, we get timetable url
         String groupName = sqlm.getGroupName(departmentTag, groupID);

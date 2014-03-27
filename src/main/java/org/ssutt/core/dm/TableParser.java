@@ -20,6 +20,8 @@
  */
 package org.ssutt.core.dm;
 
+import org.ssutt.core.dm.entities.CellEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +77,7 @@ public abstract class TableParser {
         }
 
         if ((cell.contains(ev))) {
-            //has even marker, in the beggining of the cell and has no odd marker
+            //has even marker, in the beggining of the entities and has no odd marker
             if ((cell.indexOf(ev) == 0) && (cell.indexOf(od)) == -1) {
                 result.add(cell.replace(ev, ""));
                 result.add("even");
@@ -91,7 +93,7 @@ public abstract class TableParser {
 
         //same for odd
         if ((cell.contains(od))) {
-            //has even marker, in the beggining of the cell and has no odd marker
+            //has even marker, in the beggining of the entities and has no odd marker
             if ((cell.indexOf(od) == 0) && (cell.contains(ev))) {
                 result.add(cell.replace(od, ""));
                 result.add("odd");
