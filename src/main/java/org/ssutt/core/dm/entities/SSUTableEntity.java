@@ -18,15 +18,37 @@
  */
 package org.ssutt.core.dm.entities;
 
-public class SSUTableEntity implements TableEntity{
+public class SSUTableEntity implements TableEntity {
+    String[][] evenTable;
+    String[][] oddTable;
+
 
     @Override
-    public void putClass(String info) {
+    public void initializeTables(int maxClasses) {
+        evenTable = new String[6][maxClasses];
+        oddTable = new String[6][maxClasses];
 
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < maxClasses; j++)
+                evenTable[i][j] = oddTable[i][j] = "";
+        }
     }
 
     @Override
-    public void putEmptyClass() {
+    public void putEvenLesson(String info, int day, int sequence) {
+        evenTable[day - 1][sequence - 1] = info;
+    }
 
+    @Override
+    public void putOddLesson(String info, int day, int sequence) {
+        oddTable[day - 1][sequence - 1] = info;
+    }
+
+    public String[][] getEvenTable() {
+        return evenTable;
+    }
+
+    public String[][] getOddTable() {
+        return oddTable;
     }
 }

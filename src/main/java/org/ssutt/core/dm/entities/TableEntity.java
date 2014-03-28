@@ -19,8 +19,13 @@
 package org.ssutt.core.dm.entities;
 
 public interface TableEntity {
+    void initializeTables(int maxClasses);
 
-    void putClass(String info);
-    void putEmptyClass();
+    void putEvenLesson(String info, int day, int sequence);
 
+    void putOddLesson(String info, int day, int sequence);
+
+    String[][] getEvenTable();
+
+    String[][] getOddTable();
 }

@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.ssutt</groupId>
-    <artifactId>tt-core-lib</artifactId>
+    <artifactId>tt-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.31</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,7 +42,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>tt-core-lib</finalName>
+        <finalName>tt-core</finalName>
     </build>
     <dependencies>
         <dependency>

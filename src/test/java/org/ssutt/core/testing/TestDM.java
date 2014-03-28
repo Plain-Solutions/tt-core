@@ -20,6 +20,7 @@ package org.ssutt.core.testing;
 
 import junit.framework.Assert;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.ssutt.core.dm.DataManager;
@@ -39,6 +40,7 @@ import java.util.Map;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDM {
 
+    @Ignore
     @Test
     public void aObjectCreation(){
         DataManager dm = null;
@@ -51,6 +53,7 @@ public class TestDM {
         Assert.assertNotNull("DataManager(SSU) init - failed",dm);
     }
 
+    @Ignore
     @Test
     public void bTestProviders(){
         DataManager dm = null;
@@ -67,6 +70,7 @@ public class TestDM {
         }
     }
 
+    @Ignore
     @Test
     public void cTestDepartments(){
         DataManager dm = null;
@@ -96,6 +100,7 @@ public class TestDM {
         Assert.assertNotNull(result);
     }
 
+
     @Test
     public void dTestGroupsAndTTs() {
         DataManager dm = null;
@@ -111,11 +116,11 @@ public class TestDM {
         }
 
         try {
-            dm.putAllGroups();
-            for (String d: dm.getDepartmentTags())
-                for (String g: dm.getGroups(d))
-                    dm.putTT(d, dm.getGroupID(d, g));
-            dm.getTT(dm.getGroupID("knt","151"));
+//            dm.putAllGroups();
+//            for (String d: dm.getDepartmentTags())
+//                for (String g: dm.getGroups(d))
+//                    dm.putTT(d, dm.getGroupID(d, g));
+            dm.getTT(dm.getGroupID("knt", "221"));
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (NoSuchDepartmentException e) {
@@ -124,8 +129,8 @@ public class TestDM {
             e.printStackTrace();
         } catch (EmptyTableException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+       // } catch (IOException e) {
+         //   e.printStackTrace();
         }
 
         //removeTestDB();

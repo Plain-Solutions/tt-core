@@ -20,6 +20,8 @@ package org.ssutt.core.dm;
 
 import org.ssutt.core.dm.entities.HTMLCellEntity;
 import org.ssutt.core.dm.entities.HTMLRecord;
+import org.ssutt.core.dm.entities.TableEntity;
+import org.ssutt.core.dm.entities.TableEntityFactory;
 import org.ssutt.core.fetch.DataFetcher;
 import org.ssutt.core.fetch.SSUDataFetcher;
 import org.ssutt.core.sql.SQLManager;
@@ -87,15 +89,20 @@ public class SSUDataManager implements DataManager {
     }
 
     @Override
-    public int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
+    public int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException,
+            NoSuchGroupException {
         return sqlm.getGroupID(departmentTag, groupName);
     }
 
     @Override
-    public void getTT(int groupID) throws EmptyTableException, SQLException, NoSuchGroupException {
-        List<List<String>> table = sqlm.getTT(groupID);
+    public TableEntity getTT(int groupID) throws EmptyTableException, SQLException, NoSuchGroupException {
+        List<String[]> table = sqlm.getTT(groupID);
 
-        System.out.println();
+        TableEntityFactory tf = new TableEntityFactory();
+        tf.supplyOriginalTable(table);
+
+        return tf.produceTableEntity();
+
     }
 
     @Override
