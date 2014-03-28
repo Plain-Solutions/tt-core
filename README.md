@@ -9,7 +9,7 @@ SSU TimeTables is a startup by Plain Solutions, group of several students, which
 What is TT Core?
 ================
 The structure of the whole TT project briefly can be described in this chart:
-ADD CHART
+![ttcore](http://i.imgur.com/254Pko2.jpg)
 
 We use our own core library to communicate between [our university schedule page](http://www.sgu.ru/schedule), database and [TT Platform module](https://github.com/plain-solutions/tt-platform).
 
