@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="3139957456">
+    <data-source source="LOCAL" name="H2 - Testing" uuid="4f7c8f2a-3a14-47bf-b2f6-be4faa35a872">
+      <driver-ref>h2.embedded</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.h2.Driver</jdbc-driver>
+      <jdbc-url>jdbc:h2:file:/Library/Tomcat/bin/timetables.h2.db</jdbc-url>
+      <user-name>sa</user-name>
+      <schema-pattern>TIMETABLES.H2.DB.PUBLIC</schema-pattern>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+
