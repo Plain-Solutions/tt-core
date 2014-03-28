@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TableEntityFactory {
-    List<String[]> table = Collections.emptyList();
+    private List<String[]> table = Collections.emptyList();
 
     public TableEntityFactory() {
     }
