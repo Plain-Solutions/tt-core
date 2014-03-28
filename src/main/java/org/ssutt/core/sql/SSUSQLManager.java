@@ -30,30 +30,30 @@ import java.util.*;
 
 
 /**
- * Manages data in h2 database and
- * executes queries
+ * SSUSQLManager is an implementation of TTSQLManager, configured for usage
+ * in SSU with H2DB (defined in the constructor)
+ *
+ * @author Vlad Slepukhin
+ * @since 1.0
  */
-public class SSUSQLManager implements SQLManager {
+public class SSUSQLManager implements TTSQLManager {
     private static Connection conn;
     private static Queries qrs;
 
+    /**
+     * Constructor that creates configured TTSQLManager instance for usage in TTDataManager (mainly)
+     * @param conn java.sql.Connection of database provider, that should be familiar to instance creator method
+     */
     public SSUSQLManager(Connection conn) {
         SSUSQLManager.conn = conn;
         qrs = new H2Queries();
     }
 
-
-    @Override
-    public int getLastID(String table) throws SQLException {
-        Statement stmt = conn.createStatement();
-
-        ResultSet rs = stmt.executeQuery(String.format(qrs.getLastID(), table));
-        int id = 0;
-        while (rs.next())
-            id = rs.getInt("MAX(id)");
-        return id;
-    }
-
+    /**
+     * Adds departments to the DB.
+     * @param departments Map of departments: name-tag. Better to be sorted by displayed name.  
+     * @throws SQLException
+     */
     @Override
     public void putDepartments(Map<String, String> departments) throws SQLException {
         Statement stmt = conn.createStatement();
@@ -65,6 +65,98 @@ public class SSUSQLManager implements SQLManager {
         stmt.close();
     }
 
+    /**
+     * Adds groups to the DB.
+     * @param groups list of group names or numbers, that will be displayed to the end-user.
+     * @param departmentTag tag of the department to associate with the group in <code>groups</code> table.
+     * @throws SQLException
+     * @throws NoSuchDepartmentException If no such department found. 
+     */
+    @Override
+    public void putGroups(List<String> groups, String departmentTag) throws SQLException, NoSuchDepartmentException {
+        if (departmentExists(departmentTag)) {
+            Statement stmt = conn.createStatement();
+            Collections.sort(groups);
+            for (String g : groups) {
+                stmt.executeUpdate(String.format(qrs.qAddGroups(), departmentTag, g));
+            }
+
+            stmt.close();
+        } else throw new NoSuchDepartmentException();
+    }
+
+    /**
+     * Adds datetime information about lesson to <code>lessons_datetimes</code> table, if no such datetime found.
+     * @param weekID identifier from week_states: even, odd or both.
+     * @param sequence the order of the lesson during the day.
+     * @param dayID day number in the week, Monday - 1.
+     * @return id of the datetime record.
+     * @throws SQLException
+     */
+    @Override
+    public int putDateTime(int weekID, int sequence, int dayID) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetDateTimeID(), weekID, sequence, dayID));
+        int id = 0;
+
+        while (rs.next()) id = rs.getInt("id");
+
+        if (id == 0) {
+            stmt.executeUpdate(String.format(qrs.qAddDateTime(), weekID, sequence, dayID));
+            stmt.close();
+            id = getLastID("lessons_datetimes");
+        }
+
+        return id;
+    }
+
+    /**
+     * Adds subject to respective table, if not exists.
+     * @param info information about subject (displayble, like room, teacher, lesson activity, name).
+     * @return id of the added/found subject.
+     * @throws SQLException
+     */
+    @Override
+    public int putSubject(String info) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetSubjectID(), info));
+        int id = 0;
+
+        while (rs.next()) id = rs.getInt("id");
+
+        if (id == 0) {
+            stmt.executeUpdate(String.format(qrs.qAddSubject(), info));
+            stmt.close();
+
+            id = getLastID("subjects");
+        }
+
+
+        return id;
+    }
+
+    /**
+     * Adds the lesson record - which group has this lesson, at what datetime, and, obviously, what is the lesson
+     * is on for this group at this particular datetime (week parity, day and time)
+     * @param groupID the id of the group (should be taken from <code>groups</code> table.
+     * @param dateTimeID the id of datetime (should be taken from <code>lessons_datetimes</code> table.
+     * @param subjectID the id of the subject ((should be taken from <code>subjects</code> table.
+     * @throws SQLException
+     */
+    @Override
+    public void putLessonRecord(int groupID, int dateTimeID, int subjectID) throws SQLException {
+        Statement stmt = conn.createStatement();
+        if (!lessonExists(groupID, dateTimeID, subjectID))
+            stmt.executeUpdate(String.format(qrs.qAddLessonRecord(), groupID, dateTimeID, subjectID));
+
+        stmt.close();
+    }
+
+    /**
+     * Gets Map (name-tag) of departments from DB.
+     * @return map in format name-tag
+     * @throws SQLException
+     */
     @Override
     public Map<String, String> getDepartments() throws SQLException {
         Map<String, String> result = new HashMap<>();
@@ -80,6 +172,11 @@ public class SSUSQLManager implements SQLManager {
         return result;
     }
 
+    /**
+     * Gets only tags from departemnt table from DB.
+     * @return List of Strings.
+     * @throws SQLException
+     */
     @Override
     public List<String> getDepartmentTags() throws SQLException {
         List<String> result = new ArrayList<>();
@@ -94,30 +191,13 @@ public class SSUSQLManager implements SQLManager {
         return result;
     }
 
-    @Override
-    public boolean departmentExists(String departmentTag) throws SQLException {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qDepartmentExists(), departmentTag));
-        int id = 0;
-        while (rs.next()) id = rs.getInt("id");
-
-        stmt.close();
-        return id != 0;
-    }
-
-    @Override
-    public void putGroups(List<String> groups, String departmentTag) throws SQLException, NoSuchDepartmentException {
-        if (departmentExists(departmentTag)) {
-            Statement stmt = conn.createStatement();
-            Collections.sort(groups);
-            for (String g : groups) {
-                stmt.executeUpdate(String.format(qrs.qAddGroups(), departmentTag, g));
-            }
-
-            stmt.close();
-        } else throw new NoSuchDepartmentException();
-    }
-
+    /**
+     * Get group names from groups table, based on department tag ('knt', 'ff' or so)
+     * @param departmentTag department tag.
+     * @return List of strings (some groups has non-numerical names @see org.ssutt.core.fetch.SSUDataFetcher)
+     * @throws SQLException
+     * @throws NoSuchDepartmentException
+     */
     @Override
     public List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException {
         if (departmentExists(departmentTag)) {
@@ -133,6 +213,16 @@ public class SSUSQLManager implements SQLManager {
         } else throw new NoSuchDepartmentException();
     }
 
+    /**
+     * Gets group global id from <code>groups</code> table. Actually, converts its name and its department tag to
+     * simple and fast number - id.
+     * @param departmentTag the tag of the department, where the groups exists.
+     * @param groupName its printed name.
+     * @return the global id.
+     * @throws SQLException
+     * @throws NoSuchDepartmentException
+     * @throws NoSuchGroupException
+     */
     @Override
     public int getGroupID(String departmentTag, String groupName) throws SQLException,
             NoSuchDepartmentException, NoSuchGroupException {
@@ -149,6 +239,16 @@ public class SSUSQLManager implements SQLManager {
         } else throw new NoSuchDepartmentException();
     }
 
+    /**
+     * Gets displayable name from groups department (represented by tag) and its ID from <code>groups</code> table.
+     * Actually, convertion, opposite to getGroupID.
+     * @param departmentTag the tag of the department, where the groups exists.
+     * @param groupID its global ID.
+     * @return the printed name.
+     * @throws SQLException
+     * @throws NoSuchDepartmentException
+     * @throws NoSuchGroupException
+     */
     @Override
     public String getGroupName(String departmentTag, int groupID) throws SQLException,
             NoSuchDepartmentException, NoSuchGroupException {
@@ -166,6 +266,15 @@ public class SSUSQLManager implements SQLManager {
         else throw new NoSuchDepartmentException();
     }
 
+    /**
+     * Gets the whole timetable of the group, based on its id from <code>groups</code> table.
+     * @param groupID the  global id of the group.
+     * @return List\<String[]\> formatted line by line in ascending day and ascending sequence (of classes) way. Each
+     * String[] contains week state, the name of the day, sequence (as String!) and information about subject.
+     * @throws SQLException
+     * @throws NoSuchGroupException
+     * @throws EmptyTableException
+     */
     @Override
     public List<String[]> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException {
         if (groupExistsAsID(groupID)) {
@@ -181,12 +290,37 @@ public class SSUSQLManager implements SQLManager {
                 element[3]=rs.getString("info");
                 table.add(element);
             }
+            if (table.size()==0) throw new EmptyTableException();
 
             return table;
         }
         else throw new NoSuchGroupException();
     }
 
+    /**
+     * Utility. Checks, if the department found by its tag.
+     * @param departmentTag the tag of the department: knt, ff, sf or so.
+     * @return <code>true</code> if found, else <code>false</code>.
+     * @throws SQLException
+     */
+    @Override
+    public boolean departmentExists(String departmentTag) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qDepartmentExists(), departmentTag));
+        int id = 0;
+        while (rs.next()) id = rs.getInt("id");
+
+        stmt.close();
+        return id != 0;
+    }
+
+    /**
+     * Utility. Checks, if the specified department has this group.
+     * @param departmentTag the tag of the department: knt, ff, sf or so.
+     * @param groupName the displayable name to check.
+     * @return <code>true</code> if found, else <code>false</code>.
+     * @throws SQLException
+     */
     @Override
     public boolean groupExistsInDepartment(String departmentTag, String groupName) throws SQLException {
         Statement stmt = conn.createStatement();
@@ -207,51 +341,14 @@ public class SSUSQLManager implements SQLManager {
         return (id != 0);
     }
 
-    @Override
-    public int putDateTime(int weekID, int sequence, int dayID) throws SQLException {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetDateTimeID(), weekID, sequence, dayID));
-        int id = 0;
-
-        while (rs.next()) id = rs.getInt("id");
-
-        if (id == 0) {
-            stmt.executeUpdate(String.format(qrs.qAddDateTime(), weekID, sequence, dayID));
-            stmt.close();
-            id = getLastID("lessons_datetimes");
-        }
-
-        return id;
-    }
-
-    @Override
-    public int putSubject(String info) throws SQLException {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetSubjectID(), info));
-        int id = 0;
-
-        while (rs.next()) id = rs.getInt("id");
-
-        if (id == 0) {
-            stmt.executeUpdate(String.format(qrs.qAddSubject(), info));
-            stmt.close();
-
-            id = getLastID("subjects");
-        }
-
-
-        return id;
-    }
-
-    @Override
-    public void putLessonRecord(int groupID, int dateTimeID, int subjectID) throws SQLException {
-        Statement stmt = conn.createStatement();
-        if (!lessonExists(groupID, dateTimeID, subjectID))
-            stmt.executeUpdate(String.format(qrs.qAddLessonRecord(), groupID, dateTimeID, subjectID));
-
-        stmt.close();
-    }
-
+    /**
+     * Utility. Checks if the group has this subject at the specified datetime.
+     * @param groupID the global id of the group.
+     * @param dateTimeID datetime id to check.
+     * @param subjectID the id of the subject (should be taken from <code>subjects</code> table).
+     * @return
+     * @throws SQLException
+     */
     @Override
     public boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException {
         Statement stmt = conn.createStatement();
@@ -263,7 +360,22 @@ public class SSUSQLManager implements SQLManager {
         return id != 0;
     }
 
+    /**
+     * Utility. Gets the last ID of the specified table.
+     * @param table checked table.
+     * @return last ID.
+     * @throws SQLException
+     */
+    @Override
+    public int getLastID(String table) throws SQLException {
+        Statement stmt = conn.createStatement();
 
+        ResultSet rs = stmt.executeQuery(String.format(qrs.getLastID(), table));
+        int id = 0;
+        while (rs.next())
+            id = rs.getInt("MAX(id)");
+        return id;
+    }
 }
 
 

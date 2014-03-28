@@ -7,7 +7,7 @@
     <groupId>org.ssutt</groupId>
     <artifactId>tt-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.31</version>
+    <version>1.0.32</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,10 +27,22 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <finalName>tt-core-1.0-SNAPSHOT</finalName>
+                    <finalName>tt-core-1.0.32</finalName>
                 </configuration>
             </plugin>
             <plugin>

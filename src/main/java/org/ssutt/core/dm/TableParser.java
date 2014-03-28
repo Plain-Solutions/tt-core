@@ -1,16 +1,11 @@
-/**
+/*
  * Copyright 2014 Plain Solutions
- *
- * Authors:
- * Vlad Slepukhin <slp.vld@gmail.com>
- * Sevak Avetisyan <sevak.avet@gmail.com>
- *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,11 +20,25 @@ import org.ssutt.core.dm.entities.HTMLCellEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TableParser - set of tools to re-format TTDataFetcher parsed HTML table and prepare to split into two tables.
+ *
+ * @author Vlad Slepukhin
+ * @since 1.0
+ */
 public abstract class TableParser {
 
     private static final String ev = "чис.";
     private static final String od = "знам.";
 
+    /**
+     * Parses a cell of HTML table to get even and odd activities separated.
+     *
+     * @param cell   the information in the cell.
+     * @param row    coordinate in HTML table (order of lesson)
+     * @param column coordinate in HTML table (day)
+     * @return HTMLCellEntity - split by parity cell.
+     */
     public static HTMLCellEntity parseCell(String cell, int row, int column) {
         List<String> parsed = splitCell(cell);
 
@@ -40,7 +49,7 @@ public abstract class TableParser {
         if (parsed.contains("odd")) {
             return createEntity(2, row + 1, column + 1, parsed.get(0));
         }
-        if (parsed.contains("eq")) {
+        if (parsed.contains("both")) {
             return createEntity(3, row + 1, column + 1, parsed.get(0));
         }
 
@@ -61,6 +70,12 @@ public abstract class TableParser {
         return ce;
     }
 
+    /**
+     * Analyzes cell and finds out which parity does it have: only even, only odd or both.
+     *
+     * @param cell the cell from HTML-parsed table.
+     * @return
+     */
     private static List<String> splitCell(String cell) {
         List<String> result = new ArrayList<>();
 
@@ -77,7 +92,7 @@ public abstract class TableParser {
         }
 
         if ((cell.contains(ev))) {
-            //has even marker, in the beggining of the entities and has no odd marker
+            //has even marker, in the beginning of the entities and has no odd marker
             if ((cell.indexOf(ev) == 0) && (cell.indexOf(od)) == -1) {
                 result.add(cell.replace(ev, ""));
                 result.add("even");
@@ -93,7 +108,7 @@ public abstract class TableParser {
 
         //same for odd
         if ((cell.contains(od))) {
-            //has even marker, in the beggining of the entities and has no odd marker
+            //has even marker, in the beginning of the entities and has no odd marker
             if ((cell.indexOf(od) == 0) && (!cell.contains(ev))) {
                 result.add(cell.replace(od, ""));
                 result.add("odd");
@@ -109,10 +124,19 @@ public abstract class TableParser {
 
         //has no markers, both weeks
         result.add(cell);
-        result.add("eq");
+        result.add("both");
         return result;
     }
 
+    /**
+     * Entity factory.
+     *
+     * @param weekID   parity of the week: even, odd, both.
+     * @param sequence the order of the lessons by the day.
+     * @param dayID    weekday numerical representation.
+     * @param info     parsed parity-free information about subject.
+     * @return parsed temporary table to push to the database.
+     */
     private static HTMLCellEntity createEntity(int weekID, int sequence, int dayID, String info) {
         HTMLCellEntity ce = new HTMLCellEntity();
         ce.addRecord(weekID, sequence, dayID, info);

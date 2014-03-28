@@ -22,7 +22,7 @@ import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.ssutt.core.fetch.DataFetcher;
+import org.ssutt.core.fetch.TTDataFetcher;
 import org.ssutt.core.fetch.SSUDataFetcher;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class TestDF {
     private String[] exclusions = {"kgl", "cre", "el"};
     private String globalScheduleURL = "http://www.sgu.ru/schedule";
 
-    private DataFetcher df;
+    private TTDataFetcher df;
 
     @Test
     public void aTestObjectCreation() {

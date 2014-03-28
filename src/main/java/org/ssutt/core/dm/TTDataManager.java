@@ -1,14 +1,11 @@
-/**
+/*
  * Copyright 2014 Plain Solutions
- *
- * Authors:
- *  Vlad Slepukhin <slp.vld@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,15 +26,21 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public interface DataManager {
-    void deliverDBProvider(Connection conn);
-
-    void deliverDataFetcherProvider();
-
+/**
+ * TTDataManager is the main external interface of TT Core Library. Actually, it represents a connector
+ * between all the internal modules and external interface.
+ * <p/>
+ * It should be connected to TT Platform to deliver information to end-user, but some modules (TTDataFetcher)
+ * work independently from this connection.
+ *
+ * @author Vlad Slepukhin
+ * @since 1.0
+ */
+public interface TTDataManager {
 
     void putDepartments() throws SQLException;
 
-    void putDepartmentGroups(String departmentTag) throws  SQLException, NoSuchDepartmentException;
+    void putDepartmentGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
 
     void putAllGroups() throws SQLException, NoSuchDepartmentException;
 
@@ -54,5 +57,10 @@ public interface DataManager {
             NoSuchGroupException;
 
     TableEntity getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
+
+
+    void deliverDBProvider(Connection conn);
+
+    void deliverDataFetcherProvider();
 
 }

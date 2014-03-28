@@ -20,12 +20,10 @@ package org.ssutt.core.testing;
 
 import junit.framework.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.ssutt.core.dm.DataManager;
 import org.ssutt.core.dm.SSUDataManager;
-import org.ssutt.core.sql.ex.EmptyTableException;
+import org.ssutt.core.dm.TTDataManager;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -40,10 +38,9 @@ import java.util.Map;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDM {
 
-    @Ignore
     @Test
     public void aObjectCreation(){
-        DataManager dm = null;
+        TTDataManager dm = null;
         try {
             dm = createInstance();
 
@@ -53,10 +50,9 @@ public class TestDM {
         Assert.assertNotNull("DataManager(SSU) init - failed",dm);
     }
 
-    @Ignore
     @Test
     public void bTestProviders(){
-        DataManager dm = null;
+        TTDataManager dm = null;
 
         try {
             dm = createInstance();
@@ -70,10 +66,9 @@ public class TestDM {
         }
     }
 
-    @Ignore
     @Test
     public void cTestDepartments(){
-        DataManager dm = null;
+        TTDataManager dm = null;
         try {
             dm = createInstance();
             assert(true);
@@ -103,7 +98,7 @@ public class TestDM {
 
     @Test
     public void dTestGroupsAndTTs() {
-        DataManager dm = null;
+        TTDataManager dm = null;
         try {
             dm = createInstance();
             assert (true);
@@ -116,28 +111,30 @@ public class TestDM {
         }
 
         try {
-//            dm.putAllGroups();
-//            for (String d: dm.getDepartmentTags())
-//                for (String g: dm.getGroups(d))
-//                    dm.putTT(d, dm.getGroupID(d, g));
-            dm.getTT(dm.getGroupID("knt", "221"));
+            dm.putAllGroups();
+            for (String d: dm.getDepartmentTags())
+                for (String g: dm.getGroups(d))
+                    dm.putTT(d, dm.getGroupID(d, g));
+            assert(true);
         } catch (SQLException e) {
             e.printStackTrace();
+            assert (false);
         } catch (NoSuchDepartmentException e) {
             e.printStackTrace();
+            assert (false);
         } catch (NoSuchGroupException e) {
             e.printStackTrace();
-        } catch (EmptyTableException e) {
+            assert (false);
+       } catch (IOException e) {
             e.printStackTrace();
-       // } catch (IOException e) {
-         //   e.printStackTrace();
+            assert (false);
         }
 
-        //removeTestDB();
+        removeTestDB();
     }
 
-    private DataManager createInstance() throws SQLException, ClassNotFoundException {
-        DataManager dm = new SSUDataManager();
+    private TTDataManager createInstance() throws SQLException, ClassNotFoundException {
+        TTDataManager dm = new SSUDataManager();
 
         dm.deliverDataFetcherProvider();
         dm.deliverDBProvider(createConnection());
