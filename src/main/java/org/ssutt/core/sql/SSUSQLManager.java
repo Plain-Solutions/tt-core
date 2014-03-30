@@ -166,7 +166,7 @@ public class SSUSQLManager implements TTSQLManager {
         ResultSet rs = stmt.executeQuery(qrs.qGetDepartments());
 
         while (rs.next()) {
-            Map<String, String> data = new HashMap<>();
+            Map<String, String> data = new LinkedHashMap<>();
             String tag = rs.getString("tag");
             data.put("name",rs.getString("name"));
             result.put(tag, data);
