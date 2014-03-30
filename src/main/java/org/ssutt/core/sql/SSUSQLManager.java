@@ -160,7 +160,7 @@ public class SSUSQLManager implements TTSQLManager {
      */
     @Override
     public Map<String, Map<String, String>> getDepartments() throws SQLException {
-        Map<String, Map<String, String>> result = new HashMap<>();
+        Map<String, Map<String, String>> result = new LinkedHashMap<>();
 
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(qrs.qGetDepartments());

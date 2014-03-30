@@ -96,7 +96,7 @@ public class H2Queries implements Queries {
      */
     @Override
     public String qGetDepartments() {
-        return "SELECT name,tag FROM departments;";
+        return "SELECT name,tag FROM departments ORDER BY NAME;";
     }
 
     /**
