@@ -20,14 +20,13 @@ import org.ssutt.core.dm.entities.HTMLRecord;
 import org.ssutt.core.dm.entities.TableEntity;
 import org.ssutt.core.dm.entities.TableEntityFactory;
 import org.ssutt.core.fetch.TTDataFetcher;
-import org.ssutt.core.sql.SSUSQLManager;
+import org.ssutt.core.sql.Queries;
 import org.ssutt.core.sql.TTSQLManager;
 import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -215,24 +214,28 @@ public class SSUDataManager implements TTDataManager {
     }
 
     /**
-     * Get the provider, TTSQLManager requires java.sql.Connection to be passed. The Database should be
+     * Get the provider, TTSQLManager requires an instance of TTSQLManager implementation (for instance, SSUSQLManager
+     * and Queries implementation for specified database (H2Queries, for example).
      * initialized before. For instance, in SSU TT project we do it with init script (here, in resources for testing)
      * and JNDI in Tomcat.
      *
-     * @param conn connection from database.
+     * @param sqlm TTSQLManager instance realization.
+     * @param qrs Queries instance realization to acquire queries definitions.
      */
     @Override
-    public void deliverDBProvider(Connection conn) {
-        sqlm = new SSUSQLManager(conn);
+    public void deliverDBProvider(TTSQLManager sqlm, Queries qrs) {
+        this.sqlm = sqlm;
+        sqlm.setQueries(qrs);
     }
 
     /**
      * Get the provider of data fetching utilities. We made this abstraction to be able to create a fork for other
      * universities.
-     * @param dfClass a created instance of TTDataFetcher implementation (for instance, SSUDataFetcher).
+     *
+     * @param df a created instance of TTDataFetcher implementation (for instance, SSUDataFetcher).
      */
     @Override
-    public void deliverDataFetcherProvider(TTDataFetcher dfClass) {
-        df = dfClass;
+    public void deliverDataFetcherProvider(TTDataFetcher df) {
+        this.df = df;
     }
 }

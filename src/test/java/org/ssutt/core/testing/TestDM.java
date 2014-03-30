@@ -25,6 +25,8 @@ import org.junit.runners.MethodSorters;
 import org.ssutt.core.dm.SSUDataManager;
 import org.ssutt.core.dm.TTDataManager;
 import org.ssutt.core.fetch.SSUDataFetcher;
+import org.ssutt.core.sql.H2Queries;
+import org.ssutt.core.sql.SSUSQLManager;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -138,7 +140,8 @@ public class TestDM {
         TTDataManager dm = new SSUDataManager();
 
         dm.deliverDataFetcherProvider(new SSUDataFetcher());
-        dm.deliverDBProvider(createConnection());
+
+        dm.deliverDBProvider(new SSUSQLManager(createConnection()), new H2Queries());
         return dm;
     }
 

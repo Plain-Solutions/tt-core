@@ -46,7 +46,6 @@ public class SSUSQLManager implements TTSQLManager {
      */
     public SSUSQLManager(Connection conn) {
         SSUSQLManager.conn = conn;
-        qrs = new H2Queries();
     }
 
     /**
@@ -375,6 +374,16 @@ public class SSUSQLManager implements TTSQLManager {
         while (rs.next())
             id = rs.getInt("MAX(id)");
         return id;
+    }
+
+    /**
+     * Initialization utility. Gets Queries instance to provide SQL queries definition for exact database
+     * (H2DB, MySQL or so).
+     * @param qrs initialized Queries implementation.
+     */
+    @Override
+    public void setQueries(Queries qrs) {
+        SSUSQLManager.qrs = qrs;
     }
 }
 

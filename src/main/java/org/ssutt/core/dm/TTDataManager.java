@@ -17,12 +17,13 @@ package org.ssutt.core.dm;
 
 import org.ssutt.core.dm.entities.TableEntity;
 import org.ssutt.core.fetch.TTDataFetcher;
+import org.ssutt.core.sql.Queries;
+import org.ssutt.core.sql.TTSQLManager;
 import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -60,8 +61,8 @@ public interface TTDataManager {
     TableEntity getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
 
 
-    void deliverDBProvider(Connection conn);
+    void deliverDBProvider(TTSQLManager sqlm, Queries qrs);
 
-    void deliverDataFetcherProvider(TTDataFetcher dfName);
+    void deliverDataFetcherProvider(TTDataFetcher df);
 
 }

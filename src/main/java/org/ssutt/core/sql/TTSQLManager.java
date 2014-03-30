@@ -65,4 +65,6 @@ public interface TTSQLManager {
 
     int getLastID(String table) throws SQLException;
 
+    void setQueries(Queries qrs);
+
 }
