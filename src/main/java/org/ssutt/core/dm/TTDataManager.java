@@ -16,6 +16,7 @@
 package org.ssutt.core.dm;
 
 import org.ssutt.core.dm.entities.TableEntity;
+import org.ssutt.core.fetch.TTDataFetcher;
 import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
@@ -61,6 +62,6 @@ public interface TTDataManager {
 
     void deliverDBProvider(Connection conn);
 
-    void deliverDataFetcherProvider();
+    void deliverDataFetcherProvider(TTDataFetcher dfName);
 
 }

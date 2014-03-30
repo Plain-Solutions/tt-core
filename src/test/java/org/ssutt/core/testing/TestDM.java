@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.ssutt.core.dm.SSUDataManager;
 import org.ssutt.core.dm.TTDataManager;
+import org.ssutt.core.fetch.SSUDataFetcher;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -130,13 +131,13 @@ public class TestDM {
             assert (false);
         }
 
-      //  removeTestDB();
+       removeTestDB();
     }
 
     private TTDataManager createInstance() throws SQLException, ClassNotFoundException {
         TTDataManager dm = new SSUDataManager();
 
-        dm.deliverDataFetcherProvider();
+        dm.deliverDataFetcherProvider(new SSUDataFetcher());
         dm.deliverDBProvider(createConnection());
         return dm;
     }

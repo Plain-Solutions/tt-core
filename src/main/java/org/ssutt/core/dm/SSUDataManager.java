@@ -20,15 +20,13 @@ import org.ssutt.core.dm.entities.HTMLRecord;
 import org.ssutt.core.dm.entities.TableEntity;
 import org.ssutt.core.dm.entities.TableEntityFactory;
 import org.ssutt.core.fetch.TTDataFetcher;
-import org.ssutt.core.fetch.SSUDataFetcher;
-import org.ssutt.core.sql.TTSQLManager;
 import org.ssutt.core.sql.SSUSQLManager;
+import org.ssutt.core.sql.TTSQLManager;
 import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -50,8 +48,6 @@ import java.util.Map;
  * @since 1.0
  */
 public class SSUDataManager implements TTDataManager {
-    private String[] exclusions = {"kgl", "cre", "el"};
-    private String globalScheduleURL = "http://www.sgu.ru/schedule";
 
     /**
      * Class instance of TTDataFetcher to be accessible around the DM independently.
@@ -197,19 +193,12 @@ public class SSUDataManager implements TTDataManager {
         //first, we get timetable url
         String groupName = sqlm.getGroupName(departmentTag, groupID);
 
+        //then we check that such group exists in the specified department
         if (sqlm.groupExistsInDepartment(departmentTag, groupName)) {
-            String groupAddress =
-                    (df.getNonNumericalGroups().containsKey(groupName)) ?
-                            df.getNonNumericalGroups().get(groupName) : groupName;
-
-            String url = String.format("%s/%s/%s/%s", globalScheduleURL, departmentTag, "do", groupAddress);
-            System.out.println(url);
             //and its contents
-            String[][] table = df.getTT(new URL(url));
+            String[][] table = df.getTT(df.formatURL(departmentTag, groupName));
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 6; j++) {
-                    //we swap row and column as in any timetable rows are classes and columns are days
-                    //but in the df.getTT it's vice verse
                     HTMLCellEntity ce = TableParser.parseCell(table[i][j], i, j);
                     for (HTMLRecord r : ce.getCell()) {
                         //skip empty classes
@@ -222,7 +211,6 @@ public class SSUDataManager implements TTDataManager {
                     }
                 }
             }
-            System.out.println(url + " passed");
         }
     }
 
@@ -241,9 +229,10 @@ public class SSUDataManager implements TTDataManager {
     /**
      * Get the provider of data fetching utilities. We made this abstraction to be able to create a fork for other
      * universities.
+     * @param dfClass a created instance of TTDataFetcher implementation (for instance, SSUDataFetcher).
      */
     @Override
-    public void deliverDataFetcherProvider() {
-        df = new SSUDataFetcher(globalScheduleURL, exclusions);
+    public void deliverDataFetcherProvider(TTDataFetcher dfClass) {
+        df = dfClass;
     }
 }

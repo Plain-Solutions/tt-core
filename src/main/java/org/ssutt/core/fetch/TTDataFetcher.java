@@ -16,6 +16,7 @@
 package org.ssutt.core.fetch;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -39,5 +40,6 @@ public interface TTDataFetcher {
 
     String[] getExclusions();
 
-    Map<String, String> getNonNumericalGroups();
+    URL formatURL(String departmentTag, String groupDisplayName) throws MalformedURLException;
+
 }
