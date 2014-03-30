@@ -87,7 +87,7 @@ public class SSUSQLManager implements TTSQLManager {
 
     /**
      * Adds datetime information about lesson to <code>lessons_datetimes</code> table, if no such datetime found.
-     * @param weekID identifier from week_states: even, odd or both.
+     * @param weekID identifier from week_states: even, odd or all.
      * @param sequence the order of the lesson during the day.
      * @param dayID day number in the week, Monday - 1.
      * @return id of the datetime record.
@@ -173,7 +173,7 @@ public class SSUSQLManager implements TTSQLManager {
     }
 
     /**
-     * Gets only tags from departemnt table from DB.
+     * Gets only tags from departement table from DB.
      * @return List of Strings.
      * @throws SQLException
      */
@@ -241,7 +241,7 @@ public class SSUSQLManager implements TTSQLManager {
 
     /**
      * Gets displayable name from groups department (represented by tag) and its ID from <code>groups</code> table.
-     * Actually, convertion, opposite to getGroupID.
+     * Actually, convert, opposite to getGroupID.
      * @param departmentTag the tag of the department, where the groups exists.
      * @param groupID its global ID.
      * @return the printed name.
@@ -346,7 +346,7 @@ public class SSUSQLManager implements TTSQLManager {
      * @param groupID the global id of the group.
      * @param dateTimeID datetime id to check.
      * @param subjectID the id of the subject (should be taken from <code>subjects</code> table).
-     * @return
+     * @return <code>true</code> if group has this class at this particular time, else <code>false</code>
      * @throws SQLException
      */
     @Override

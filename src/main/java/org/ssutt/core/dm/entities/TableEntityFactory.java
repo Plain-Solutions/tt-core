@@ -64,7 +64,7 @@ public class TableEntityFactory {
             case "odd":
                 id = 1;
                 break;
-            case "both":
+            case "all":
                 id = 2;
                 break;
 

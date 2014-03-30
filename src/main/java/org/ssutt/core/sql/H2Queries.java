@@ -136,7 +136,7 @@ public class H2Queries implements Queries {
     }
 
     /**
-     * Query description. Gets all the groups names (displayble) from <code>groups</code> table, based on the
+     * Query description. Gets all the groups names (displayable) from <code>groups</code> table, based on the
      * department tag.
      * @return <code>String</code> containing SQL query.
      */
@@ -148,7 +148,7 @@ public class H2Queries implements Queries {
 
     /**
      * Query description.Gets group id from <code>groups table</code>, based on its name and department tag.
-     * @return
+     * @return <code>String</code> containing SQL query.
      */
     @Override
     public String qGetGroupID() {

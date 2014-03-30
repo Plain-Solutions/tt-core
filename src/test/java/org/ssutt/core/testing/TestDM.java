@@ -130,7 +130,7 @@ public class TestDM {
             assert (false);
         }
 
-        removeTestDB();
+      //  removeTestDB();
     }
 
     private TTDataManager createInstance() throws SQLException, ClassNotFoundException {
