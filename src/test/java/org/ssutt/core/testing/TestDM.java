@@ -37,7 +37,7 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.List;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDM {
@@ -90,7 +90,7 @@ public class TestDM {
             e.printStackTrace();
         }
 
-        Map<String, String> result = null;
+        List<String[]> result = null;
         try {
             result = dm.getDepartments();
         } catch (SQLException e) {

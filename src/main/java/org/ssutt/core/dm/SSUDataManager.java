@@ -15,10 +15,10 @@
  */
 package org.ssutt.core.dm;
 
-import org.ssutt.core.fetch.entities.TableParser;
+import org.ssutt.core.fetch.TTDataFetcher;
 import org.ssutt.core.fetch.entities.HTMLCellEntity;
 import org.ssutt.core.fetch.entities.HTMLRecord;
-import org.ssutt.core.fetch.TTDataFetcher;
+import org.ssutt.core.fetch.entities.TableParser;
 import org.ssutt.core.sql.Queries;
 import org.ssutt.core.sql.TTSQLManager;
 import org.ssutt.core.sql.ex.EmptyTableException;
@@ -28,7 +28,6 @@ import org.ssutt.core.sql.ex.NoSuchGroupException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * SSUDataManager is a implementation of TTDataManager which works with SSU schedule page.
@@ -102,7 +101,7 @@ public class SSUDataManager implements TTDataManager {
      * @throws SQLException
      */
     @Override
-    public Map<String, String> getDepartments() throws SQLException {
+    public List<String[]> getDepartments() throws SQLException {
         return sqlm.getDepartments();
     }
 
