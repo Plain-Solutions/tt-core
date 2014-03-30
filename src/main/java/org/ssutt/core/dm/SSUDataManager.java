@@ -15,10 +15,9 @@
  */
 package org.ssutt.core.dm;
 
-import org.ssutt.core.dm.entities.HTMLCellEntity;
-import org.ssutt.core.dm.entities.HTMLRecord;
-import org.ssutt.core.dm.entities.TableEntity;
-import org.ssutt.core.dm.entities.TableEntityFactory;
+import org.ssutt.core.fetch.entities.TableParser;
+import org.ssutt.core.fetch.entities.HTMLCellEntity;
+import org.ssutt.core.fetch.entities.HTMLRecord;
 import org.ssutt.core.fetch.TTDataFetcher;
 import org.ssutt.core.sql.Queries;
 import org.ssutt.core.sql.TTSQLManager;
@@ -37,11 +36,10 @@ import java.util.Map;
  * <ul>
  * <li>SSUSQLManager - database connection interface</li>
  * <li>SSUDataFetcher - utilities to parse HTML on SSU schedules pages</li>
- * <li>SSUTableEntity and other entities - to represent the stored data in JSON-friendly format.</li>
  * </ul>
- * However, the main aim of TTDataManager is to manage data, especially raw data - text strings. We are trying
- * to keep this idea working and handle string and sometimes some structures, where it seems easy, correct and
- * what it important for TT Platform - JSON-friendly.
+ * However, the main aim of TTDataManager is to manage data, especially raw data - text strings and collections of them.
+ * We are trying to keep this idea working and handle string and sometimes some structures, where it seems easy,
+ * correct and what it important for TT Platform - JSON-friendly.
  *
  * @author Vlad Slepukhin, Nickolay Yurin
  * @since 1.0
@@ -150,23 +148,19 @@ public class SSUDataManager implements TTDataManager {
     }
 
     /**
-     * Get formatted timetable output from the database.
+     * Get nearly raw, but formatted timetable output from the database.
      *
      * @param groupID the global id of group to get the timetable.
-     * @return TableEntity - actually, two tables (even and odd) with simple data representation.
+     * @return <\ListString[]\> - the raw result of what stored in the database. Each list element is a lesson,
+     * String[4] contains parity, day, sequence during this day and the information. Since it we don't need
+     * TableEntity and DataManager operates really with raw data.
      * @throws EmptyTableException
      * @throws SQLException
      * @throws NoSuchGroupException
      */
     @Override
-    public TableEntity getTT(int groupID) throws EmptyTableException, SQLException, NoSuchGroupException {
-        List<String[]> table = sqlm.getTT(groupID);
-
-        TableEntityFactory tf = new TableEntityFactory();
-        tf.supplyOriginalTable(table);
-
-        return tf.produceTableEntity();
-
+    public List<String[]> getTT(int groupID) throws EmptyTableException, SQLException, NoSuchGroupException {
+        return sqlm.getTT(groupID);
     }
 
     /**

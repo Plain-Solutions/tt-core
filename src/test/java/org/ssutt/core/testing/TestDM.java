@@ -27,6 +27,7 @@ import org.ssutt.core.dm.TTDataManager;
 import org.ssutt.core.fetch.SSUDataFetcher;
 import org.ssutt.core.sql.H2Queries;
 import org.ssutt.core.sql.SSUSQLManager;
+import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -115,9 +116,8 @@ public class TestDM {
 
         try {
             dm.putAllGroups();
-            for (String d: dm.getDepartmentTags())
-                for (String g: dm.getGroups(d))
-                    dm.putTT(d, dm.getGroupID(d, g));
+            dm.putTT("knt", dm.getGroupID("knt", "151"));
+            dm.getTT(dm.getGroupID("knt", "151"));
             assert(true);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -131,9 +131,11 @@ public class TestDM {
        } catch (IOException e) {
             e.printStackTrace();
             assert (false);
+        } catch (EmptyTableException e) {
+            e.printStackTrace();
         }
 
-       removeTestDB();
+        removeTestDB();
     }
 
     private TTDataManager createInstance() throws SQLException, ClassNotFoundException {

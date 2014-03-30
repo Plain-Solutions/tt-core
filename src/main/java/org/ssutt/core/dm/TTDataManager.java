@@ -15,7 +15,6 @@
  */
 package org.ssutt.core.dm;
 
-import org.ssutt.core.dm.entities.TableEntity;
 import org.ssutt.core.fetch.TTDataFetcher;
 import org.ssutt.core.sql.Queries;
 import org.ssutt.core.sql.TTSQLManager;
@@ -58,7 +57,7 @@ public interface TTDataManager {
     int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException,
             NoSuchGroupException;
 
-    TableEntity getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
+    List<String[]> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
 
 
     void deliverDBProvider(TTSQLManager sqlm, Queries qrs);

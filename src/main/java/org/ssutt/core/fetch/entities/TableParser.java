@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ssutt.core.dm;
-
-import org.ssutt.core.dm.entities.HTMLCellEntity;
+package org.ssutt.core.fetch.entities;
 
 import java.util.ArrayList;
 import java.util.List;
