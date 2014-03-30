@@ -154,22 +154,23 @@ public class SSUSQLManager implements TTSQLManager {
     /**
      * Gets list of departments, sorted by their printed names with parameters. Since 1.1 we
      * use list of parameters to make department entries more extensionable.
-     * @return List</String/> with String[2] for now. First is tag (token) and the second is the printable name.
+     * @return Map<String, Map</String, String/>> where key is department tag and Map<String, String> all the data with
+     * provided names of positions.
      * @throws SQLException
      */
     @Override
-    public List<String[]> getDepartments() throws SQLException {
-        List<String[]> result = new ArrayList<>();
+    public Map<String, Map<String, String>> getDepartments() throws SQLException {
+        Map<String, Map<String, String>> result = new HashMap<>();
 
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(qrs.qGetDepartments());
 
         while (rs.next()) {
-            String record[] = new String[2];
-            record[0] = rs.getString("tag");
-            record[1] = rs.getString("name");
+            Map<String, String> data = new HashMap<>();
+            String tag = rs.getString("tag");
+            data.put("name",rs.getString("name"));
+            result.put(tag, data);
 
-            result.add(record);
         }
 
         stmt.close();

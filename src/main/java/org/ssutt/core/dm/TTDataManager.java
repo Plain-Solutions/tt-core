@@ -25,6 +25,7 @@ import org.ssutt.core.sql.ex.NoSuchGroupException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TTDataManager is the main external interface of TT Core Library. Actually, it represents a connector
@@ -47,7 +48,7 @@ public interface TTDataManager {
     void putTT(String departmentTag, int groupID) throws IOException, SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
 
-    List<String[]> getDepartments() throws SQLException;
+    Map<String, Map<String, String>> getDepartments() throws SQLException;
 
     List<String> getDepartmentTags() throws SQLException;
 

@@ -28,6 +28,7 @@ import org.ssutt.core.sql.ex.NoSuchGroupException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * SSUDataManager is a implementation of TTDataManager which works with SSU schedule page.
@@ -101,7 +102,7 @@ public class SSUDataManager implements TTDataManager {
      * @throws SQLException
      */
     @Override
-    public List<String[]> getDepartments() throws SQLException {
+    public Map<String, Map<String, String>> getDepartments() throws SQLException {
         return sqlm.getDepartments();
     }
 

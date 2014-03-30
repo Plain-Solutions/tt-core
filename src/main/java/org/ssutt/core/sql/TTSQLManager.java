@@ -40,7 +40,7 @@ public interface TTSQLManager {
     void putLessonRecord(int groupID, int dateTimeID, int subjectID) throws SQLException;
 
 
-    List<String[]> getDepartments() throws SQLException;
+    Map<String, Map<String, String>> getDepartments() throws SQLException;
 
     List<String> getDepartmentTags() throws SQLException;
 
