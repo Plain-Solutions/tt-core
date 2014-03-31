@@ -275,7 +275,13 @@ public class SSUSQLManager implements TTSQLManager {
      * Gets the whole timetable of the group, based on its id from <code>groups</code> table.
      * @param groupID the  global id of the group.
      * @return List\<String[]\> formatted line by line in ascending day and ascending sequence (of classes) way. Each
-     * String[] contains week state, the name of the day, sequence (as String!) and information about subject.
+     * String[] contains
+     * <ul>
+     *     <li>0 - weekday name (mon, tue, wed, ...)</li>
+     *     <li>1 - state of parity (even, odd or all)</li>
+     *     <li>2 - sequence - order during the day (1 to 8)</li>
+     *     <li>3 - info - all the information about record: type of activity, subject, teacher and room (may differ)</li>
+     * </ul>
      * @throws SQLException
      * @throws NoSuchGroupException
      * @throws EmptyTableException
@@ -289,8 +295,8 @@ public class SSUSQLManager implements TTSQLManager {
             ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTT(),groupID));
             while (rs.next()) {
                 String[] element = new String[4];
-                element[0]=rs.getString("state");
-                element[1]=rs.getString("name");
+                element[0]=rs.getString("name");
+                element[1]=rs.getString("state");
                 element[2]=String.valueOf(rs.getInt("sequence"));
                 element[3]=rs.getString("info");
                 table.add(element);
