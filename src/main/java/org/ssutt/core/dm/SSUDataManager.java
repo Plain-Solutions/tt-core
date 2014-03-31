@@ -77,6 +77,7 @@ public class SSUDataManager implements TTDataManager {
      * @param departmentTag the tag (token) of the department.
      * @throws SQLException
      * @throws NoSuchDepartmentException
+     * @since 1.0
      */
     @Override
     public void putDepartmentGroups(String departmentTag) throws SQLException, NoSuchDepartmentException {
@@ -88,6 +89,7 @@ public class SSUDataManager implements TTDataManager {
      *
      * @throws SQLException
      * @throws NoSuchDepartmentException
+     * @since 1.0
      */
     @Override
     public void putAllGroups() throws SQLException, NoSuchDepartmentException {
@@ -100,6 +102,7 @@ public class SSUDataManager implements TTDataManager {
      *
      * @return Map of departments represented by name-tag.
      * @throws SQLException
+     * @since 1.1
      */
     @Override
     public Map<String, Map<String, String>> getDepartments() throws SQLException {
@@ -111,6 +114,7 @@ public class SSUDataManager implements TTDataManager {
      *
      * @return list of tags.
      * @throws SQLException
+     * @since 1.0
      */
     @Override
     public List<String> getDepartmentTags() throws SQLException {
@@ -124,6 +128,7 @@ public class SSUDataManager implements TTDataManager {
      * @return list of Strings(!) - names.
      * @throws SQLException
      * @throws NoSuchDepartmentException
+     * @since 1.0
      */
     @Override
     public List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException {
@@ -140,6 +145,7 @@ public class SSUDataManager implements TTDataManager {
      * @throws SQLException
      * @throws NoSuchDepartmentException
      * @throws NoSuchGroupException
+     * @since 1.0
      */
     @Override
     public int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException,
@@ -157,6 +163,7 @@ public class SSUDataManager implements TTDataManager {
      * @throws EmptyTableException
      * @throws SQLException
      * @throws NoSuchGroupException
+     * @since 1.1
      */
     @Override
     public List<String[]> getTT(int groupID) throws EmptyTableException, SQLException, NoSuchGroupException {
@@ -179,6 +186,7 @@ public class SSUDataManager implements TTDataManager {
      * @throws SQLException
      * @throws NoSuchDepartmentException
      * @throws NoSuchGroupException
+     * @since 1.0
      */
     @Override
     public void putTT(String departmentTag, int groupID) throws IOException, SQLException,
@@ -215,6 +223,7 @@ public class SSUDataManager implements TTDataManager {
      *
      * @param sqlm TTSQLManager instance realization.
      * @param qrs Queries instance realization to acquire queries definitions.
+     * @since 1.1
      */
     @Override
     public void deliverDBProvider(TTSQLManager sqlm, Queries qrs) {
@@ -227,6 +236,7 @@ public class SSUDataManager implements TTDataManager {
      * universities.
      *
      * @param df a created instance of TTDataFetcher implementation (for instance, SSUDataFetcher).
+     * @since 1.1
      */
     @Override
     public void deliverDataFetcherProvider(TTDataFetcher df) {

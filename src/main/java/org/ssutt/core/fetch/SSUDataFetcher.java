@@ -64,6 +64,7 @@ public class SSUDataFetcher implements TTDataFetcher {
      * of the url in the page.
      *
      * @return Map of name-tag for departments
+     * @since 1.0
      */
     @Override
     public Map<String, String> getDepartments() {
@@ -96,6 +97,7 @@ public class SSUDataFetcher implements TTDataFetcher {
      *
      * @param department token (tag) of the department, which we get in getDepartments()
      * @return list of names.
+     * @since 1.0
      */
     @Override
     public List<String> getGroups(String department) {
@@ -131,6 +133,7 @@ public class SSUDataFetcher implements TTDataFetcher {
      * @param url the resulting (by getting groups and departments, checking non-numerical thing) url.
      * @return String[][] statical representation (statical array 8*6) of HTML code.
      * @throws IOException
+     * @since 1.0
      */
     @Override
     public String[][] getTT(URL url) throws IOException {
@@ -165,6 +168,7 @@ public class SSUDataFetcher implements TTDataFetcher {
      * @param groupDisplayName the displayed name. Usually the same as the token in the URL, but some groups needed
      *                         to be converted.
      * @return ready to parse URL.
+     * @since 1.1
      */
     @Override
     public URL formatURL(String departmentTag, String groupDisplayName) throws MalformedURLException {
@@ -182,6 +186,7 @@ public class SSUDataFetcher implements TTDataFetcher {
      * Accessor. Needed for testing purposes.
      *
      * @return filled exclusion list.
+     * @since 1.0
      */
     public String[] getExclusions() {
         return exclusions.toArray(new String[exclusions.size()]);
@@ -191,6 +196,7 @@ public class SSUDataFetcher implements TTDataFetcher {
      * Create an empty temporary table, if we find needed tags on the page.
      *
      * @return empty table with size 8*6.
+     * @since 1.0
      */
     private String[][] createEmptyTable() {
         String[][] result = new String[8][6];
@@ -207,6 +213,7 @@ public class SSUDataFetcher implements TTDataFetcher {
      *
      * @param test name to test
      * @return <code>true</code> if is an exclusion, else <code>false</code>
+     * @since 1.0
      */
     private boolean numExclusion(String test) {
         String regex = "[0-9]+";
