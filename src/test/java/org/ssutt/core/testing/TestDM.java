@@ -22,12 +22,13 @@ import junit.framework.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.ssutt.core.dm.AbstractDataManager;
 import org.ssutt.core.dm.SSUDataManager;
-import org.ssutt.core.dm.TTDataManager;
+import org.ssutt.core.dm.TTData;
+import org.ssutt.core.dm.convert.json.JSONConverter;
 import org.ssutt.core.fetch.SSUDataFetcher;
 import org.ssutt.core.sql.H2Queries;
 import org.ssutt.core.sql.SSUSQLManager;
-import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
@@ -37,29 +38,25 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Map;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDM {
 
     @Test
-    public void aObjectCreation(){
-        TTDataManager dm = null;
-        try {
-            dm = createInstance();
+    public void aObjectCreation() throws SQLException, ClassNotFoundException {
+        AbstractDataManager dm = null;
+        dm = new SSUDataManager();
 
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
         Assert.assertNotNull("DataManager(SSU) init - failed",dm);
     }
 
     @Test
     public void bTestProviders(){
-        TTDataManager dm = null;
+        AbstractDataManager dm = null;
 
         try {
-            dm = createInstance();
+            dm = new SSUDataManager(new SSUSQLManager(createConnection()), new H2Queries(), new SSUDataFetcher(),
+                    new JSONConverter());
             assert(true);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -72,9 +69,10 @@ public class TestDM {
 
     @Test
     public void cTestDepartments(){
-        TTDataManager dm = null;
+        AbstractDataManager dm = null;
         try {
-            dm = createInstance();
+            dm = new SSUDataManager(new SSUSQLManager(createConnection()), new H2Queries(), new SSUDataFetcher()
+                    , new JSONConverter());
             assert(true);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -90,21 +88,20 @@ public class TestDM {
             e.printStackTrace();
         }
 
-        Map<String, Map<String, String>> result = null;
-        try {
-            result = dm.getDepartments();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        Assert.assertNotNull(result);
+        TTData result = dm.getDepartments();
+
+        System.out.println(result.getMessage());
+
+        Assert.assertEquals(200, result.getHttpCode());
     }
 
 
     @Test
-    public void dTestGroupsAndTTs() {
-        TTDataManager dm = null;
+    public void dTestGroups() throws NoSuchDepartmentException, SQLException, IOException, NoSuchGroupException {
+        AbstractDataManager dm = null;
         try {
-            dm = createInstance();
+            dm = new SSUDataManager(new SSUSQLManager(createConnection()), new H2Queries(), new SSUDataFetcher(),
+                    new JSONConverter());
             assert (true);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -114,37 +111,29 @@ public class TestDM {
             assert (false);
         }
 
+        dm.putAllGroups();
+        System.out.println(dm.getGroups("knt").getMessage());
+        dm.putTT("knt", Integer.parseInt(dm.getGroupID("knt", "151").getMessage()));
+
+    }
+
+    @Test
+    public void eTestTTs() {
+        AbstractDataManager dm = null;
         try {
-            dm.putAllGroups();
-            dm.putTT("knt", dm.getGroupID("knt", "151"));
-            dm.getTT(dm.getGroupID("knt", "151"));
-            assert(true);
+            dm = new SSUDataManager(new SSUSQLManager(createConnection()), new H2Queries(), new SSUDataFetcher(),
+                    new JSONConverter());
+            assert (true);
         } catch (SQLException e) {
             e.printStackTrace();
             assert (false);
-        } catch (NoSuchDepartmentException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
             assert (false);
-        } catch (NoSuchGroupException e) {
-            e.printStackTrace();
-            assert (false);
-       } catch (IOException e) {
-            e.printStackTrace();
-            assert (false);
-        } catch (EmptyTableException e) {
-            e.printStackTrace();
         }
+        System.out.println(dm.getTT(Integer.parseInt(dm.getGroupID("knt","151").getMessage())).getMessage());
 
         removeTestDB();
-    }
-
-    private TTDataManager createInstance() throws SQLException, ClassNotFoundException {
-        TTDataManager dm = new SSUDataManager();
-
-        dm.deliverDataFetcherProvider(new SSUDataFetcher());
-
-        dm.deliverDBProvider(new SSUSQLManager(createConnection()), new H2Queries());
-        return dm;
     }
 
     private Connection createConnection() throws SQLException, ClassNotFoundException {

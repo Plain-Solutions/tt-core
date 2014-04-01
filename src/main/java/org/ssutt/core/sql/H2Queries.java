@@ -16,7 +16,7 @@
 package org.ssutt.core.sql;
 
 /**
- * H2Queries is an implementation of Queries interface to help TTSQLManager to communicate with H2 database
+ * H2Queries is an implementation of AbstractQueries interface to help AbstractSQLManager to communicate with H2 database
  * <p>
  * All the query definitions in this class are created specially for H2. Compatibility with other database providers
  * is not guaranteed.
@@ -24,7 +24,7 @@ package org.ssutt.core.sql;
  * @author Vlad Slepukhin
  * @since 1.0
  */
-public class H2Queries implements Queries {
+public class H2Queries implements AbstractQueries {
 
     public H2Queries() {
     }

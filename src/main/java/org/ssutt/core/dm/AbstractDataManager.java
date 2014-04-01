@@ -15,29 +15,26 @@
  */
 package org.ssutt.core.dm;
 
-import org.ssutt.core.fetch.TTDataFetcher;
-import org.ssutt.core.sql.Queries;
-import org.ssutt.core.sql.TTSQLManager;
-import org.ssutt.core.sql.ex.EmptyTableException;
+import org.ssutt.core.fetch.AbstractDataFetcher;
+import org.ssutt.core.sql.AbstractQueries;
+import org.ssutt.core.sql.AbstractSQLManager;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 
 /**
- * TTDataManager is the main external interface of TT Core Library. Actually, it represents a connector
+ * AbstractDataManager is the main external interface of TT Core Library. Actually, it represents a connector
  * between all the internal modules and external interface.
  * <p/>
- * It should be connected to TT Platform to deliver information to end-user, but some modules (TTDataFetcher)
+ * It should be connected to TT Platform to deliver information to end-user, but some modules (AbstractDataFetcher)
  * work independently from this connection.
  *
  * @author Vlad Slepukhin
  * @since 1.0
  */
-public interface TTDataManager {
+public interface AbstractDataManager {
 
     void putDepartments() throws SQLException;
 
@@ -48,20 +45,20 @@ public interface TTDataManager {
     void putTT(String departmentTag, int groupID) throws IOException, SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
 
-    Map<String, Map<String, String>> getDepartments() throws SQLException;
+    TTData getDepartments();
 
-    List<String> getDepartmentTags() throws SQLException;
+    TTData getDepartmentTags();
 
-    List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
+    TTData getGroups(String departmentTag);
 
-    int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException,
-            NoSuchGroupException;
+    TTData getGroupID(String departmentTag, String groupName);
 
-    List<String[]> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
+    TTData getTT(int groupID);
 
 
-    void deliverDBProvider(TTSQLManager sqlm, Queries qrs);
+    void deliverDBProvider(AbstractSQLManager sqlm, AbstractQueries qrs);
 
-    void deliverDataFetcherProvider(TTDataFetcher df);
+    void deliverDataFetcherProvider(AbstractDataFetcher df);
 
+    void deliverDataConverterProvider(AbstractDataConverter dconv);
 }

@@ -27,13 +27,13 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * SSUDataFetcher is an implementation of {@link TTDataFetcher} with restrictions and markup parsing for
+ * SSUDataFetcher is an implementation of {@link AbstractDataFetcher} with restrictions and markup parsing for
  * <a href=sgu.ru/schedule>SSU Timetables Website</a>.
  *
  * @author Sevak Avetisyan,Vlad Slepukhin
  * @since 1.0
  */
-public class SSUDataFetcher implements TTDataFetcher {
+public class SSUDataFetcher implements AbstractDataFetcher {
     /**
      * Exclusion lists to avoid, while parsing departments
      * We drop all the colleges (part of SSU) as they have different times of classes

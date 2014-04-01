@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ssutt.core.fetch.entities;
+package org.ssutt.core.dm;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class HTMLCellEntity {
-    private List<HTMLRecord> cell = new ArrayList<>();
+public interface AbstractDataConverter {
+    String convertDepartmentList(Map<String, Map<String, String>> departments);
 
-    public HTMLCellEntity() {
-    }
+    String convertGroupList(List<String> names);
 
-    public void addRecord(int weekID, int sequence, int dayID, String info) {
-        HTMLRecord r = new HTMLRecord();
+    String convertAbstractList(List<String> list);
 
-        r.setWeekID(weekID);
-        r.setSequence(sequence);
-        r.setDayID(dayID);
-        r.setInfo(info);
+    String convertGroupName(int id);
 
-        cell.add(r);
-    }
+    String convertTT(List<String[]> table);
 
-    public List<HTMLRecord> getCell() {
-        return cell;
-    }
+    String convertFailure(TTModule module, String msg);
+
+    String convertFailure(TTModule module, TTModule err);
+
 }

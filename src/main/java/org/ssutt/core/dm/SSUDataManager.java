@@ -15,12 +15,12 @@
  */
 package org.ssutt.core.dm;
 
-import org.ssutt.core.fetch.TTDataFetcher;
-import org.ssutt.core.fetch.entities.HTMLCellEntity;
-import org.ssutt.core.fetch.entities.HTMLRecord;
-import org.ssutt.core.fetch.entities.TableParser;
-import org.ssutt.core.sql.Queries;
-import org.ssutt.core.sql.TTSQLManager;
+import org.ssutt.core.fetch.AbstractDataFetcher;
+import org.ssutt.core.fetch.html.HTMLCellEntity;
+import org.ssutt.core.fetch.html.HTMLRecord;
+import org.ssutt.core.fetch.html.TableParser;
+import org.ssutt.core.sql.AbstractQueries;
+import org.ssutt.core.sql.AbstractSQLManager;
 import org.ssutt.core.sql.ex.EmptyTableException;
 import org.ssutt.core.sql.ex.NoSuchDepartmentException;
 import org.ssutt.core.sql.ex.NoSuchGroupException;
@@ -31,29 +31,34 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * SSUDataManager is a implementation of TTDataManager which works with SSU schedule page.
+ * SSUDataManager is a implementation of AbstractDataManager which works with SSU schedule page.
  * It connects:
  * <ul>
  * <li>SSUSQLManager - database connection interface</li>
  * <li>SSUDataFetcher - utilities to parse HTML on SSU schedules pages</li>
  * </ul>
- * However, the main aim of TTDataManager is to manage data, especially raw data - text strings and collections of them.
+ * However, the main aim of AbstractDataManager is to manage data, especially raw data - text strings and collections of them.
  * We are trying to keep this idea working and handle string and sometimes some structures, where it seems easy,
  * correct and what it important for TT Platform - JSON-friendly.
  *
  * @author Vlad Slepukhin, Nickolay Yurin
  * @since 1.0
  */
-public class SSUDataManager implements TTDataManager {
+public class SSUDataManager implements AbstractDataManager {
 
     /**
-     * Class instance of TTDataFetcher to be accessible around the DM independently.
+     * Class instance of AbstractDataFetcher to be accessible around the DM independently.
      */
-    private TTDataFetcher df;
+    private AbstractDataFetcher df;
     /**
-     * Class instance of SQLManager to be accessible around the DM independently.
+     * Class instance of AbstractSQLManager to be accessible around the DM independently.
      */
-    private TTSQLManager sqlm;
+    private AbstractSQLManager sqlm;
+
+    /**
+     * Class instance of AbstractDataConverter to be accessible around the DM independently.
+     */
+    private AbstractDataConverter dconv;
 
     /**
      * Constructor now is empty.
@@ -61,8 +66,14 @@ public class SSUDataManager implements TTDataManager {
     public SSUDataManager() {
     }
 
+    public SSUDataManager(AbstractSQLManager sqlm, AbstractQueries qrs, AbstractDataFetcher df, AbstractDataConverter dconv) {
+        deliverDBProvider(sqlm,qrs);
+        deliverDataFetcherProvider(df);
+        deliverDataConverterProvider(dconv);
+    }
+
     /**
-     * Connect TTDataFetcher to get departments map and store it into DB with TTSQLManager.
+     * Connect AbstractDataFetcher to get departments map and store it into DB with AbstractSQLManager.
      *
      * @throws SQLException
      */
@@ -72,7 +83,7 @@ public class SSUDataManager implements TTDataManager {
     }
 
     /**
-     * Connect TTDataFetcher to get list of groups on <b>department</b> and store it into DB with TTSQLManager.
+     * Connect AbstractDataFetcher to get list of groups on <b>department</b> and store it into DB with AbstractSQLManager.
      *
      * @param departmentTag the tag (token) of the department.
      * @throws SQLException
@@ -85,7 +96,7 @@ public class SSUDataManager implements TTDataManager {
     }
 
     /**
-     * Connect TTDataFetcher to get list of <b>ALL</b> groups and store it into DB.
+     * Connect AbstractDataFetcher to get list of <b>ALL</b> groups and store it into DB.
      *
      * @throws SQLException
      * @throws NoSuchDepartmentException
@@ -93,7 +104,7 @@ public class SSUDataManager implements TTDataManager {
      */
     @Override
     public void putAllGroups() throws SQLException, NoSuchDepartmentException {
-        for (String departmentTag : getDepartmentTags())
+        for (String departmentTag : sqlm.getDepartmentTags())
             putDepartmentGroups(departmentTag);
     }
 
@@ -101,24 +112,40 @@ public class SSUDataManager implements TTDataManager {
      * Get the map of stored departments.
      *
      * @return Map of departments represented by name-tag.
-     * @throws SQLException
-     * @since 1.1
+     * @since 1.2
      */
     @Override
-    public Map<String, Map<String, String>> getDepartments() throws SQLException {
-        return sqlm.getDepartments();
+    public TTData getDepartments() {
+        TTData result = new TTData();
+        try {
+            Map<String, Map<String, String>> raw = sqlm.getDepartments();
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertDepartmentList(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+        }
+        return result;
     }
 
     /**
      * Get list of the tags for each department. TT Platform&Servlets are tied around them.
      *
      * @return list of tags.
-     * @throws SQLException
      * @since 1.0
      */
     @Override
-    public List<String> getDepartmentTags() throws SQLException {
-        return sqlm.getDepartmentTags();
+    public TTData getDepartmentTags() {
+        TTData result = new TTData();
+        try {
+            List<String> raw = sqlm.getDepartmentTags();
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertAbstractList(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+        }
+        return result;
     }
 
     /**
@@ -126,13 +153,23 @@ public class SSUDataManager implements TTDataManager {
      *
      * @param departmentTag the tag of the department.
      * @return list of Strings(!) - names.
-     * @throws SQLException
-     * @throws NoSuchDepartmentException
      * @since 1.0
      */
     @Override
-    public List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException {
-        return sqlm.getGroups(departmentTag);
+    public TTData getGroups(String departmentTag) {
+        TTData result = new TTData();
+        try {
+            List<String> raw = sqlm.getGroups(departmentTag);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertGroupList(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.DEPARTMENTERR));
+        }
+        return result;
     }
 
     /**
@@ -142,15 +179,26 @@ public class SSUDataManager implements TTDataManager {
      * @param departmentTag the tag of the department.
      * @param groupName     the displayable name.
      * @return global ID.
-     * @throws SQLException
-     * @throws NoSuchDepartmentException
-     * @throws NoSuchGroupException
      * @since 1.0
      */
     @Override
-    public int getGroupID(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException,
-            NoSuchGroupException {
-        return sqlm.getGroupID(departmentTag, groupName);
+    public TTData getGroupID(String departmentTag, String groupName) {
+        TTData result = new TTData();
+        try {
+            int raw = sqlm.getGroupID(departmentTag, groupName);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertGroupName(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.DEPARTMENTERR));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.GROUPERR));
+        }
+        return result;
     }
 
     /**
@@ -160,22 +208,34 @@ public class SSUDataManager implements TTDataManager {
      * @return <\ListString[]\> - the raw result of what stored in the database. Each list element is a lesson,
      * String[4] contains parity, day, sequence during this day and the information. Since it we don't need
      * TableEntity and DataManager operates really with raw data.
-     * @throws EmptyTableException
-     * @throws SQLException
-     * @throws NoSuchGroupException
      * @since 1.1
      */
     @Override
-    public List<String[]> getTT(int groupID) throws EmptyTableException, SQLException, NoSuchGroupException {
-        return sqlm.getTT(groupID);
+    public TTData getTT(int groupID) {
+        TTData result = new TTData();
+        try {
+            List<String[]> raw = sqlm.getTT(groupID);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertTT(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.GROUPERR));
+        } catch (EmptyTableException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.TABLERR));
+        }
+        return result;
     }
 
     /**
-     * Adding temporary table from TTDataFetcher (parsed by HTML tags table) in a proper format to DB.
+     * Adding temporary table from AbstractDataFetcher (parsed by HTML tags table) in a proper format to DB.
      * <p/>
      * We need to clarify one thing
-     * TTDataManager works only RAW data, that's why we pass RAW data to
-     * TTSQLManager, though we can pass Record, but
+     * AbstractDataManager works only RAW data, that's why we pass RAW data to
+     * AbstractSQLManager, though we can pass Record, but
      * the level of abstraction on DB site should be as high as it can be
      * That's why you won't see JSON Parser in TTDataManger, it's a part of
      * tt-platform and its task: convert raw data for end-user
@@ -216,17 +276,17 @@ public class SSUDataManager implements TTDataManager {
     }
 
     /**
-     * Get the provider, TTSQLManager requires an instance of TTSQLManager implementation (for instance, SSUSQLManager
-     * and Queries implementation for specified database (H2Queries, for example).
+     * Get the provider, AbstractSQLManager requires an instance of AbstractSQLManager implementation (for instance, SSUSQLManager
+     * and AbstractQueries implementation for specified database (H2Queries, for example).
      * initialized before. For instance, in SSU TT project we do it with init script (here, in resources for testing)
      * and JNDI in Tomcat.
      *
-     * @param sqlm TTSQLManager instance realization.
-     * @param qrs Queries instance realization to acquire queries definitions.
+     * @param sqlm AbstractSQLManager instance realization.
+     * @param qrs  AbstractQueries instance realization to acquire queries definitions.
      * @since 1.1
      */
     @Override
-    public void deliverDBProvider(TTSQLManager sqlm, Queries qrs) {
+    public void deliverDBProvider(AbstractSQLManager sqlm, AbstractQueries qrs) {
         this.sqlm = sqlm;
         sqlm.setQueries(qrs);
     }
@@ -235,11 +295,21 @@ public class SSUDataManager implements TTDataManager {
      * Get the provider of data fetching utilities. We made this abstraction to be able to create a fork for other
      * universities.
      *
-     * @param df a created instance of TTDataFetcher implementation (for instance, SSUDataFetcher).
+     * @param df a created instance of AbstractDataFetcher implementation (for instance, SSUDataFetcher).
      * @since 1.1
      */
     @Override
-    public void deliverDataFetcherProvider(TTDataFetcher df) {
+    public void deliverDataFetcherProvider(AbstractDataFetcher df) {
         this.df = df;
+    }
+
+    /**
+     * Gets the provider of data representation module. It can be json or yaml or xml, but in TT Core only JSON implemented.
+     *
+     * @param dconv a created instance of AbstractDataConverter implementation (for instance, JSONConverter)
+     */
+    @Override
+    public void deliverDataConverterProvider(AbstractDataConverter dconv) {
+        this.dconv = dconv;
     }
 }

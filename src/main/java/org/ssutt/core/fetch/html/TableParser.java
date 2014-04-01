@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ssutt.core.fetch.entities;
+package org.ssutt.core.fetch.html;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TableParser - set of tools to re-format TTDataFetcher parsed HTML table and prepare to split into two tables.
+ * TableParser - set of tools to re-format AbstractDataFetcher parsed HTML table and prepare to split into two tables.
  *
  * @author Vlad Slepukhin
  * @since 1.0
@@ -90,7 +90,7 @@ public abstract class TableParser {
         }
 
         if ((cell.contains(ev))) {
-            //has even marker, in the beginning of the entities and has no odd marker
+            //has even marker, in the beginning of the entity and has no odd marker
             if ((cell.indexOf(ev) == 0) && (cell.indexOf(od)) == -1) {
                 result.add(cell.replace(ev, ""));
                 result.add("even");
@@ -106,7 +106,7 @@ public abstract class TableParser {
 
         //same for odd
         if ((cell.contains(od))) {
-            //has even marker, in the beginning of the entities and has no odd marker
+            //has even marker, in the beginning of the entity and has no odd marker
             if ((cell.indexOf(od) == 0) && (!cell.contains(ev))) {
                 result.add(cell.replace(od, ""));
                 result.add("odd");

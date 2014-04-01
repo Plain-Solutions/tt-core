@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ssutt.core.fetch.entities;
+package org.ssutt.core.fetch.html;
 
 public class HTMLRecord {
     private int weekID;

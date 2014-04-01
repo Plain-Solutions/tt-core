@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TTDataFetcher is an abstraction that should communicate with university web services and format temporary
+ * AbstractDataFetcher is an abstraction that should communicate with university web services and format temporary
  * timetable in the memory to deliver it to database with the help of DataManager.
  * <p>
  * Also, it handles exclusions for parsing, non-numerical groups (encoded by the name of the major, not number) and
@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Sevak Avetisyan,Vlad Slepukhin
  * @since 1.0
  */
-public interface TTDataFetcher {
+public interface AbstractDataFetcher {
     Map<String, String> getDepartments();
 
     List<String> getGroups(String department);

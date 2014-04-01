@@ -16,8 +16,8 @@
 package org.ssutt.core.sql;
 
 /**
- * Queries is the interface that contains method descriptions for
- * all the needed operations in TTSQLManager. Simply, queries definitions.
+ * AbstractQueries is the interface that contains method descriptions for
+ * all the needed operations in AbstractSQLManager. Simply, queries definitions.
  * <p>
  * We use abstraction to allow developers change the provider of the database
  * and use, for instance MySQL instead of H2 or has
@@ -26,7 +26,7 @@ package org.ssutt.core.sql;
  * @author Vlad Slepukhin
  * @since 1.0
  */
-public interface Queries {
+public interface AbstractQueries {
 
     String getLastID();
 

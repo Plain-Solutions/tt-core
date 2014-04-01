@@ -30,18 +30,18 @@ import java.util.*;
 
 
 /**
- * SSUSQLManager is an implementation of TTSQLManager, configured for usage
+ * SSUSQLManager is an implementation of AbstractSQLManager, configured for usage
  * in SSU with H2DB (defined in the constructor)
  *
  * @author Vlad Slepukhin
  * @since 1.0
  */
-public class SSUSQLManager implements TTSQLManager {
+public class SSUSQLManager implements AbstractSQLManager {
     private static Connection conn;
-    private static Queries qrs;
+    private static AbstractQueries qrs;
 
     /**
-     * Constructor that creates configured TTSQLManager instance for usage in TTDataManager (mainly)
+     * Constructor that creates configured AbstractSQLManager instance for usage in AbstractDataManager (mainly)
      * @param conn java.sql.Connection of database provider, that should be familiar to instance creator method.
      * @since 1.0
      */
@@ -412,13 +412,13 @@ public class SSUSQLManager implements TTSQLManager {
     }
 
     /**
-     * Initialization utility. Gets Queries instance to provide SQL queries definition for exact database
+     * Initialization utility. Gets AbstractQueries instance to provide SQL queries definition for exact database
      * (H2DB, MySQL or so).
-     * @param qrs initialized Queries implementation.
+     * @param qrs initialized AbstractQueries implementation.
      * @since 1.1
      */
     @Override
-    public void setQueries(Queries qrs) {
+    public void setQueries(AbstractQueries qrs) {
         SSUSQLManager.qrs = qrs;
     }
 }

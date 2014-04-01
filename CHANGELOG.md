@@ -1,7 +1,21 @@
 Changelog
 =========
+###TT Core 1.2.0
 
-###TT Core 1.1.0
+
+* Added `org.ssutt.dm.json` (now is `org.ssutt.dm.convert.json`) - transfered from TT Platform - package to transform data from TTDataManager into JSON Strings.
+* `JSONConverter` now is an instance of `AbstractDataConverter` - interface to provide various output to user-agent in TT Platform. With this abstraction we can get not only JSON-formatted output, but anything, that can be converted to `String` 	
+* Introduced `TTData` - an unified class to deliver data from DataManager to user-agent. It has only two fields  - `httpCode` and `message`, where we can store all the needed information about operation. Thus, we don't need to analyze the contents of message to get this or that error code in TT Platform servlets.
+* As new platform-wide classes like `TTData` were introduced, all the interfaces are now named with **Abstract**. In a breif way:
+	+ All the classes that don't have to be overloaded are now start with **TT**.
+	+ All the interfaces, which are overloaded for SSU now start with **Abstract**.
+* `org.ssutt.core.fetch.entities` renamed to `html` - as we now have `org.ssutt.dm.convert.json.entites` we don't want to mess up.
+* Made all `get` methods return `TTData` instance. 
+* Encapsulated all the throws in `TTDataManager`
+* Created `TTModule` enum to keep labels of errors and modules. 
+
+
+###TT Core 1.1.0 (squashed into 1.2.0)
 
 * Switched versioning system from `X.X.BUILD` to `X.X.PATCH` as it becomes to hard to watch after Travis CI build system and our own CI/CD Server.
 * Updated JavaDoc to provide more detailed and specific information.
