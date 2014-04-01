@@ -24,7 +24,30 @@ import org.ssutt.core.dm.convert.json.entity.DepartmentEntity;
 
 import java.lang.reflect.Type;
 
+/**
+ * DepartmentSerializer is override of standard GSON  <code>JsonSerializer</code> to properly create the list of departments.
+ * It is now formatted as. We need a list inside "bf" or "gf" or so to be able extend some data about departments:
+ * mails, phones, locations.
+ * <code>    <br>
+ *      {"bf": <br>
+ *          {"name":"Some department"}, <br>
+ *      "gf":{"name":"Another department"}} <br>
+ * </code>
+ *
+ * @author Vlad Slepukhin
+ * @since 1.2
+ */
 public class DepartmentSerializer implements JsonSerializer<DepartmentEntity> {
+
+    /**
+     * Converts DepartmentEntity to JsonElement, saving order in information in right representation.
+     * @param departmentEntity the instance of {@link org.ssutt.core.dm.convert.json.entity.DepartmentEntity}.
+     * @param type default GSON parameter.
+     * @param jsonSerializationContext default GSON parameter.
+     * @return Formatted JSON Element - sub-array with info about the department and its tag.
+     *
+     * @since 1.2
+     */
     @Override
     public JsonElement serialize(DepartmentEntity departmentEntity, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject result = new JsonObject();

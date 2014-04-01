@@ -18,19 +18,39 @@ package org.ssutt.core.dm.convert.json.entity;
 
 import java.util.Map;
 
+/**
+ * DepartmentEntity is a accessor class for {@link org.ssutt.core.dm.convert.json.JSONConverter} to
+ * reformat Java Object to JsonObject properly.
+ *
+ * @author Vlad Slepukhin
+ * @since 1.2
+ */
 public class DepartmentEntity {
     private String tag;
     private Map<String, String> data;
 
+    /**
+     * Creates entity.
+     * @param tag the tag of the department.
+     * @param data all the data about the department in key-value representation (name: 'smth' or so).
+     */
     public DepartmentEntity(String tag, Map<String, String> data) {
         this.tag = tag;
         this.data = data;
     }
 
+    /**
+     * Accessor for {@link org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer}.
+     * @return the tag of the department.
+     */
     public String getTag() {
         return tag;
     }
 
+    /**
+     * Accessor for {@link org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer}.
+     * @return K-V representation of data for JSON.
+     */
     public Map<String, String> getData() {
         return data;
     }

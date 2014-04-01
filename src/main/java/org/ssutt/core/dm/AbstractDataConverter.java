@@ -18,19 +18,72 @@ package org.ssutt.core.dm;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * AbstractDataConverter is an interface, which allows to convert raw data to
+ * some suitable representation, which can be casted to <code>java.lang.String</code>, like YAML or JSON.
+ *
+ * TT Core now has only serializers for JSON, using GSON. For example of implementation and execution results go
+ * for JSONConverter.
+ * @see org.ssutt.core.dm.convert.json.JSONConverter
+ * @author Vlad Slepukhin
+ * @since 1.2
+ */
 public interface AbstractDataConverter {
+
+    /**
+     * Converts raw data in Java Object, containing information about all departments in university to
+     * suitable representation.
+     * @param departments raw data.
+     * @return String of some format.
+     */
     String convertDepartmentList(Map<String, Map<String, String>> departments);
 
+    /**
+     * Converts raw data in Java Object, containing information about all groups of the department to
+     * suitable representation.
+     * @param names raw data.
+     * @return String of some format.
+     */
     String convertGroupList(List<String> names);
 
+
+    /**
+     * General-purposed converter of <code>List<String></code> to string view.
+     * suitable representation.
+     * @param list raw data.
+     * @return String of some format.
+     */
     String convertAbstractList(List<String> list);
 
+    /**
+     * <code>int</code> to <code>String</code> encapsulated conversion, used internally for getting timetables
+     * by group id (faster, as it is should be a primary key). The value should be checked, no Exception is thrown.
+     * @param id some integer.
+     * @return String representation.
+     */
     String convertGroupName(int id);
 
+    /**
+     * Converts list of all classes in group to formatted output.
+     * @param table data from database sorted by day tags, sequence of lessons and parity (even<odd).
+     * @return String of some format.
+     */
     String convertTT(List<String[]> table);
 
+    /**
+     * Creates error report.
+     * @param module failing class or module.
+     * @param msg the detailed information.
+     * @return Error report.
+     */
     String convertFailure(TTModule module, String msg);
 
+    /**
+     * Creates error report.
+     * @param module failing class or module.
+     * @param err the detailed information as listed in {@link org.ssutt.core.dm.TTModule}.
+     * @return Error report.
+     */
     String convertFailure(TTModule module, TTModule err);
 
 }

@@ -13,6 +13,7 @@ Changelog
 * Made all `get` methods return `TTData` instance. 
 * Encapsulated all the throws in `TTDataManager`
 * Created `TTModule` enum to keep labels of errors and modules. 
+* Now requires Google `gson` to parse JSON. 
 
 
 ###TT Core 1.1.0 (squashed into 1.2.0)

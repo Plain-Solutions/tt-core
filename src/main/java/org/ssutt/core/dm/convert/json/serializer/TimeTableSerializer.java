@@ -26,7 +26,41 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * TimeTableSerializer is override of standard GSON <code>JsonSerializer</code> to properly create table of group.
+ * It is formatted as K-V sorted by day tags with values of array of K-V with all data about lessons: parity,
+ * sequence and info. It is sorted by days, then by sequence of lessons and then by parity (even<odd):
+ * <code>
+ *     {"mon":     <br>
+ *          [      <br>
+ *              {   "parity":"odd",<br>
+ *                  "sequence":"1",    <br>
+ *                  "info":"lecture. Calculus (II) Sakhno XII, 312"<br>
+ *              },                                                     <br>
+ *              {                                                          <br>
+ *                  "parity":"all",                                            <br>
+ *                  "sequence":"2",                                                <br>
+ *                  "info":"practical. Calculus (II) Sakhno XII, 312"                  <br>
+ *              },                                                                         <br>
+ *              ...                                                                            <br>
+ *          ]                                                                                      <br>
+ *     }                                                                                               <br>
+ * </code>
+ *
+ * @author Vlad Slepukhin
+ * @since 1.2
+ */
 public class TimeTableSerializer implements JsonSerializer<TimeTableEntity> {
+
+    /**
+     * Converts TimeTableEntity to JsonElement, saving order in information in right representation.
+     * @param tt an initialized entity of {@link org.ssutt.core.dm.convert.json.entity.TimeTableEntity}
+     * @param type default GSON parameter.
+     * @param jsonSerializationContext default GSON parameter.
+     * @return JsonElement in a proper format.
+     *
+     * @since 1.2
+     */
     @Override
     public JsonElement serialize(TimeTableEntity tt, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject result = new JsonObject();
