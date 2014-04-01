@@ -32,16 +32,18 @@ public class TimeTableEntity {
 
     /**
      * Creates entity.
+     *
      * @param weekday the tag of the day to be iterator in the JsonArray.
-     * @param data all the other data about the lesson: parity, sequence and information.
+     * @param data    all the other data about the lesson: parity, sequence and information.
      */
-    public TimeTableEntity(String weekday, List<Map<String, String>>  data) {
+    public TimeTableEntity(String weekday, List<Map<String, String>> data) {
         this.weekday = weekday;
         this.data = data;
     }
 
     /**
      * Accessor for {@link org.ssutt.core.dm.convert.json.serializer.TimeTableSerializer}.
+     *
      * @return the weekday tag.
      */
     public String getWeekday() {
@@ -50,6 +52,7 @@ public class TimeTableEntity {
 
     /**
      * Accessor for {@link org.ssutt.core.dm.convert.json.serializer.TimeTableSerializer}.
+     *
      * @return the all data about lessons on this day.
      */
     public List<Map<String, String>> getData() {

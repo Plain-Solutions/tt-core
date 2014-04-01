@@ -45,20 +45,82 @@ public interface AbstractDataManager {
     void putTT(String departmentTag, int groupID) throws IOException, SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
 
+    /**
+     * Get the map of stored departments.
+     *
+     * @return TTData instance with JSON-formatted String and success/error code.
+     * @see org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer
+     * @since 1.1
+     */
     TTData getDepartments();
 
+    /**
+     * Get list of the tags for each department. TT Platform&Servlets are tied around them.
+     *
+     * @return JSON List of department tags.
+     * @since 1.0
+     */
     TTData getDepartmentTags();
 
+    /**
+     * Get displayable group names (151, 451) as Strings (see non-numerical groups in
+     * {@link org.ssutt.core.fetch.SSUDataFetcher})on specified department.
+     *
+     * @param departmentTag the tag of the department.
+     * @return JSON List of tags.
+     * @since 1.0
+     */
     TTData getGroups(String departmentTag);
 
+    /**
+     * Converts name of group of the specified department (allocation check, throws NoSuchGroupException) to its global
+     * id in the database. Used by TT Platform&Servlets.
+     *
+     * @param departmentTag the tag of the department.
+     * @param groupName     the displayable name.
+     * @return TTData instance with JSON-formatted String and success/error code.
+     * @since 1.0
+     */
     TTData getGroupID(String departmentTag, String groupName);
 
+    /**
+     * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
+     *
+     * @param groupID the global id of group to get the timetable.
+     * @return TTData instance with JSON-formatted String and success/error code.
+     * @see org.ssutt.core.dm.convert.json.serializer.TimeTableSerializer
+     * @since 1.1
+     */
     TTData getTT(int groupID);
 
-
+    /**
+     * Get the provider, AbstractSQLManager requires an instance of AbstractSQLManager implementation (for instance, SSUSQLManager
+     * and AbstractQueries implementation for specified database (H2Queries, for example).
+     * initialized before. For instance, in SSU TT project we do it with init script (here, in resources for testing)
+     * and JNDI in Tomcat.
+     *
+     * @param sqlm AbstractSQLManager instance realization.
+     * @param qrs  AbstractQueries instance realization to acquire queries definitions.
+     * @since 1.1
+     */
     void deliverDBProvider(AbstractSQLManager sqlm, AbstractQueries qrs);
 
+    /**
+     * Get the provider of data fetching utilities. We made this abstraction to be able to create a fork for other
+     * universities.
+     *
+     * @param df a created instance of AbstractDataFetcher implementation (for instance, SSUDataFetcher).
+     * @since 1.1
+     */
     void deliverDataFetcherProvider(AbstractDataFetcher df);
 
+    /**
+     * Gets the provider of data representation module. It can be json or yaml or xml, but in TT Core only JSON implemented.
+     *
+     * @param dconv a created instance of AbstractDataConverter implementation (for instance, JSONConverter)
+     * @see org.ssutt.core.dm.AbstractDataConverter
+     * @see org.ssutt.core.dm.convert.json.JSONConverter
+     * @since 1.2
+     */
     void deliverDataConverterProvider(AbstractDataConverter dconv);
 }

@@ -63,7 +63,7 @@ public class SSUDataFetcher implements AbstractDataFetcher {
      * Parses schedule URL to find the tokens (tags) and names of departments. In our case, these tags are just part
      * of the url in the page.
      *
-     * @return Map of name-tag for departments
+     * @return K-V of name-tag for departments
      * @since 1.0
      */
     @Override
@@ -96,7 +96,7 @@ public class SSUDataFetcher implements AbstractDataFetcher {
      * Parses department pages to get the list of groupnames.
      *
      * @param department token (tag) of the department, which we get in getDepartments()
-     * @return list of names.
+     * @return List of names.
      * @since 1.0
      */
     @Override
@@ -137,7 +137,7 @@ public class SSUDataFetcher implements AbstractDataFetcher {
      */
     @Override
     public String[][] getTT(URL url) throws IOException {
-        System.out.println("Parsing: "+url.toString());
+        System.out.println("Parsing: " + url.toString());
         //see comment later. we need table with empty cells, not empty table
         String[][] table = createEmptyTable();
 
@@ -158,16 +158,17 @@ public class SSUDataFetcher implements AbstractDataFetcher {
             }
         }
 
-        System.out.println("Parsed: "+url.toString());
+        System.out.println("Parsed: " + url.toString());
         return table;
     }
 
     /**
      * Formats url for ssu schedule website with conversion of non-numerical groups.
-     * @param departmentTag the tag of department, where group exists (one token of link for SSU)
+     *
+     * @param departmentTag    the tag of department, where group exists (one token of link for SSU)
      * @param groupDisplayName the displayed name. Usually the same as the token in the URL, but some groups needed
      *                         to be converted.
-     * @return ready to parse URL.
+     * @return Ready to parse URL.
      * @since 1.1
      */
     @Override
@@ -185,7 +186,7 @@ public class SSUDataFetcher implements AbstractDataFetcher {
     /**
      * Accessor. Needed for testing purposes.
      *
-     * @return filled exclusion list.
+     * @return Filled exclusion list.
      * @since 1.0
      */
     public String[] getExclusions() {
@@ -195,7 +196,7 @@ public class SSUDataFetcher implements AbstractDataFetcher {
     /**
      * Create an empty temporary table, if we find needed tags on the page.
      *
-     * @return empty table with size 8*6.
+     * @return Empty table with size 8*6.
      * @since 1.0
      */
     private String[][] createEmptyTable() {

@@ -24,22 +24,64 @@ import java.util.Map;
 /**
  * AbstractDataFetcher is an abstraction that should communicate with university web services and format temporary
  * timetable in the memory to deliver it to database with the help of DataManager.
- * <p>
+ * <p/>
  * Also, it handles exclusions for parsing, non-numerical groups (encoded by the name of the major, not number) and
  * delivering groups lists and department lists.
- * <p>
+ * <p/>
+ *
  * @author Sevak Avetisyan,Vlad Slepukhin
  * @since 1.0
  */
 public interface AbstractDataFetcher {
+    /**
+     * Parses schedule URL to find the tokens (tags) and names of departments. In our case, these tags are just part
+     * of the url in the page.
+     *
+     * @return K-V of name-tag for departments
+     * @see org.ssutt.core.fetch.SSUDataFetcher
+     * @since 1.0
+     */
     Map<String, String> getDepartments();
 
+    /**
+     * Parses department pages to get the list of group names.
+     *
+     * @param department token (tag) of the department, which we get in getDepartments()
+     * @return List of names.
+     * @see org.ssutt.core.fetch.SSUDataFetcher
+     * @since 1.0
+     */
     List<String> getGroups(String department);
 
+    /**
+     * Parse the resulting url of group to create a temporary, huge and complicated table from SSU website.
+     *
+     * @param url the resulting (by getting groups and departments, checking non-numerical thing) url.
+     * @return String[][] statical representation (statical array 8*6) of HTML code.
+     * @throws IOException
+     * @see org.ssutt.core.fetch.SSUDataFetcher
+     * @since 1.0
+     */
     String[][] getTT(URL url) throws IOException;
 
-    String[] getExclusions();
-
+    /**
+     * Formats url for ssu schedule website with conversion of non-numerical groups.
+     *
+     * @param departmentTag    the tag of department, where group exists (one token of link for SSU)
+     * @param groupDisplayName the displayed name. Usually the same as the token in the URL, but some groups needed
+     *                         to be converted.
+     * @return Ready to parse URL.
+     * @see org.ssutt.core.fetch.SSUDataFetcher
+     * @since 1.1
+     */
     URL formatURL(String departmentTag, String groupDisplayName) throws MalformedURLException;
+
+    /**
+     * Accessor. Needed for testing purposes.
+     *
+     * @return Filled exclusion list.
+     * @since 1.0
+     */
+    String[] getExclusions();
 
 }

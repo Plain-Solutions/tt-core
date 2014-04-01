@@ -46,28 +46,35 @@ import java.util.Map;
  */
 public class SSUDataManager implements AbstractDataManager {
 
-    /**
-     * Class instance of AbstractDataFetcher to be accessible around the DM independently.
-     */
     private AbstractDataFetcher df;
-    /**
-     * Class instance of AbstractSQLManager to be accessible around the DM independently.
-     */
     private AbstractSQLManager sqlm;
 
-    /**
-     * Class instance of AbstractDataConverter to be accessible around the DM independently.
-     */
     private AbstractDataConverter dconv;
 
     /**
-     * Constructor now is empty.
+     * Constructor with no params now is empty.
      */
     public SSUDataManager() {
     }
 
-    public SSUDataManager(AbstractSQLManager sqlm, AbstractQueries qrs, AbstractDataFetcher df, AbstractDataConverter dconv) {
-        deliverDBProvider(sqlm,qrs);
+    /**
+     * Constructor with all provided entities of data suppliers.
+     *
+     * @param sqlm  SQLManager instance.
+     * @param qrs   Queries for SQL instance.
+     * @param df    DataFetcher instance.
+     * @param dconv DataConverter instance.
+     * @see org.ssutt.core.sql.AbstractSQLManager
+     * @see org.ssutt.core.sql.AbstractQueries
+     * @see org.ssutt.core.fetch.AbstractDataFetcher
+     * @see org.ssutt.core.dm.AbstractDataConverter
+     * @since 1.2
+     */
+    public SSUDataManager(AbstractSQLManager sqlm,
+                          AbstractQueries qrs,
+                          AbstractDataFetcher df,
+                          AbstractDataConverter dconv) {
+        deliverDBProvider(sqlm, qrs);
         deliverDataFetcherProvider(df);
         deliverDataConverterProvider(dconv);
     }
@@ -106,128 +113,6 @@ public class SSUDataManager implements AbstractDataManager {
     public void putAllGroups() throws SQLException, NoSuchDepartmentException {
         for (String departmentTag : sqlm.getDepartmentTags())
             putDepartmentGroups(departmentTag);
-    }
-
-    /**
-     * Get the map of stored departments.
-     *
-     * @return Map of departments represented by name-tag.
-     * @since 1.2
-     */
-    @Override
-    public TTData getDepartments() {
-        TTData result = new TTData();
-        try {
-            Map<String, Map<String, String>> raw = sqlm.getDepartments();
-            result.setHttpCode(200);
-            result.setMessage(dconv.convertDepartmentList(raw));
-        } catch (SQLException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
-        }
-        return result;
-    }
-
-    /**
-     * Get list of the tags for each department. TT Platform&Servlets are tied around them.
-     *
-     * @return list of tags.
-     * @since 1.0
-     */
-    @Override
-    public TTData getDepartmentTags() {
-        TTData result = new TTData();
-        try {
-            List<String> raw = sqlm.getDepartmentTags();
-            result.setHttpCode(200);
-            result.setMessage(dconv.convertAbstractList(raw));
-        } catch (SQLException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
-        }
-        return result;
-    }
-
-    /**
-     * Get displayable group names (151, 451) as Strings (see non-numerical groups) on specified department.
-     *
-     * @param departmentTag the tag of the department.
-     * @return list of Strings(!) - names.
-     * @since 1.0
-     */
-    @Override
-    public TTData getGroups(String departmentTag) {
-        TTData result = new TTData();
-        try {
-            List<String> raw = sqlm.getGroups(departmentTag);
-            result.setHttpCode(200);
-            result.setMessage(dconv.convertGroupList(raw));
-        } catch (SQLException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
-        } catch (NoSuchDepartmentException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.DEPARTMENTERR));
-        }
-        return result;
-    }
-
-    /**
-     * Converts name of group of the specified department (allocation check, throws NoSuchGroupException) to its global
-     * id in the database. Used by TT Platform&Servlets.
-     *
-     * @param departmentTag the tag of the department.
-     * @param groupName     the displayable name.
-     * @return global ID.
-     * @since 1.0
-     */
-    @Override
-    public TTData getGroupID(String departmentTag, String groupName) {
-        TTData result = new TTData();
-        try {
-            int raw = sqlm.getGroupID(departmentTag, groupName);
-            result.setHttpCode(200);
-            result.setMessage(dconv.convertGroupName(raw));
-        } catch (SQLException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
-        } catch (NoSuchDepartmentException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.DEPARTMENTERR));
-        } catch (NoSuchGroupException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.GROUPERR));
-        }
-        return result;
-    }
-
-    /**
-     * Get nearly raw, but formatted timetable output from the database.
-     *
-     * @param groupID the global id of group to get the timetable.
-     * @return <\ListString[]\> - the raw result of what stored in the database. Each list element is a lesson,
-     * String[4] contains parity, day, sequence during this day and the information. Since it we don't need
-     * TableEntity and DataManager operates really with raw data.
-     * @since 1.1
-     */
-    @Override
-    public TTData getTT(int groupID) {
-        TTData result = new TTData();
-        try {
-            List<String[]> raw = sqlm.getTT(groupID);
-            result.setHttpCode(200);
-            result.setMessage(dconv.convertTT(raw));
-        } catch (SQLException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
-        } catch (NoSuchGroupException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.GROUPERR));
-        } catch (EmptyTableException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.TABLERR));
-        }
-        return result;
     }
 
     /**
@@ -276,6 +161,130 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     /**
+     * Get the map of stored departments.
+     *
+     * @return TTData instance with JSON-formatted String and success/error code.
+     * @see org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer
+     * @since 1.1
+     */
+    @Override
+    public TTData getDepartments() {
+        TTData result = new TTData();
+        try {
+            Map<String, Map<String, String>> raw = sqlm.getDepartments();
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertDepartmentList(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+        }
+        return result;
+    }
+
+    /**
+     * Get list of the tags for each department. TT Platform&Servlets are tied around them.
+     *
+     * @return JSON List of department tags.
+     * @since 1.0
+     */
+    @Override
+    public TTData getDepartmentTags() {
+        TTData result = new TTData();
+        try {
+            List<String> raw = sqlm.getDepartmentTags();
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertAbstractList(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+        }
+        return result;
+    }
+
+    /**
+     * Get displayable group names (151, 451) as Strings (see non-numerical groups in
+     * {@link org.ssutt.core.fetch.SSUDataFetcher})on specified department.
+     *
+     * @param departmentTag the tag of the department.
+     * @return JSON List of tags.
+     * @since 1.0
+     */
+    @Override
+    public TTData getGroups(String departmentTag) {
+        TTData result = new TTData();
+        try {
+            List<String> raw = sqlm.getGroups(departmentTag);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertGroupList(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.DEPARTMENTERR));
+        }
+        return result;
+    }
+
+    /**
+     * Converts name of group of the specified department (allocation check, throws NoSuchGroupException) to its global
+     * id in the database. Used by TT Platform&Servlets.
+     *
+     * @param departmentTag the tag of the department.
+     * @param groupName     the displayable name.
+     * @return TTData instance with JSON-formatted String and success/error code.
+     * @since 1.0
+     */
+    @Override
+    public TTData getGroupID(String departmentTag, String groupName) {
+        TTData result = new TTData();
+        try {
+            int raw = sqlm.getGroupID(departmentTag, groupName);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertGroupName(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.DEPARTMENTERR));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.GROUPERR));
+        }
+        return result;
+    }
+
+    /**
+     * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
+     *
+     * @param groupID the global id of group to get the timetable.
+     * @return TTData instance with JSON-formatted String and success/error code.
+     * @see org.ssutt.core.dm.convert.json.serializer.TimeTableSerializer
+     * @since 1.1
+     */
+    @Override
+    public TTData getTT(int groupID) {
+        TTData result = new TTData();
+        try {
+            List<String[]> raw = sqlm.getTT(groupID);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertTT(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.GROUPERR));
+        } catch (EmptyTableException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.TABLERR));
+        }
+        return result;
+    }
+
+
+    /**
      * Get the provider, AbstractSQLManager requires an instance of AbstractSQLManager implementation (for instance, SSUSQLManager
      * and AbstractQueries implementation for specified database (H2Queries, for example).
      * initialized before. For instance, in SSU TT project we do it with init script (here, in resources for testing)
@@ -307,6 +316,9 @@ public class SSUDataManager implements AbstractDataManager {
      * Gets the provider of data representation module. It can be json or yaml or xml, but in TT Core only JSON implemented.
      *
      * @param dconv a created instance of AbstractDataConverter implementation (for instance, JSONConverter)
+     * @see org.ssutt.core.dm.AbstractDataConverter
+     * @see org.ssutt.core.dm.convert.json.JSONConverter
+     * @since 1.2
      */
     @Override
     public void deliverDataConverterProvider(AbstractDataConverter dconv) {

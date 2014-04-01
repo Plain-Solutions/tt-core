@@ -31,7 +31,8 @@ public class DepartmentEntity {
 
     /**
      * Creates entity.
-     * @param tag the tag of the department.
+     *
+     * @param tag  the tag of the department.
      * @param data all the data about the department in key-value representation (name: 'smth' or so).
      */
     public DepartmentEntity(String tag, Map<String, String> data) {
@@ -41,6 +42,7 @@ public class DepartmentEntity {
 
     /**
      * Accessor for {@link org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer}.
+     *
      * @return the tag of the department.
      */
     public String getTag() {
@@ -49,6 +51,7 @@ public class DepartmentEntity {
 
     /**
      * Accessor for {@link org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer}.
+     *
      * @return K-V representation of data for JSON.
      */
     public Map<String, String> getData() {

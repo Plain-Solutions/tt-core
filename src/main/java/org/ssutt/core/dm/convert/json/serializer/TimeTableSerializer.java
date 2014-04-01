@@ -31,20 +31,20 @@ import java.util.Map;
  * It is formatted as K-V sorted by day tags with values of array of K-V with all data about lessons: parity,
  * sequence and info. It is sorted by days, then by sequence of lessons and then by parity (even<odd):
  * <code>
- *     {"mon":     <br>
- *          [      <br>
- *              {   "parity":"odd",<br>
- *                  "sequence":"1",    <br>
- *                  "info":"lecture. Calculus (II) Sakhno XII, 312"<br>
- *              },                                                     <br>
- *              {                                                          <br>
- *                  "parity":"all",                                            <br>
- *                  "sequence":"2",                                                <br>
- *                  "info":"practical. Calculus (II) Sakhno XII, 312"                  <br>
- *              },                                                                         <br>
- *              ...                                                                            <br>
- *          ]                                                                                      <br>
- *     }                                                                                               <br>
+ * {"mon":     <br>
+ * [      <br>
+ * {   "parity":"odd",<br>
+ * "sequence":"1",    <br>
+ * "info":"lecture. Calculus (II) Sakhno XII, 312"<br>
+ * },                                                     <br>
+ * {                                                          <br>
+ * "parity":"all",                                            <br>
+ * "sequence":"2",                                                <br>
+ * "info":"practical. Calculus (II) Sakhno XII, 312"                  <br>
+ * },                                                                         <br>
+ * ...                                                                            <br>
+ * ]                                                                                      <br>
+ * }                                                                                               <br>
  * </code>
  *
  * @author Vlad Slepukhin
@@ -54,11 +54,11 @@ public class TimeTableSerializer implements JsonSerializer<TimeTableEntity> {
 
     /**
      * Converts TimeTableEntity to JsonElement, saving order in information in right representation.
-     * @param tt an initialized entity of {@link org.ssutt.core.dm.convert.json.entity.TimeTableEntity}
-     * @param type default GSON parameter.
+     *
+     * @param tt                       an initialized entity of {@link org.ssutt.core.dm.convert.json.entity.TimeTableEntity}
+     * @param type                     default GSON parameter.
      * @param jsonSerializationContext default GSON parameter.
      * @return JsonElement in a proper format.
-     *
      * @since 1.2
      */
     @Override
@@ -68,16 +68,15 @@ public class TimeTableSerializer implements JsonSerializer<TimeTableEntity> {
 
         List<Map<String, String>> data = tt.getData();
 
-        for (Map<String, String> aLesson: data)
-        {
+        for (Map<String, String> aLesson : data) {
             JsonObject lesson = new JsonObject();
-            for (String key: aLesson.keySet()) {
+            for (String key : aLesson.keySet()) {
                 lesson.addProperty(key, aLesson.get(key));
             }
-            day.add(tt.getWeekday(),lesson);
+            day.add(tt.getWeekday(), lesson);
         }
 
-        result.add(tt.getWeekday(),day);
+        result.add(tt.getWeekday(), day);
         return result;
     }
 }

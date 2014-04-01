@@ -15,6 +15,12 @@
  */
 package org.ssutt.core.fetch.html;
 
+/**
+ * Entity of each cell from the parsed table.
+ *
+ * @author Vlad Slepukhin
+ * @since 1.0
+ */
 public class HTMLRecord {
     private int weekID;
     private int sequence;

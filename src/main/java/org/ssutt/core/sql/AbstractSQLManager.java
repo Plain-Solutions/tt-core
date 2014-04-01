@@ -27,6 +27,12 @@ import java.util.Map;
  * AbstractSQLManager is one the core workers in TT Core library that serves as a bridge
  * between raw data, supplied by AbstractDataFetcher and AbstractDataManager and some database instance, which
  * description is usually passed by AbstractDataManager.
+ * <p/>
+ * There is no need to describe each prototype in detail, so please follow 'see' link:
+ *
+ * @author Vlad Slepukhin
+ * @see org.ssutt.core.sql.SSUSQLManager
+ * @since 1.0
  */
 public interface AbstractSQLManager {
     void putDepartments(Map<String, String> departments) throws SQLException;

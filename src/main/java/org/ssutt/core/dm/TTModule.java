@@ -26,7 +26,8 @@ public enum TTModule {
     TABLERR("Table seems to be empty.");
 
     private final String name;
-    TTModule (String name) {
+
+    TTModule(String name) {
         this.name = name;
     }
 }

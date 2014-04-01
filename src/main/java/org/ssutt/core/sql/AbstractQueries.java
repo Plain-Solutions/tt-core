@@ -18,12 +18,15 @@ package org.ssutt.core.sql;
 /**
  * AbstractQueries is the interface that contains method descriptions for
  * all the needed operations in AbstractSQLManager. Simply, queries definitions.
- * <p>
+ * <p/>
  * We use abstraction to allow developers change the provider of the database
  * and use, for instance MySQL instead of H2 or has
  * different implementation and realization of these queries.
+ * <p/>
+ * For more information please follow `see` link.
  *
  * @author Vlad Slepukhin
+ * @see org.ssutt.core.sql.H2Queries
  * @since 1.0
  */
 public interface AbstractQueries {

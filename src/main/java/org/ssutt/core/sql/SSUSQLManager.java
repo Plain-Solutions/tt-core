@@ -42,6 +42,7 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Constructor that creates configured AbstractSQLManager instance for usage in AbstractDataManager (mainly)
+     *
      * @param conn java.sql.Connection of database provider, that should be familiar to instance creator method.
      * @since 1.0
      */
@@ -51,7 +52,8 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Adds departments to the DB.
-     * @param departments Map of departments: name-tag. Better to be sorted by displayed name.  
+     *
+     * @param departments Map of departments: name-tag. Better to be sorted by displayed name.
      * @throws SQLException
      * @since 1.0
      */
@@ -68,7 +70,8 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Adds groups to the DB.
-     * @param groups list of group names or numbers, that will be displayed to the end-user.
+     *
+     * @param groups        list of group names or numbers, that will be displayed to the end-user.
      * @param departmentTag tag of the department to associate with the group in <code>groups</code> table.
      * @throws SQLException
      * @throws NoSuchDepartmentException If no such department found.
@@ -89,10 +92,11 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Adds datetime information about lesson to <code>lessons_datetimes</code> table, if no such datetime found.
-     * @param weekID identifier from week_states: even, odd or all.
+     *
+     * @param weekID   identifier from week_states: even, odd or all.
      * @param sequence the order of the lesson during the day.
-     * @param dayID day number in the week, Monday - 1.
-     * @return id of the datetime record.
+     * @param dayID    day number in the week, Monday - 1.
+     * @return ID of the datetime record.
      * @throws SQLException
      * @since 1.0
      */
@@ -115,8 +119,9 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Adds subject to respective table, if not exists.
+     *
      * @param info information about subject (displayble, like room, teacher, lesson activity, name).
-     * @return id of the added/found subject.
+     * @return ID of the added/found subject.
      * @throws SQLException
      * @since 1.0
      */
@@ -142,9 +147,10 @@ public class SSUSQLManager implements AbstractSQLManager {
     /**
      * Adds the lesson record - which group has this lesson, at what datetime, and, obviously, what is the lesson
      * is on for this group at this particular datetime (week parity, day and time)
-     * @param groupID the id of the group (should be taken from <code>groups</code> table.
+     *
+     * @param groupID    the id of the group (should be taken from <code>groups</code> table.
      * @param dateTimeID the id of datetime (should be taken from <code>lessons_datetimes</code> table.
-     * @param subjectID the id of the subject ((should be taken from <code>subjects</code> table.
+     * @param subjectID  the id of the subject ((should be taken from <code>subjects</code> table.
      * @throws SQLException
      * @since 1.0
      */
@@ -160,6 +166,7 @@ public class SSUSQLManager implements AbstractSQLManager {
     /**
      * Gets list of departments, sorted by their printed names with parameters. Since 1.1 we
      * use list of parameters to make department entries more extensionable.
+     *
      * @return Map<String, Map</String, String/>> where key is department tag and Map<String, String> all the data with
      * provided names of positions.
      * @throws SQLException
@@ -175,7 +182,7 @@ public class SSUSQLManager implements AbstractSQLManager {
         while (rs.next()) {
             Map<String, String> data = new LinkedHashMap<>();
             String tag = rs.getString("tag");
-            data.put("name",rs.getString("name"));
+            data.put("name", rs.getString("name"));
             result.put(tag, data);
 
         }
@@ -186,6 +193,7 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Gets only tags from department table from DB.
+     *
      * @return List of Strings.
      * @throws SQLException
      * @since 1.0
@@ -206,6 +214,7 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Get group names from groups table, based on department tag ('knt', 'ff' or so)
+     *
      * @param departmentTag department tag.
      * @return List of strings (some groups has non-numerical names @see org.ssutt.core.fetch.SSUDataFetcher)
      * @throws SQLException
@@ -230,9 +239,10 @@ public class SSUSQLManager implements AbstractSQLManager {
     /**
      * Gets group global id from <code>groups</code> table. Actually, converts its name and its department tag to
      * simple and fast number - id.
+     *
      * @param departmentTag the tag of the department, where the groups exists.
-     * @param groupName its printed name.
-     * @return the global id.
+     * @param groupName     its printed name.
+     * @return The global id.
      * @throws SQLException
      * @throws NoSuchDepartmentException
      * @throws NoSuchGroupException
@@ -257,9 +267,10 @@ public class SSUSQLManager implements AbstractSQLManager {
     /**
      * Gets displayable name from groups department (represented by tag) and its ID from <code>groups</code> table.
      * Actually, convert, opposite to getGroupID.
+     *
      * @param departmentTag the tag of the department, where the groups exists.
-     * @param groupID its global ID.
-     * @return the printed name.
+     * @param groupID       its global ID.
+     * @return The printed name.
      * @throws SQLException
      * @throws NoSuchDepartmentException
      * @throws NoSuchGroupException
@@ -275,23 +286,23 @@ public class SSUSQLManager implements AbstractSQLManager {
             while (rs.next()) name = rs.getString("name");
             stmt.close();
 
-            if (name.length()==0) throw new NoSuchGroupException();
+            if (name.length() == 0) throw new NoSuchGroupException();
 
             return name;
-        }
-        else throw new NoSuchDepartmentException();
+        } else throw new NoSuchDepartmentException();
     }
 
     /**
      * Gets the whole timetable of the group, based on its id from <code>groups</code> table.
+     *
      * @param groupID the  global id of the group.
      * @return List\<String[]\> formatted line by line in ascending day and ascending sequence (of classes) way. Each
      * String[] contains
      * <ul>
-     *     <li>0 - weekday name (mon, tue, wed, ...)</li>
-     *     <li>1 - state of parity (even, odd or all)</li>
-     *     <li>2 - sequence - order during the day (1 to 8)</li>
-     *     <li>3 - info - all the information about record: type of activity, subject, teacher and room (may differ)</li>
+     * <li>0 - weekday name (mon, tue, wed, ...)</li>
+     * <li>1 - state of parity (even, odd or all)</li>
+     * <li>2 - sequence - order during the day (1 to 8)</li>
+     * <li>3 - info - all the information about record: type of activity, subject, teacher and room (may differ)</li>
      * </ul>
      * @throws SQLException
      * @throws NoSuchGroupException
@@ -304,24 +315,24 @@ public class SSUSQLManager implements AbstractSQLManager {
             List<String[]> table = new ArrayList<>();
 
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTT(),groupID));
+            ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTT(), groupID));
             while (rs.next()) {
                 String[] element = new String[4];
-                element[0]=rs.getString("name");
-                element[1]=rs.getString("state");
-                element[2]=String.valueOf(rs.getInt("sequence"));
-                element[3]=rs.getString("info");
+                element[0] = rs.getString("name");
+                element[1] = rs.getString("state");
+                element[2] = String.valueOf(rs.getInt("sequence"));
+                element[3] = rs.getString("info");
                 table.add(element);
             }
-            if (table.size()==0) throw new EmptyTableException();
+            if (table.size() == 0) throw new EmptyTableException();
 
             return table;
-        }
-        else throw new NoSuchGroupException();
+        } else throw new NoSuchGroupException();
     }
 
     /**
      * Utility. Checks, if the department found by its tag.
+     *
      * @param departmentTag the tag of the department: knt, ff, sf or so.
      * @return <code>true</code> if found, else <code>false</code>.
      * @throws SQLException
@@ -340,8 +351,9 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Utility. Checks, if the specified department has this group.
+     *
      * @param departmentTag the tag of the department: knt, ff, sf or so.
-     * @param groupName the displayable name to check.
+     * @param groupName     the displayable name to check.
      * @return <code>true</code> if found, else <code>false</code>.
      * @throws SQLException
      * @since 1.0
@@ -358,6 +370,7 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Utility. Checks, if such ID exists in the DB.
+     *
      * @param groupID the group to check
      * @return <code>true</code> if found, else <code>false</code>
      * @throws SQLException
@@ -375,9 +388,10 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Utility. Checks if the group has this subject at the specified datetime.
-     * @param groupID the global id of the group.
+     *
+     * @param groupID    the global id of the group.
      * @param dateTimeID datetime id to check.
-     * @param subjectID the id of the subject (should be taken from <code>subjects</code> table).
+     * @param subjectID  the id of the subject (should be taken from <code>subjects</code> table).
      * @return <code>true</code> if group has this class at this particular time, else <code>false</code>
      * @throws SQLException
      * @since 1.0
@@ -395,8 +409,9 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     /**
      * Utility. Gets the last ID of the specified table.
+     *
      * @param table checked table.
-     * @return last ID.
+     * @return Last ID.
      * @throws SQLException
      * @since 1.0
      */
@@ -414,6 +429,7 @@ public class SSUSQLManager implements AbstractSQLManager {
     /**
      * Initialization utility. Gets AbstractQueries instance to provide SQL queries definition for exact database
      * (H2DB, MySQL or so).
+     *
      * @param qrs initialized AbstractQueries implementation.
      * @since 1.1
      */

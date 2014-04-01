@@ -15,14 +15,23 @@
 */
 package org.ssutt.core.dm;
 
+/**
+ * TTData is a library-wide class which provides delivering converted raw data (in JSON or some other format) to
+ * the world.
+ * <p/>
+ * It has a field for response code/status and the contents.
+ */
 public class TTData {
     private int httpCode;
     private String message;
 
     public TTData() {
-
     }
 
+    public TTData(int httpCode, String message) {
+        this.httpCode = httpCode;
+        this.message = message;
+    }
 
     public void setHttpCode(int httpCode) {
         this.httpCode = httpCode;

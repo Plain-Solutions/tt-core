@@ -51,6 +51,7 @@ public class JSONConverter implements AbstractDataConverter {
 
     /**
      * Converts <code>getDepartments</code> of {@link org.ssutt.core.sql.AbstractSQLManager} to JSON String.
+     *
      * @param departments list of departments represented in Java Object entity.
      * @return JSON-formatted representation of raw object. See {@link org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer}
      * or API reference for the output format.
@@ -64,6 +65,7 @@ public class JSONConverter implements AbstractDataConverter {
 
     /**
      * Converts <code>getGroupNames</code> of {@link org.ssutt.core.sql.AbstractSQLManager} to JSON String.
+     *
      * @param names list of departments represented in Java Object entity.
      * @return JSON-formatted representation of raw object. <code>List<String></code> to <code>[""]</code>
      */
@@ -73,6 +75,7 @@ public class JSONConverter implements AbstractDataConverter {
 
     /**
      * General-purpose conversion for inner usage mainly.
+     *
      * @param list some generic <code>java.lang.List<String></code>
      * @return [""] representation of List.
      */
@@ -84,15 +87,17 @@ public class JSONConverter implements AbstractDataConverter {
     /**
      * Inner-used conversion <code>getGroupID</code> of {@link org.ssutt.core.dm.AbstractDataManager} for JSON format. Actually int
      * to String conversion due to encapsulation and the unified TTData interface packed as String.
+     *
      * @param id the numerical representation.
      * @return String representation.
      */
-    public String convertGroupName(int id){
+    public String convertGroupName(int id) {
         return gson.toJson(id);
     }
 
     /**
      * Converts <code>getTT</code> of {@link org.ssutt.core.sql.AbstractSQLManager} to JSON String.
+     *
      * @param table list of classes, sorted ascending by days, times of classes and parity.
      * @return JSON-formatted representation of raw object. See {@link org.ssutt.core.dm.convert.json.serializer.TimeTableSerializer}
      * or API reference for the output format.
@@ -102,19 +107,18 @@ public class JSONConverter implements AbstractDataConverter {
 
         Map<String, List<Map<String, String>>> temp = new LinkedHashMap<>();
 
-        for (String[] record: table){
-            String weekday  = record[0];
+        for (String[] record : table) {
+            String weekday = record[0];
             Map<String, String> t = new LinkedHashMap<>();
             t.put("parity", record[1]);
             t.put("sequence", record[2]);
             t.put("info", record[3]);
             if (temp.containsKey(weekday)) {
                 temp.get(weekday).add(t);
-            }
-            else {
-                List<Map <String, String>> tT = new ArrayList<>();
+            } else {
+                List<Map<String, String>> tT = new ArrayList<>();
                 tT.add(t);
-                temp.put(weekday,tT);
+                temp.put(weekday, tT);
             }
 
         }
@@ -125,8 +129,9 @@ public class JSONConverter implements AbstractDataConverter {
 
     /**
      * Converts failures information for JSON output in TT Platform.
+     *
      * @param module element of {@link org.ssutt.core.dm.TTModule} enum.
-     * @param msg the message about error.
+     * @param msg    the message about error.
      * @return JSON representation. See {@link org.ssutt.core.dm.convert.json.entity.FailureEntity}.
      */
     @Override
@@ -136,8 +141,9 @@ public class JSONConverter implements AbstractDataConverter {
 
     /**
      * Converts failures information for JSON output in TT Platform.
+     *
      * @param module element of {@link org.ssutt.core.dm.TTModule} enum.
-     * @param err element of {@link org.ssutt.core.dm.TTModule} enum.
+     * @param err    element of {@link org.ssutt.core.dm.TTModule} enum.
      * @return JSON representation. See {@link org.ssutt.core.dm.convert.json.entity.FailureEntity}.
      */
     @Override
