@@ -94,4 +94,13 @@ public interface AbstractDataConverter {
      */
     String convertStatus(TTStatus module, TTStatus err);
 
+
+    /**
+     * General-purposed converter string back to <code>List<String></code>  suitable representation.
+     *
+     * @param list of some format.
+     * @return raw data.
+     */
+    List<String> reverseConvertGroup(String list);
+
 }

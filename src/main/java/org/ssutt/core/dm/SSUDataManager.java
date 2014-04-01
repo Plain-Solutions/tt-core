@@ -15,6 +15,7 @@
  */
 package org.ssutt.core.dm;
 
+import org.ssutt.core.dm.convert.json.JSONConverter;
 import org.ssutt.core.fetch.AbstractDataFetcher;
 import org.ssutt.core.fetch.html.HTMLCellEntity;
 import org.ssutt.core.fetch.html.HTMLRecord;
@@ -365,5 +366,9 @@ public class SSUDataManager implements AbstractDataManager {
     @Override
     public void deliverDataConverterProvider(AbstractDataConverter dconv) {
         this.dconv = dconv;
+    }
+
+    public JSONConverter getJSONConverter() {
+        return (JSONConverter)dconv;
     }
 }

@@ -17,6 +17,7 @@ package org.ssutt.core.dm.convert.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.ssutt.core.dm.AbstractDataConverter;
 import org.ssutt.core.dm.TTStatus;
 import org.ssutt.core.dm.convert.json.entity.DepartmentEntity;
@@ -25,6 +26,7 @@ import org.ssutt.core.dm.convert.json.entity.TimeTableEntity;
 import org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer;
 import org.ssutt.core.dm.convert.json.serializer.TimeTableSerializer;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -149,6 +151,18 @@ public class JSONConverter implements AbstractDataConverter {
     @Override
     public String convertStatus(TTStatus module, TTStatus state) {
         return gson.toJson(new StatusEntity(module.name(), state.name()));
+    }
+
+    /**
+     * General-purposed converter string back to <code>List<String></code>  suitable representation.
+     *
+     * @param list of some format.
+     * @return raw data.
+     */
+    @Override
+    public List<String> reverseConvertGroup(String list) {
+        Type listType = new TypeToken<List<String>>() {}.getType();
+        return gson.fromJson(list, listType);
     }
 
 }
