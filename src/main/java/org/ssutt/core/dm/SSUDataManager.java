@@ -82,37 +82,68 @@ public class SSUDataManager implements AbstractDataManager {
     /**
      * Connect AbstractDataFetcher to get departments map and store it into DB with AbstractSQLManager.
      *
-     * @throws SQLException
+     * @return TTData
+     * @see org.ssutt.core.dm.AbstractDataConverter
      */
     @Override
-    public void putDepartments() throws SQLException {
-        sqlm.putDepartments(df.getDepartments());
+    public TTData putDepartments() {
+        TTData result = new TTData();
+        try {
+            sqlm.putDepartments(df.getDepartments());
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        }
+        return result;
     }
 
     /**
      * Connect AbstractDataFetcher to get list of groups on <b>department</b> and store it into DB with AbstractSQLManager.
      *
      * @param departmentTag the tag (token) of the department.
-     * @throws SQLException
-     * @throws NoSuchDepartmentException
+     * @return TTData
+     * @see org.ssutt.core.dm.AbstractDataConverter
      * @since 1.0
      */
     @Override
-    public void putDepartmentGroups(String departmentTag) throws SQLException, NoSuchDepartmentException {
-        sqlm.putGroups(df.getGroups(departmentTag), departmentTag);
+    public TTData putDepartmentGroups(String departmentTag) {
+        TTData result = new TTData();
+        try {
+            sqlm.putGroups(df.getGroups(departmentTag), departmentTag);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
+        }
+        return result;
     }
 
     /**
      * Connect AbstractDataFetcher to get list of <b>ALL</b> groups and store it into DB.
      *
-     * @throws SQLException
-     * @throws NoSuchDepartmentException
+     * @return TTData
+     * @see org.ssutt.core.dm.AbstractDataConverter
      * @since 1.0
      */
     @Override
-    public void putAllGroups() throws SQLException, NoSuchDepartmentException {
-        for (String departmentTag : sqlm.getDepartmentTags())
-            putDepartmentGroups(departmentTag);
+    public TTData putAllGroups() {
+        TTData result = new TTData();
+        try {
+            for (String departmentTag : sqlm.getDepartmentTags())
+                putDepartmentGroups(departmentTag);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        }
+        return result;
     }
 
     /**
@@ -121,43 +152,54 @@ public class SSUDataManager implements AbstractDataManager {
      * We need to clarify one thing
      * AbstractDataManager works only RAW data, that's why we pass RAW data to
      * AbstractSQLManager, though we can pass Record, but
-     * the level of abstraction on DB site should be as high as it can be
-     * That's why you won't see JSON Parser in TTDataManger, it's a part of
-     * tt-platform and its task: convert raw data for end-user
+     * the level of abstraction on DB site should be as high as it can be.
      *
      * @param departmentTag the tag of the department, where the group is located (allocation check).
      * @param groupID       the global id of group.
-     * @throws IOException
-     * @throws SQLException
-     * @throws NoSuchDepartmentException
-     * @throws NoSuchGroupException
      * @since 1.0
      */
     @Override
-    public void putTT(String departmentTag, int groupID) throws IOException, SQLException,
-            NoSuchDepartmentException, NoSuchGroupException {
-        //first, we get timetable url
-        String groupName = sqlm.getGroupName(departmentTag, groupID);
+    public TTData putTT(String departmentTag, int groupID) {
+        TTData result = new TTData();
+        try {
+            //first, we get timetable url
+            String groupName = sqlm.getGroupName(departmentTag, groupID);
 
-        //then we check that such group exists in the specified department
-        if (sqlm.groupExistsInDepartment(departmentTag, groupName)) {
-            //and its contents
-            String[][] table = df.getTT(df.formatURL(departmentTag, groupName));
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 6; j++) {
-                    HTMLCellEntity ce = TableParser.parseCell(table[i][j], i, j);
-                    for (HTMLRecord r : ce.getCell()) {
-                        //skip empty classes
-                        if (r.getInfo().length() != 0) {
-                            int grpID = sqlm.getGroupID(departmentTag, groupName);
-                            int dtID = sqlm.putDateTime(r.getWeekID(), r.getSequence(), r.getDayID());
-                            int subjID = sqlm.putSubject(r.getInfo());
-                            sqlm.putLessonRecord(grpID, dtID, subjID);
+            //then we check that such group exists in the specified department
+            if (sqlm.groupExistsInDepartment(departmentTag, groupName)) {
+                //and its contents
+                String[][] table = df.getTT(df.formatURL(departmentTag, groupName));
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 6; j++) {
+                        HTMLCellEntity ce = TableParser.parseCell(table[i][j], i, j);
+                        for (HTMLRecord r : ce.getCell()) {
+                            //skip empty classes
+                            if (r.getInfo().length() != 0) {
+                                int grpID = sqlm.getGroupID(departmentTag, groupName);
+                                int dtID = sqlm.putDateTime(r.getWeekID(), r.getSequence(), r.getDayID());
+                                int subjID = sqlm.putSubject(r.getInfo());
+                                sqlm.putLessonRecord(grpID, dtID, subjID);
+                            }
                         }
                     }
                 }
             }
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
+        } catch (IOException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.IO, TTStatus.IOERR));
         }
+        return result;
     }
 
     /**
@@ -176,7 +218,7 @@ public class SSUDataManager implements AbstractDataManager {
             result.setMessage(dconv.convertDepartmentList(raw));
         } catch (SQLException e) {
             result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
         }
         return result;
     }
@@ -196,7 +238,7 @@ public class SSUDataManager implements AbstractDataManager {
             result.setMessage(dconv.convertAbstractList(raw));
         } catch (SQLException e) {
             result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
         }
         return result;
     }
@@ -218,10 +260,10 @@ public class SSUDataManager implements AbstractDataManager {
             result.setMessage(dconv.convertGroupList(raw));
         } catch (SQLException e) {
             result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
         } catch (NoSuchDepartmentException e) {
             result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.DEPARTMENTERR));
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
         }
         return result;
     }
@@ -244,13 +286,13 @@ public class SSUDataManager implements AbstractDataManager {
             result.setMessage(dconv.convertGroupName(raw));
         } catch (SQLException e) {
             result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
         } catch (NoSuchDepartmentException e) {
             result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.DEPARTMENTERR));
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
         } catch (NoSuchGroupException e) {
             result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.GROUPERR));
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
         }
         return result;
     }
@@ -272,13 +314,13 @@ public class SSUDataManager implements AbstractDataManager {
             result.setMessage(dconv.convertTT(raw));
         } catch (SQLException e) {
             result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.GENSQL, e.getSQLState()));
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
         } catch (NoSuchGroupException e) {
             result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.GROUPERR));
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
         } catch (EmptyTableException e) {
             result.setHttpCode(404);
-            result.setMessage(dconv.convertFailure(TTModule.TTSQL, TTModule.TABLERR));
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.TABLERR));
         }
         return result;
     }

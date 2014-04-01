@@ -65,6 +65,8 @@ public class TestDM {
             e.printStackTrace();
             assert(false);
         }
+
+        Assert.assertNotNull("DataManager (SSU) with SSUSQL, H2Q and SSUDF inti - failed", dm);
     }
 
     @Test
@@ -82,11 +84,9 @@ public class TestDM {
             assert(false);
         }
 
-        try {
-            dm.putDepartments();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        TTData status =  dm.putDepartments();
+        Assert.assertEquals(200, status.getHttpCode());
 
         TTData result = dm.getDepartments();
 
@@ -97,7 +97,7 @@ public class TestDM {
 
 
     @Test
-    public void dTestGroups() throws NoSuchDepartmentException, SQLException, IOException, NoSuchGroupException {
+    public void dTestGroupsAndPutTT() throws NoSuchDepartmentException, SQLException, IOException, NoSuchGroupException {
         AbstractDataManager dm = null;
         try {
             dm = new SSUDataManager(new SSUSQLManager(createConnection()), new H2Queries(), new SSUDataFetcher(),
@@ -111,14 +111,15 @@ public class TestDM {
             assert (false);
         }
 
-        dm.putAllGroups();
+        TTData status = dm.putAllGroups();
+        Assert.assertEquals(200, status.getHttpCode());
         System.out.println(dm.getGroups("knt").getMessage());
-        dm.putTT("knt", Integer.parseInt(dm.getGroupID("knt", "151").getMessage()));
-
+        TTData result = dm.putTT("knt", Integer.parseInt(dm.getGroupID("knt", "151").getMessage()));
+        Assert.assertEquals(200, result.getHttpCode());
     }
 
     @Test
-    public void eTestTTs() {
+    public void eTestGetTT() {
         AbstractDataManager dm = null;
         try {
             dm = new SSUDataManager(new SSUSQLManager(createConnection()), new H2Queries(), new SSUDataFetcher(),
@@ -131,9 +132,12 @@ public class TestDM {
             e.printStackTrace();
             assert (false);
         }
-        System.out.println(dm.getTT(Integer.parseInt(dm.getGroupID("knt","151").getMessage())).getMessage());
+        TTData result = dm.getTT(Integer.parseInt(dm.getGroupID("knt","151").getMessage()));
 
+        System.out.println(result.getMessage());
         removeTestDB();
+
+        Assert.assertEquals(200, result.getHttpCode());
     }
 
     private Connection createConnection() throws SQLException, ClassNotFoundException {

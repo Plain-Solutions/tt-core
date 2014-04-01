@@ -15,7 +15,7 @@
 */
 package org.ssutt.core.dm;
 
-public enum TTModule {
+public enum TTStatus {
     GENSQL("SQL"),
     TTSQL("SSUSQLManager/Database"),
     DF("SSUDataFetcher"),
@@ -23,11 +23,15 @@ public enum TTModule {
 
     DEPARTMENTERR("No such department."),
     GROUPERR("No such group."),
-    TABLERR("Table seems to be empty.");
+    TABLERR("Table seems to be empty."),
+    IOERR("I/O or URL Error."),
+
+    OK("ok"),
+    OKMSG("");
 
     private final String name;
 
-    TTModule(String name) {
+    TTStatus(String name) {
         this.name = name;
     }
 }

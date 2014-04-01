@@ -18,26 +18,26 @@ package org.ssutt.core.dm.convert.json.entity;
 
 
 /**
- * FailureEntity is a accessor class for {@link org.ssutt.core.dm.convert.json.JSONConverter} to
- * reformat Java Object of {@link org.ssutt.core.dm.TTModule} to JsonObject properly.
+ * StatusEntity is a accessor class for {@link org.ssutt.core.dm.convert.json.JSONConverter} to
+ * reformat Java Object of {@link org.ssutt.core.dm.TTStatus} to JsonObject properly.
  * <p/>
  * It is formatted as <code>{"module":"SOMEMODULE", "message":"exact info"}</code>
  *
  * @author Vlad Slepukhin
  * @since 1.2
  */
-public class FailureEntity {
-    private String error;
+public class StatusEntity {
+    private String modifier;
     private String message;
 
     /**
      * Creates entity.
      *
-     * @param error   a string describing error (module, usually).
+     * @param modifier   a string describing error/success (module, usually).
      * @param message a string with detailed information on error.
      */
-    public FailureEntity(String error, String message) {
+    public StatusEntity(String modifier, String message) {
         this.message = message;
-        this.error = error;
+        this.modifier = modifier;
     }
 }

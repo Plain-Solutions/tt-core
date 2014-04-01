@@ -83,15 +83,15 @@ public interface AbstractDataConverter {
      * @param msg    the detailed information.
      * @return Error report.
      */
-    String convertFailure(TTModule module, String msg);
+    String convertStatus(TTStatus module, String msg);
 
     /**
      * Creates error report.
      *
      * @param module failing class or module.
-     * @param err    the detailed information as listed in {@link org.ssutt.core.dm.TTModule}.
+     * @param err    the detailed information as listed in {@link TTStatus}.
      * @return Error report.
      */
-    String convertFailure(TTModule module, TTModule err);
+    String convertStatus(TTStatus module, TTStatus err);
 
 }

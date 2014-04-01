@@ -18,11 +18,6 @@ package org.ssutt.core.dm;
 import org.ssutt.core.fetch.AbstractDataFetcher;
 import org.ssutt.core.sql.AbstractQueries;
 import org.ssutt.core.sql.AbstractSQLManager;
-import org.ssutt.core.sql.ex.NoSuchDepartmentException;
-import org.ssutt.core.sql.ex.NoSuchGroupException;
-
-import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * AbstractDataManager is the main external interface of TT Core Library. Actually, it represents a connector
@@ -36,14 +31,42 @@ import java.sql.SQLException;
  */
 public interface AbstractDataManager {
 
-    void putDepartments() throws SQLException;
+    /**
+     * Fetch and put departments list with connected information to the database.
+     *
+     * @return TTData with <code>httpCode</code> 200
+     * <code>module:ok</code> and empty message String in case of success or error trace.
+     */
+    TTData putDepartments();
 
-    void putDepartmentGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
+    /**
+     * Connect AbstractDataFetcher to get list of groups on <b>department</b> and store it into DB with AbstractSQLManager.
+     *
+     * @param departmentTag the tag of the department.
+     * @return TTData with <code>httpCode</code> 200
+     * <code>module:ok</code> and empty message String in case of success or error trace.
+     */
+    TTData putDepartmentGroups(String departmentTag);
 
-    void putAllGroups() throws SQLException, NoSuchDepartmentException;
+    /**
+     * Connect AbstractDataFetcher to get list of <b>ALL</b> groups and store it into DB.
+     *
+     * @return TTData with <code>httpCode</code> 200
+     * <code>module:ok</code> and empty message String in case of success or error trace.
+     * @since 1.0
+     */
+    TTData putAllGroups();
 
-    void putTT(String departmentTag, int groupID) throws IOException, SQLException,
-            NoSuchDepartmentException, NoSuchGroupException;
+    /**
+     * Adding temporary table from AbstractDataFetcher (parsed by HTML tags table) in a proper format to DB.
+     *
+     * @param departmentTag the tag of the department, where the group is located (allocation check).
+     * @param groupID       the global id of group.
+     * @return TTData with <code>httpCode</code> 200
+     * <code>module:ok</code> and empty message String in case of success or error trace.
+     * @since 1.0
+     */
+    TTData putTT(String departmentTag, int groupID);
 
     /**
      * Get the map of stored departments.

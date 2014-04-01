@@ -10,9 +10,9 @@ Changelog
 	+ All the classes that don't have to be overloaded are now start with **TT**.
 	+ All the interfaces, which are overloaded for SSU now start with **Abstract**.
 * `org.ssutt.core.fetch.entities` renamed to `html` - as we now have `org.ssutt.dm.convert.json.entites` we don't want to mess up.
-* Made all `get` methods return `TTData` instance. 
-* Encapsulated all the throws in `TTDataManager`
-* Created `TTModule` enum to keep labels of errors and modules. 
+* Made all `AbstractDataManager` methods return `TTData` instance. 
+* Encapsulated all the throws in `AbstractDataManager`.
+* Created `TTStatus` enum to keep labels of states, errors and modules. 
 * Now requires Google `gson` to parse JSON. 
 
 

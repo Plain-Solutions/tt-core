@@ -23,6 +23,7 @@ The whole library is built with Maven, but here is the brief list of main depend
 
 * Java 7 (jdk>=1.7.0)
 * jsoup (>=1.7.3)
+* Your formatting driver. For us it is gson (>=2.2.4)
 * Your database driver. For us it is **h2**>=1.3.175
 
 License

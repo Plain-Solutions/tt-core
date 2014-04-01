@@ -18,9 +18,9 @@ package org.ssutt.core.dm.convert.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.ssutt.core.dm.AbstractDataConverter;
-import org.ssutt.core.dm.TTModule;
+import org.ssutt.core.dm.TTStatus;
 import org.ssutt.core.dm.convert.json.entity.DepartmentEntity;
-import org.ssutt.core.dm.convert.json.entity.FailureEntity;
+import org.ssutt.core.dm.convert.json.entity.StatusEntity;
 import org.ssutt.core.dm.convert.json.entity.TimeTableEntity;
 import org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer;
 import org.ssutt.core.dm.convert.json.serializer.TimeTableSerializer;
@@ -128,27 +128,27 @@ public class JSONConverter implements AbstractDataConverter {
     }
 
     /**
-     * Converts failures information for JSON output in TT Platform.
+     * Converts status information for JSON output in TT Platform.
      *
-     * @param module element of {@link org.ssutt.core.dm.TTModule} enum.
-     * @param msg    the message about error.
-     * @return JSON representation. See {@link org.ssutt.core.dm.convert.json.entity.FailureEntity}.
+     * @param module element of {@link org.ssutt.core.dm.TTStatus} enum.
+     * @param msg    the message about error/success.
+     * @return JSON representation. See {@link org.ssutt.core.dm.convert.json.entity.StatusEntity}.
      */
     @Override
-    public String convertFailure(TTModule module, String msg) {
-        return gson.toJson(new FailureEntity(module.name(), msg));
+    public String convertStatus(TTStatus module, String msg) {
+        return gson.toJson(new StatusEntity(module.name(), msg));
     }
 
     /**
-     * Converts failures information for JSON output in TT Platform.
+     * Converts status information for JSON output in TT Platform.
      *
-     * @param module element of {@link org.ssutt.core.dm.TTModule} enum.
-     * @param err    element of {@link org.ssutt.core.dm.TTModule} enum.
-     * @return JSON representation. See {@link org.ssutt.core.dm.convert.json.entity.FailureEntity}.
+     * @param module element of {@link org.ssutt.core.dm.TTStatus} enum.
+     * @param state    element of {@link org.ssutt.core.dm.TTStatus} enum.
+     * @return JSON representation. See {@link org.ssutt.core.dm.convert.json.entity.StatusEntity}.
      */
     @Override
-    public String convertFailure(TTModule module, TTModule err) {
-        return gson.toJson(new FailureEntity(module.name(), err.name()));
+    public String convertStatus(TTStatus module, TTStatus state) {
+        return gson.toJson(new StatusEntity(module.name(), state.name()));
     }
 
 }
