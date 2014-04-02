@@ -13,17 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ssutt.core.dm.entities;
+package org.ssutt.core.fetch.html;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * HTMLCelEntity is a class to convert HTML-formatted table output to database-friendly format. It just stores
+ * data in a format, which can be accessed with ease. Actually, it is a factory with warehouse.
+ *
+ * Entity has
+ * <li>
+ *     <ul><code>weekID</code> - ID for the database of parity</ul>
+ *     <ul><code>sequence</code> - order of lesson during the day</ul>
+ *     <ul><code>dayID</code> - ID of the day (mon - 1)</ul>
+ *     <ul><code>info</code> the whole info about parsed lesson</ul>
+ * </li>
+ *
+ * @author Vlad Slepukhin
+ * @since 1.0
+ */
 public class HTMLCellEntity {
     private List<HTMLRecord> cell = new ArrayList<>();
 
     public HTMLCellEntity() {
     }
 
+    /**
+     * Adds record to the list of lessons/
+     * @param weekID  ID for the database of parity.
+     * @param sequence order through day.
+     * @param dayID day ID (mon -1)
+     * @param info all the data
+     */
     public void addRecord(int weekID, int sequence, int dayID, String info) {
         HTMLRecord r = new HTMLRecord();
 
@@ -35,6 +57,10 @@ public class HTMLCellEntity {
         cell.add(r);
     }
 
+    /**
+     * Accessor for usage in the DB.
+     * @return List of {@link org.ssutt.core.fetch.html.HTMLRecord} entities
+     */
     public List<HTMLRecord> getCell() {
         return cell;
     }

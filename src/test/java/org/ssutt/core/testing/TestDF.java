@@ -22,7 +22,7 @@ import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.ssutt.core.fetch.TTDataFetcher;
+import org.ssutt.core.fetch.AbstractDataFetcher;
 import org.ssutt.core.fetch.SSUDataFetcher;
 
 import java.util.ArrayList;
@@ -32,22 +32,13 @@ import java.util.TreeSet;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestDF {
-    private String[] exclusions = {"kgl", "cre", "el"};
-    private String globalScheduleURL = "http://www.sgu.ru/schedule";
 
-    private TTDataFetcher df;
+    private AbstractDataFetcher df;
 
     @Test
-    public void aTestObjectCreation() {
+    public void aTestGettingDataFromSSU() {
         if (df == null)
-            df = new SSUDataFetcher(globalScheduleURL, exclusions);
-        Assert.assertArrayEquals("DataFetcher(SSU) creation - failed", exclusions, df.getExclusions());
-    }
-
-    @Test
-    public void bTestGettingDataFromSSU() {
-        if (df == null)
-            df = new SSUDataFetcher(globalScheduleURL, exclusions);
+            df = new SSUDataFetcher();
         Map<String, String> res = df.getDepartments();
 
         Assert.assertNotNull("DataFetcher(SSU) getting departments - failed", res);
@@ -56,7 +47,7 @@ public class TestDF {
     @Test
     public void cTestGettingGroups() {
         if (df == null)
-            df = new SSUDataFetcher(globalScheduleURL, exclusions);
+            df = new SSUDataFetcher();
 
         Map<String, String> res = df.getDepartments();
 

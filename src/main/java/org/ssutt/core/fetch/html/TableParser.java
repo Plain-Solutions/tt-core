@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ssutt.core.dm;
-
-import org.ssutt.core.dm.entities.HTMLCellEntity;
+package org.ssutt.core.fetch.html;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TableParser - set of tools to re-format TTDataFetcher parsed HTML table and prepare to split into two tables.
+ * TableParser - set of tools to re-format AbstractDataFetcher parsed HTML table and prepare to split into two tables.
  *
  * @author Vlad Slepukhin
  * @since 1.0
@@ -49,7 +47,7 @@ public abstract class TableParser {
         if (parsed.contains("odd")) {
             return createEntity(2, row + 1, column + 1, parsed.get(0));
         }
-        if (parsed.contains("both")) {
+        if (parsed.contains("all")) {
             return createEntity(3, row + 1, column + 1, parsed.get(0));
         }
 
@@ -71,10 +69,10 @@ public abstract class TableParser {
     }
 
     /**
-     * Analyzes cell and finds out which parity does it have: only even, only odd or both.
+     * Analyzes cell and finds out which parity does it have: only even, only odd or all, or changing every week.
      *
      * @param cell the cell from HTML-parsed table.
-     * @return
+     * @return generated list containing classes or their parity description:
      */
     private static List<String> splitCell(String cell) {
         List<String> result = new ArrayList<>();
@@ -92,7 +90,7 @@ public abstract class TableParser {
         }
 
         if ((cell.contains(ev))) {
-            //has even marker, in the beginning of the entities and has no odd marker
+            //has even marker, in the beginning of the entity and has no odd marker
             if ((cell.indexOf(ev) == 0) && (cell.indexOf(od)) == -1) {
                 result.add(cell.replace(ev, ""));
                 result.add("even");
@@ -108,7 +106,7 @@ public abstract class TableParser {
 
         //same for odd
         if ((cell.contains(od))) {
-            //has even marker, in the beginning of the entities and has no odd marker
+            //has even marker, in the beginning of the entity and has no odd marker
             if ((cell.indexOf(od) == 0) && (!cell.contains(ev))) {
                 result.add(cell.replace(od, ""));
                 result.add("odd");
@@ -124,14 +122,14 @@ public abstract class TableParser {
 
         //has no markers, both weeks
         result.add(cell);
-        result.add("both");
+        result.add("all");
         return result;
     }
 
     /**
      * Entity factory.
      *
-     * @param weekID   parity of the week: even, odd, both.
+     * @param weekID   parity of the week: even, odd, all.
      * @param sequence the order of the lessons by the day.
      * @param dayID    weekday numerical representation.
      * @param info     parsed parity-free information about subject.

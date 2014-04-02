@@ -30,29 +30,32 @@ import java.util.*;
 
 
 /**
- * SSUSQLManager is an implementation of TTSQLManager, configured for usage
+ * SSUSQLManager is an implementation of AbstractSQLManager, configured for usage
  * in SSU with H2DB (defined in the constructor)
  *
  * @author Vlad Slepukhin
  * @since 1.0
  */
-public class SSUSQLManager implements TTSQLManager {
+public class SSUSQLManager implements AbstractSQLManager {
     private static Connection conn;
-    private static Queries qrs;
+    private static AbstractQueries qrs;
 
     /**
-     * Constructor that creates configured TTSQLManager instance for usage in TTDataManager (mainly)
-     * @param conn java.sql.Connection of database provider, that should be familiar to instance creator method
+     * Constructor that creates configured AbstractSQLManager instance for usage in AbstractDataManager (mainly)
+     *
+     * @param conn java.sql.Connection of database provider, that should be familiar to instance creator method.
+     * @since 1.0
      */
     public SSUSQLManager(Connection conn) {
         SSUSQLManager.conn = conn;
-        qrs = new H2Queries();
     }
 
     /**
      * Adds departments to the DB.
-     * @param departments Map of departments: name-tag. Better to be sorted by displayed name.  
+     *
+     * @param departments Map of departments: name-tag. Better to be sorted by displayed name.
      * @throws SQLException
+     * @since 1.0
      */
     @Override
     public void putDepartments(Map<String, String> departments) throws SQLException {
@@ -67,10 +70,12 @@ public class SSUSQLManager implements TTSQLManager {
 
     /**
      * Adds groups to the DB.
-     * @param groups list of group names or numbers, that will be displayed to the end-user.
+     *
+     * @param groups        list of group names or numbers, that will be displayed to the end-user.
      * @param departmentTag tag of the department to associate with the group in <code>groups</code> table.
      * @throws SQLException
-     * @throws NoSuchDepartmentException If no such department found. 
+     * @throws NoSuchDepartmentException If no such department found.
+     * @since 1.0
      */
     @Override
     public void putGroups(List<String> groups, String departmentTag) throws SQLException, NoSuchDepartmentException {
@@ -87,11 +92,13 @@ public class SSUSQLManager implements TTSQLManager {
 
     /**
      * Adds datetime information about lesson to <code>lessons_datetimes</code> table, if no such datetime found.
-     * @param weekID identifier from week_states: even, odd or both.
+     *
+     * @param weekID   identifier from week_states: even, odd or all.
      * @param sequence the order of the lesson during the day.
-     * @param dayID day number in the week, Monday - 1.
-     * @return id of the datetime record.
+     * @param dayID    day number in the week, Monday - 1.
+     * @return ID of the datetime record.
      * @throws SQLException
+     * @since 1.0
      */
     @Override
     public int putDateTime(int weekID, int sequence, int dayID) throws SQLException {
@@ -112,9 +119,11 @@ public class SSUSQLManager implements TTSQLManager {
 
     /**
      * Adds subject to respective table, if not exists.
+     *
      * @param info information about subject (displayble, like room, teacher, lesson activity, name).
-     * @return id of the added/found subject.
+     * @return ID of the added/found subject.
      * @throws SQLException
+     * @since 1.0
      */
     @Override
     public int putSubject(String info) throws SQLException {
@@ -138,10 +147,12 @@ public class SSUSQLManager implements TTSQLManager {
     /**
      * Adds the lesson record - which group has this lesson, at what datetime, and, obviously, what is the lesson
      * is on for this group at this particular datetime (week parity, day and time)
-     * @param groupID the id of the group (should be taken from <code>groups</code> table.
+     *
+     * @param groupID    the id of the group (should be taken from <code>groups</code> table.
      * @param dateTimeID the id of datetime (should be taken from <code>lessons_datetimes</code> table.
-     * @param subjectID the id of the subject ((should be taken from <code>subjects</code> table.
+     * @param subjectID  the id of the subject ((should be taken from <code>subjects</code> table.
      * @throws SQLException
+     * @since 1.0
      */
     @Override
     public void putLessonRecord(int groupID, int dateTimeID, int subjectID) throws SQLException {
@@ -153,19 +164,27 @@ public class SSUSQLManager implements TTSQLManager {
     }
 
     /**
-     * Gets Map (name-tag) of departments from DB.
-     * @return map in format name-tag
+     * Gets list of departments, sorted by their printed names with parameters. Since 1.1 we
+     * use list of parameters to make department entries more extensionable.
+     *
+     * @return Map<String, Map</String, String/>> where key is department tag and Map<String, String> all the data with
+     * provided names of positions.
      * @throws SQLException
+     * @since 1.1
      */
     @Override
-    public Map<String, String> getDepartments() throws SQLException {
-        Map<String, String> result = new HashMap<>();
+    public Map<String, Map<String, String>> getDepartments() throws SQLException {
+        Map<String, Map<String, String>> result = new LinkedHashMap<>();
 
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(qrs.qGetDepartments());
 
         while (rs.next()) {
-            result.put(rs.getString("name"), rs.getString("tag"));
+            Map<String, String> data = new LinkedHashMap<>();
+            String tag = rs.getString("tag");
+            data.put("name", rs.getString("name"));
+            result.put(tag, data);
+
         }
 
         stmt.close();
@@ -173,9 +192,11 @@ public class SSUSQLManager implements TTSQLManager {
     }
 
     /**
-     * Gets only tags from departemnt table from DB.
+     * Gets only tags from department table from DB.
+     *
      * @return List of Strings.
      * @throws SQLException
+     * @since 1.0
      */
     @Override
     public List<String> getDepartmentTags() throws SQLException {
@@ -193,10 +214,12 @@ public class SSUSQLManager implements TTSQLManager {
 
     /**
      * Get group names from groups table, based on department tag ('knt', 'ff' or so)
+     *
      * @param departmentTag department tag.
      * @return List of strings (some groups has non-numerical names @see org.ssutt.core.fetch.SSUDataFetcher)
      * @throws SQLException
      * @throws NoSuchDepartmentException
+     * @since 1.0
      */
     @Override
     public List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException {
@@ -216,12 +239,14 @@ public class SSUSQLManager implements TTSQLManager {
     /**
      * Gets group global id from <code>groups</code> table. Actually, converts its name and its department tag to
      * simple and fast number - id.
+     *
      * @param departmentTag the tag of the department, where the groups exists.
-     * @param groupName its printed name.
-     * @return the global id.
+     * @param groupName     its printed name.
+     * @return The global id.
      * @throws SQLException
      * @throws NoSuchDepartmentException
      * @throws NoSuchGroupException
+     * @since 1.0
      */
     @Override
     public int getGroupID(String departmentTag, String groupName) throws SQLException,
@@ -241,13 +266,15 @@ public class SSUSQLManager implements TTSQLManager {
 
     /**
      * Gets displayable name from groups department (represented by tag) and its ID from <code>groups</code> table.
-     * Actually, convertion, opposite to getGroupID.
+     * Actually, convert, opposite to getGroupID.
+     *
      * @param departmentTag the tag of the department, where the groups exists.
-     * @param groupID its global ID.
-     * @return the printed name.
+     * @param groupID       its global ID.
+     * @return The printed name.
      * @throws SQLException
      * @throws NoSuchDepartmentException
      * @throws NoSuchGroupException
+     * @since 1.0
      */
     @Override
     public String getGroupName(String departmentTag, int groupID) throws SQLException,
@@ -259,21 +286,28 @@ public class SSUSQLManager implements TTSQLManager {
             while (rs.next()) name = rs.getString("name");
             stmt.close();
 
-            if (name.length()==0) throw new NoSuchGroupException();
+            if (name.length() == 0) throw new NoSuchGroupException();
 
             return name;
-        }
-        else throw new NoSuchDepartmentException();
+        } else throw new NoSuchDepartmentException();
     }
 
     /**
      * Gets the whole timetable of the group, based on its id from <code>groups</code> table.
+     *
      * @param groupID the  global id of the group.
      * @return List\<String[]\> formatted line by line in ascending day and ascending sequence (of classes) way. Each
-     * String[] contains week state, the name of the day, sequence (as String!) and information about subject.
+     * String[] contains
+     * <ul>
+     * <li>0 - weekday name (mon, tue, wed, ...)</li>
+     * <li>1 - state of parity (even, odd or all)</li>
+     * <li>2 - sequence - order during the day (1 to 8)</li>
+     * <li>3 - info - all the information about record: type of activity, subject, teacher and room (may differ)</li>
+     * </ul>
      * @throws SQLException
      * @throws NoSuchGroupException
      * @throws EmptyTableException
+     * @since 1.1
      */
     @Override
     public List<String[]> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException {
@@ -281,27 +315,28 @@ public class SSUSQLManager implements TTSQLManager {
             List<String[]> table = new ArrayList<>();
 
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTT(),groupID));
+            ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTT(), groupID));
             while (rs.next()) {
                 String[] element = new String[4];
-                element[0]=rs.getString("state");
-                element[1]=rs.getString("name");
-                element[2]=String.valueOf(rs.getInt("sequence"));
-                element[3]=rs.getString("info");
+                element[0] = rs.getString("name");
+                element[1] = rs.getString("state");
+                element[2] = String.valueOf(rs.getInt("sequence"));
+                element[3] = rs.getString("info");
                 table.add(element);
             }
-            if (table.size()==0) throw new EmptyTableException();
+            if (table.size() == 0) throw new EmptyTableException();
 
             return table;
-        }
-        else throw new NoSuchGroupException();
+        } else throw new NoSuchGroupException();
     }
 
     /**
      * Utility. Checks, if the department found by its tag.
+     *
      * @param departmentTag the tag of the department: knt, ff, sf or so.
      * @return <code>true</code> if found, else <code>false</code>.
      * @throws SQLException
+     * @since 1.0
      */
     @Override
     public boolean departmentExists(String departmentTag) throws SQLException {
@@ -316,10 +351,12 @@ public class SSUSQLManager implements TTSQLManager {
 
     /**
      * Utility. Checks, if the specified department has this group.
+     *
      * @param departmentTag the tag of the department: knt, ff, sf or so.
-     * @param groupName the displayable name to check.
+     * @param groupName     the displayable name to check.
      * @return <code>true</code> if found, else <code>false</code>.
      * @throws SQLException
+     * @since 1.0
      */
     @Override
     public boolean groupExistsInDepartment(String departmentTag, String groupName) throws SQLException {
@@ -331,6 +368,14 @@ public class SSUSQLManager implements TTSQLManager {
         return (id != 0);
     }
 
+    /**
+     * Utility. Checks, if such ID exists in the DB.
+     *
+     * @param groupID the group to check
+     * @return <code>true</code> if found, else <code>false</code>
+     * @throws SQLException
+     * @since 1.0
+     */
     @Override
     public boolean groupExistsAsID(int groupID) throws SQLException {
         Statement stmt = conn.createStatement();
@@ -343,11 +388,13 @@ public class SSUSQLManager implements TTSQLManager {
 
     /**
      * Utility. Checks if the group has this subject at the specified datetime.
-     * @param groupID the global id of the group.
+     *
+     * @param groupID    the global id of the group.
      * @param dateTimeID datetime id to check.
-     * @param subjectID the id of the subject (should be taken from <code>subjects</code> table).
-     * @return
+     * @param subjectID  the id of the subject (should be taken from <code>subjects</code> table).
+     * @return <code>true</code> if group has this class at this particular time, else <code>false</code>
      * @throws SQLException
+     * @since 1.0
      */
     @Override
     public boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException {
@@ -362,9 +409,11 @@ public class SSUSQLManager implements TTSQLManager {
 
     /**
      * Utility. Gets the last ID of the specified table.
+     *
      * @param table checked table.
-     * @return last ID.
+     * @return Last ID.
      * @throws SQLException
+     * @since 1.0
      */
     @Override
     public int getLastID(String table) throws SQLException {
@@ -375,6 +424,18 @@ public class SSUSQLManager implements TTSQLManager {
         while (rs.next())
             id = rs.getInt("MAX(id)");
         return id;
+    }
+
+    /**
+     * Initialization utility. Gets AbstractQueries instance to provide SQL queries definition for exact database
+     * (H2DB, MySQL or so).
+     *
+     * @param qrs initialized AbstractQueries implementation.
+     * @since 1.1
+     */
+    @Override
+    public void setQueries(AbstractQueries qrs) {
+        SSUSQLManager.qrs = qrs;
     }
 }
 

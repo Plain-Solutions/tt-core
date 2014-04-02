@@ -24,11 +24,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TTSQLManager is one the core workers in TT Core library that serves as a bridge
- * between raw data, supplied by TTDataFetcher and TTDataManager and some database instance, which
- * description is usually passed by TTDataManager.
+ * AbstractSQLManager is one the core workers in TT Core library that serves as a bridge
+ * between raw data, supplied by AbstractDataFetcher and AbstractDataManager and some database instance, which
+ * description is usually passed by AbstractDataManager.
+ * <p/>
+ * There is no need to describe each prototype in detail, so please follow 'see' link:
+ *
+ * @author Vlad Slepukhin
+ * @see org.ssutt.core.sql.SSUSQLManager
+ * @since 1.0
  */
-public interface TTSQLManager {
+public interface AbstractSQLManager {
     void putDepartments(Map<String, String> departments) throws SQLException;
 
     void putGroups(List<String> groups, String departmentTag) throws SQLException, NoSuchDepartmentException;
@@ -40,7 +46,7 @@ public interface TTSQLManager {
     void putLessonRecord(int groupID, int dateTimeID, int subjectID) throws SQLException;
 
 
-    Map<String, String> getDepartments() throws SQLException;
+    Map<String, Map<String, String>> getDepartments() throws SQLException;
 
     List<String> getDepartmentTags() throws SQLException;
 
@@ -64,5 +70,7 @@ public interface TTSQLManager {
     boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException;
 
     int getLastID(String table) throws SQLException;
+
+    void setQueries(AbstractQueries qrs);
 
 }

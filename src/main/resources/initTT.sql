@@ -59,21 +59,10 @@ INSERT INTO week_states (state)
       SELECT state FROM week_states WHERE state = 'odd'
   ) LIMIT 1;
 INSERT INTO week_states (state)
-  SELECT * FROM (SELECT 'both') AS tmp
+  SELECT * FROM (SELECT 'all') AS tmp
   WHERE NOT EXISTS (
-      SELECT state FROM week_states WHERE state = 'both'
+      SELECT state FROM week_states WHERE state = 'all'
   ) LIMIT 1;
-INSERT INTO week_states (state)
-  SELECT * FROM (SELECT 'even') AS tmp
-  WHERE NOT EXISTS (
-      SELECT state FROM week_states WHERE state = 'even'
-  ) LIMIT 1;
-INSERT INTO week_states (state)
-  SELECT * FROM (SELECT 'odd') AS tmp
-  WHERE NOT EXISTS (
-      SELECT state FROM week_states WHERE state = 'odd'
-  ) LIMIT 1;
-
 
 INSERT INTO days (name)
   SELECT * FROM (SELECT 'mon') AS tmp

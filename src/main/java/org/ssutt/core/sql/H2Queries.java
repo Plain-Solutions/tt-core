@@ -16,26 +16,27 @@
 package org.ssutt.core.sql;
 
 /**
- * H2Queries is an implementation of Queries interface to help TTSQLManager to communicate with H2 database
- * <p>
+ * H2Queries is an implementation of AbstractQueries interface to help AbstractSQLManager to communicate with H2 database
+ * <p/>
  * All the query definitions in this class are created specially for H2. Compatibility with other database providers
  * is not guaranteed.
  *
  * @author Vlad Slepukhin
  * @since 1.0
  */
-public class H2Queries implements Queries {
+public class H2Queries implements AbstractQueries {
 
     public H2Queries() {
     }
 
     /**
      * Query description. Gets the last id in the given table.
-     * <p>
+     * <p/>
      * The main usage is it get the last added class or datetime and pass it back to
      * lessons_records
      *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String getLastID() {
@@ -44,7 +45,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Adds department to <code>departments</code> table
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qAddDepartment() {
@@ -53,7 +56,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Adds group to <code>groups</code> table, based on department_tag information
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qAddGroups() {
@@ -64,7 +69,9 @@ public class H2Queries implements Queries {
     /**
      * Query description. Adds datetime entry to <code>lessons_datetimes</code> table to handle all the variations
      * of lesson parity, sequence of them and day order
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qAddDateTime() {
@@ -73,7 +80,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Adds subject entry to <code>subjects</code> table to store them for further use.
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qAddSubject() {
@@ -83,7 +92,9 @@ public class H2Queries implements Queries {
     /**
      * Query description. Adds lesson entry to <code>lessons_records</code> table to interconnect group, subject and datetime entries
      * in respective tables for fetching structured information about group timetable
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qAddLessonRecord() {
@@ -92,16 +103,20 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Gets map name-tag from <code>departments table</code>
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetDepartments() {
-        return "SELECT name,tag FROM departments;";
+        return "SELECT name,tag FROM departments ORDER BY NAME;";
     }
 
     /**
      * Query description. Exclusively gets tags of departments, because of their wide usage in the whole TT project
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetDepartmentTags() {
@@ -110,7 +125,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Converts department tag to the id.
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetDepartmentTagByID() {
@@ -119,7 +136,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Converts department id to the printed name
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetDepartmentNameByID() {
@@ -128,7 +147,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Gets tag of the department by the name.
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetDepartmentTagByName() {
@@ -136,9 +157,11 @@ public class H2Queries implements Queries {
     }
 
     /**
-     * Query description. Gets all the groups names (displayble) from <code>groups</code> table, based on the
+     * Query description. Gets all the groups names (displayable) from <code>groups</code> table, based on the
      * department tag.
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetGroups() {
@@ -148,7 +171,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description.Gets group id from <code>groups table</code>, based on its name and department tag.
-     * @return
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetGroupID() {
@@ -158,7 +183,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Gets group name from <code>groups</code> table, based on its id and department tag.
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetGroupName() {
@@ -168,7 +195,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Gets id of the datetime record from <code>lessons_datetimes</code>.
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetDateTimeID() {
@@ -177,7 +206,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Gets id of the subject from <code>subjects</code> table.
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetSubjectID() {
@@ -186,7 +217,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Gets structured information about the whole timetable for the selected group
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGetTT() {
@@ -202,7 +235,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Utility. Gets id of the department to proof its existence.
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qDepartmentExists() {
@@ -211,7 +246,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Utility. Gets id of the group to proof its existence.
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qGroupIDExists() {
@@ -220,7 +257,9 @@ public class H2Queries implements Queries {
 
     /**
      * Query description. Utility. Gets id of the subject to proof its existence.
+     *
      * @return <code>String</code> containing SQL query.
+     * @since 1.0
      */
     @Override
     public String qSubjectExists() {

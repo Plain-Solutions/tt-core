@@ -20,7 +20,7 @@ package org.ssutt.core.testing;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.ssutt.core.sql.TTSQLManager;
+import org.ssutt.core.sql.AbstractSQLManager;
 import org.ssutt.core.sql.SSUSQLManager;
 
 import java.sql.Connection;
@@ -41,7 +41,7 @@ public class TestDB {
 
     @Test
     public void TestSSUSQLManager(){
-        TTSQLManager sqlm = new SSUSQLManager(conn);
+        AbstractSQLManager sqlm = new SSUSQLManager(conn);
         Assert.assertNotNull("Testing SQLManager(SSU) - failed", sqlm);
     }
 }
