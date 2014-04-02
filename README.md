@@ -2,7 +2,7 @@ TT Core Library
 =======
 General
 =======
-[SSU TimeTables](ssutt.org) is a startup by Plain Solutions, group of several students, which is created to bring university schedules to your palm - your mobile devices.
+[SSU TimeTables](http://ssutt.org) is a startup by Plain Solutions, group of several students, which is created to bring university schedules to your palm - your mobile devices.
 
 What is TT Core?
 ================
