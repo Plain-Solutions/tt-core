@@ -1,10 +1,8 @@
 TT Core Library
 =======
-General
-=======
 [SSU TimeTables](http://ssutt.org) is a startup by Plain Solutions, group of several students, which is created to bring university schedules to your palm - your mobile devices.
 
-What is TT Core?
+General
 ================
 TT Core is a kernel of the TT Project. It connects two main structures: university website with timetables, database, containing pre-formatted entries, groups and departments lists and an interface to represent data in web-friendly format and deliver data to  [TT Platform](https://github.com/plain-solutions/tt-platform) -  servlet module.
 
