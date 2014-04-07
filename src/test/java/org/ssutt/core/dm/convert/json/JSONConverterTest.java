@@ -16,16 +16,9 @@
 
 package org.ssutt.core.dm.convert.json;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.junit.Before;
+
 import org.junit.Test;
 import org.ssutt.core.dm.TTStatus;
-import org.ssutt.core.dm.convert.json.entity.DepartmentEntity;
-import org.ssutt.core.dm.convert.json.entity.StatusEntity;
-import org.ssutt.core.dm.convert.json.entity.TimeTableEntity;
-import org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer;
-import org.ssutt.core.dm.convert.json.serializer.TimeTableSerializer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,8 +69,6 @@ public class JSONConverterTest {
 
     @Test
     public void testConvertTT() throws Exception {
-        GsonBuilder gsb = new GsonBuilder();
-
         List<String[]> tt = new ArrayList<>();
 
         String[] t0 = new String[]{"mon", "even", "1", "calc"};
@@ -112,6 +103,15 @@ public class JSONConverterTest {
 
     @Test
     public void testReverseConvertGroup() throws Exception {
+        List<String> expected = new ArrayList<>();
+
+        String groups = "[\"111\",\"123\",\"145\",\"String group\"]";
+
+        expected = Arrays.asList(new String[]{"111", "123", "145", "String group"});
+
+        List<String> result = jsc.reverseConvertGroup(groups);
+
+        assertArrayEquals(expected.toArray(), result.toArray());
 
     }
 }
