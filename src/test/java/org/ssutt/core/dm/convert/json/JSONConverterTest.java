@@ -16,12 +16,20 @@
 
 package org.ssutt.core.dm.convert.json;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import org.junit.Test;
+import org.ssutt.core.dm.TTStatus;
 import org.ssutt.core.dm.convert.json.entity.DepartmentEntity;
+import org.ssutt.core.dm.convert.json.entity.StatusEntity;
+import org.ssutt.core.dm.convert.json.entity.TimeTableEntity;
 import org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer;
+import org.ssutt.core.dm.convert.json.serializer.TimeTableSerializer;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -50,35 +58,70 @@ public class JSONConverterTest {
 
         String result = gsb.create().toJson(departments);
 
-        System.out.println("expected: " + expected);
-        System.out.println("result: " + result);
-
         assertEquals(expected, result);
     }
 
     @Test
     public void testConvertGroupList() throws Exception {
+        List<String> groups = new ArrayList<>();
 
-    }
+        String expected = "[\"111\",\"123\",\"145\",\"String group\"]";
 
-    @Test
-    public void testConvertAbstractList() throws Exception {
+        groups = Arrays.asList(new String[]{"111", "123", "145", "String group"});
 
-    }
+        Gson gson = new Gson();
 
-    @Test
-    public void testConvertGroupName() throws Exception {
+        String result = gson.toJson(groups);
+
+        assertEquals(expected, result);
 
     }
 
     @Test
     public void testConvertTT() throws Exception {
+        GsonBuilder gsb = new GsonBuilder();
+
+        List<String[]> tt = new ArrayList<>();
+
+        String[] t0 = new String[]{"mon", "even", "1", "calc"};
+        String[] t1 = new String[]{"tue", "odd", "2", "code"};
+        String[] t2 = new String[]{"wed", "all", "3", "la"};
+
+        tt.add(t0);
+        tt.add(t1);
+        tt.add(t2);
+
+        String expected = "{\"mon\":[{\"parity\":\"even\",\"sequence\":\"1\",\"info\":\"calc\"}]," +
+                "\"tue\":[{\"parity\":\"odd\",\"sequence\":\"2\",\"info\":\"code\"}]," +
+                "\"wed\":[{\"parity\":\"all\",\"sequence\":\"3\",\"info\":\"la\"}]}";
+
+        Map<String, List<Map<String, String>>> temp = new LinkedHashMap<>();
+
+        for (String[] record : tt) {
+            String weekday = record[0];
+            Map<String, String> t = new LinkedHashMap<>();
+            t.put("parity", record[1]);
+            t.put("sequence", record[2]);
+            t.put("info", record[3]);
+            if (temp.containsKey(weekday)) {
+                temp.get(weekday).add(t);
+            } else {
+                List<Map<String, String>> tT = new ArrayList<>();
+                tT.add(t);
+                temp.put(weekday, tT);
+            }
+        }
+
+        gsb.registerTypeAdapter(TimeTableEntity.class, new TimeTableSerializer());
+
+        String result = gsb.create().toJson(temp);
+
+        assertEquals(expected, result);
 
     }
 
     @Test
     public void testConvertStatus() throws Exception {
-
     }
 
     @Test
