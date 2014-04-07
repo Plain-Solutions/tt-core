@@ -1,7 +1,11 @@
 Changelog
 =========
-###TT Core 1.2.0
+###TT Core <@dev>
 
+* Added adequate testing module with correct independent tests with JUnit 4.
+* TTStatus rewritten to return actual messages. Backwards compatibility for TT Platform 1.0.3 is saved.
+
+###TT Core 1.2.0
 
 * Added `org.ssutt.dm.json` (now is `org.ssutt.dm.convert.json`) - transfered from TT Platform - package to transform data from TTDataManager into JSON Strings.
 * `JSONConverter` now is an instance of `AbstractDataConverter` - interface to provide various output to user-agent in TT Platform. With this abstraction we can get not only JSON-formatted output, but anything, that can be converted to `String` 	

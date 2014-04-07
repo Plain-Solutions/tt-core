@@ -15,23 +15,48 @@
 */
 package org.ssutt.core.dm;
 
+/**
+ * TTStatus is just enum of all the messages codes for communication between modules to improve structure and
+ * create unified design of error messages.
+ */
 public enum TTStatus {
-    GENSQL("SQL"),
-    TTSQL("SSUSQLManager/Database"),
-    DF("SSUDataFetcher"),
-    IO("Input/Output"),
+    GENSQL,
+    TTSQL,
+    DF,
+    IO,
 
-    DEPARTMENTERR("No such department."),
-    GROUPERR("No such group."),
-    TABLERR("Table seems to be empty."),
-    IOERR("I/O or URL Error."),
+    DEPARTMENTERR,
+    GROUPERR,
+    TABLERR,
+    IOERR,
 
-    OK("ok"),
-    OKMSG("");
+    OK,
+    OKMSG;
 
-    private final String name;
-
-    TTStatus(String name) {
-        this.name = name;
+    public String message(TTStatus e) {
+        switch (e) {
+            case GENSQL:
+                return "General SQL (Transaction) Error";
+            case TTSQL:
+                return "TT DB SQL Error";
+            case DF:
+                return "DataFetcher Error";
+            case IO:
+                return "General I/O Error";
+            case DEPARTMENTERR:
+                return "No such department";
+            case GROUPERR:
+                return "No such group";
+            case TABLERR:
+                return "Empty table";
+            case IOERR:
+                return "URL Exception";
+            case OK:
+                return "OK";
+            case OKMSG:
+            default:
+                return "";
+        }
     }
+
 }

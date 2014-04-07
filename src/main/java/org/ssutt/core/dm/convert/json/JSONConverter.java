@@ -138,7 +138,7 @@ public class JSONConverter implements AbstractDataConverter {
      */
     @Override
     public String convertStatus(TTStatus module, String msg) {
-        return gson.toJson(new StatusEntity(module.name(), msg));
+        return gson.toJson(new StatusEntity(module.toString(), msg));
     }
 
     /**
@@ -150,7 +150,7 @@ public class JSONConverter implements AbstractDataConverter {
      */
     @Override
     public String convertStatus(TTStatus module, TTStatus state) {
-        return gson.toJson(new StatusEntity(module.name(), state.name()));
+        return gson.toJson(new StatusEntity(module.toString(), state.message(state)));
     }
 
     /**

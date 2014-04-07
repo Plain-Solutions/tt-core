@@ -18,7 +18,7 @@ package org.ssutt.core.dm.convert.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import edu.emory.mathcs.backport.java.util.Arrays;
+import org.junit.Before;
 import org.junit.Test;
 import org.ssutt.core.dm.TTStatus;
 import org.ssutt.core.dm.convert.json.entity.DepartmentEntity;
@@ -28,6 +28,7 @@ import org.ssutt.core.dm.convert.json.serializer.DepartmentSerializer;
 import org.ssutt.core.dm.convert.json.serializer.TimeTableSerializer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 public class JSONConverterTest {
+    private JSONConverter jsc = new JSONConverter();
 
     @Test
     public void testConvertDepartmentList() throws Exception {
@@ -53,10 +55,7 @@ public class JSONConverterTest {
             departments.put(departmentCodes[i], info);
         }
 
-        GsonBuilder gsb = new GsonBuilder();
-        gsb.registerTypeAdapter(DepartmentEntity.class, new DepartmentSerializer());
-
-        String result = gsb.create().toJson(departments);
+        String result = jsc.convertDepartmentList(departments);
 
         assertEquals(expected, result);
     }
@@ -69,9 +68,7 @@ public class JSONConverterTest {
 
         groups = Arrays.asList(new String[]{"111", "123", "145", "String group"});
 
-        Gson gson = new Gson();
-
-        String result = gson.toJson(groups);
+        String result = jsc.convertGroupList(groups);
 
         assertEquals(expected, result);
 
@@ -95,26 +92,7 @@ public class JSONConverterTest {
                 "\"tue\":[{\"parity\":\"odd\",\"sequence\":\"2\",\"info\":\"code\"}]," +
                 "\"wed\":[{\"parity\":\"all\",\"sequence\":\"3\",\"info\":\"la\"}]}";
 
-        Map<String, List<Map<String, String>>> temp = new LinkedHashMap<>();
-
-        for (String[] record : tt) {
-            String weekday = record[0];
-            Map<String, String> t = new LinkedHashMap<>();
-            t.put("parity", record[1]);
-            t.put("sequence", record[2]);
-            t.put("info", record[3]);
-            if (temp.containsKey(weekday)) {
-                temp.get(weekday).add(t);
-            } else {
-                List<Map<String, String>> tT = new ArrayList<>();
-                tT.add(t);
-                temp.put(weekday, tT);
-            }
-        }
-
-        gsb.registerTypeAdapter(TimeTableEntity.class, new TimeTableSerializer());
-
-        String result = gsb.create().toJson(temp);
+        String result = jsc.convertTT(tt);
 
         assertEquals(expected, result);
 
@@ -122,10 +100,13 @@ public class JSONConverterTest {
 
     @Test
     public void testConvertStatus() throws Exception {
-    }
 
-    @Test
-    public void testConvertStatus1() throws Exception {
+
+        String expected = "{\"module\":\"IO\",\"message\":\"URL Exception\"}";
+
+        String result = jsc.convertStatus(TTStatus.IO, TTStatus.IOERR);
+
+        assertEquals(expected, result);
 
     }
 

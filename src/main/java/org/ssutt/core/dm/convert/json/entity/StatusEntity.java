@@ -27,17 +27,17 @@ package org.ssutt.core.dm.convert.json.entity;
  * @since 1.2
  */
 public class StatusEntity {
-    private String modifier;
+    private String module;
     private String message;
 
     /**
      * Creates entity.
      *
-     * @param modifier   a string describing error/success (module, usually).
+     * @param module   a string describing error/success (module, usually).
      * @param message a string with detailed information on error.
      */
-    public StatusEntity(String modifier, String message) {
+    public StatusEntity(String module, String message) {
         this.message = message;
-        this.modifier = modifier;
+        this.module = module;
     }
 }
