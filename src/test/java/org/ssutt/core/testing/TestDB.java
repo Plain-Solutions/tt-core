@@ -20,8 +20,8 @@ package org.ssutt.core.testing;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.ssutt.core.sql.AbstractSQLManager;
-import org.ssutt.core.sql.SSUSQLManager;
+import org.tt.core.sql.AbstractSQLManager;
+import org.tt.core.sql.SSUSQLManager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

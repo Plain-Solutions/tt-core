@@ -4,6 +4,7 @@ Changelog
 
 * Added adequate testing module with correct independent tests with JUnit 4.
 * TTStatus rewritten to return actual messages. Backwards compatibility for TT Platform 1.0.3 is saved.
+* Packages naming refactoring: `ssutt` replaced with `tt`
 
 ###TT Core 1.2.0
 

@@ -22,8 +22,8 @@ import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.ssutt.core.fetch.AbstractDataFetcher;
-import org.ssutt.core.fetch.SSUDataFetcher;
+import org.tt.core.fetch.AbstractDataFetcher;
+import org.tt.core.fetch.SSUDataFetcher;
 
 import java.util.ArrayList;
 import java.util.List;
