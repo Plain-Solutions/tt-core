@@ -5,6 +5,9 @@ Changelog
 * Added adequate testing module with correct independent tests with JUnit 4.
 * TTStatus rewritten to return actual messages. Backwards compatibility for TT Platform 1.0.3 is saved.
 * Packages naming refactoring: `ssutt` replaced with `tt`
+* `org.tt.core.dm.AbstractDataManager` now has two new methods: `getTT(String departmentTag, String groupName)` to resemble TT API query and avoid
+conversion from name and tag to inner DB groupID on high level and `deliverDBProvider(AbstractSQLManager sqlm)` for pre-configured SQLManagers (with initialized
+Queries provider).
 
 ###TT Core 1.2.0
 

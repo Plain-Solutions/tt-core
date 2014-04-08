@@ -117,6 +117,16 @@ public interface AbstractDataManager {
     TTData getTT(int groupID);
 
     /**
+     * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
+     * Method was introduced to create a TT API resembling structure.
+     *
+     * @param departmentTag the tag of the department
+     * @param groupName     the displayable name.
+     * @since 1.3
+     */
+    TTData getTT(String departmentTag, String groupName);
+
+    /**
      * Get the provider, AbstractSQLManager requires an instance of AbstractSQLManager implementation (for instance, SSUSQLManager
      * and AbstractQueries implementation for specified database (H2Queries, for example).
      * initialized before. For instance, in SSU TT project we do it with init script (here, in resources for testing)
@@ -128,6 +138,15 @@ public interface AbstractDataManager {
      */
     void deliverDBProvider(AbstractSQLManager sqlm, AbstractQueries qrs);
 
+
+    /**
+     * Deliver a pre-configured with some kind of queries provider.
+     *
+     * @param sqlm AbstractSQLManager instance realization with pre-configured Queries
+     * @since 1.3
+     */
+    void deliverDBProvider(AbstractSQLManager sqlm);
+
     /**
      * Get the provider of data fetching utilities. We made this abstraction to be able to create a fork for other
      * universities.
@@ -136,6 +155,7 @@ public interface AbstractDataManager {
      * @since 1.1
      */
     void deliverDataFetcherProvider(AbstractDataFetcher df);
+
 
     /**
      * Gets the provider of data representation module. It can be json or yaml or xml, but in TT Core only JSON implemented.

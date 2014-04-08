@@ -326,6 +326,34 @@ public class SSUDataManager implements AbstractDataManager {
         return result;
     }
 
+    /**
+     * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
+     *
+     * @param departmentTag the tag of the department
+     * @param groupName     the displayable name.
+     * @return TTData instance with JSON-formatted String and success/error code.
+     * @see org.tt.core.dm.convert.json.serializer.TimeTableSerializer
+     * @since 1.3
+     */
+    @Override
+    public TTData getTT(String departmentTag, String groupName) {
+        TTData result = new TTData();
+        try {
+            int groupID = sqlm.getGroupID(departmentTag, groupName);
+            result = getTT(groupID);
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
+        }
+        return result;
+    }
+
 
     /**
      * Get the provider, AbstractSQLManager requires an instance of AbstractSQLManager implementation (for instance, SSUSQLManager
@@ -341,6 +369,17 @@ public class SSUDataManager implements AbstractDataManager {
     public void deliverDBProvider(AbstractSQLManager sqlm, AbstractQueries qrs) {
         this.sqlm = sqlm;
         sqlm.setQueries(qrs);
+    }
+
+    /**
+     * Gets already confiugred instance and delivers it to this class.
+     *
+     * @param sqlm AbstractSQLManager instance realization with pre-configured Queries
+     * @since 1.3
+     */
+    @Override
+    public void deliverDBProvider(AbstractSQLManager sqlm) {
+        this.sqlm = sqlm;
     }
 
     /**
@@ -369,6 +408,6 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     public JSONConverter getJSONConverter() {
-        return (JSONConverter)dconv;
+        return (JSONConverter) dconv;
     }
 }
