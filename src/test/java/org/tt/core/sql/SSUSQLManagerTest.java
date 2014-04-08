@@ -44,15 +44,15 @@ public class SSUSQLManagerTest {
 
     @Before
     public void initializeTestDB() throws SQLException, ClassNotFoundException {
-            if (sqlm==null) {
-                Class.forName("org.h2.Driver");
-                Connection c = DriverManager.
-                        getConnection("jdbc:h2:mem:localtest;INIT=RUNSCRIPT FROM './src/test/resources/initTT.sql'", "sa", "");
+        if (sqlm == null) {
+            Class.forName("org.h2.Driver");
+            Connection c = DriverManager.
+                    getConnection("jdbc:h2:mem:localtest;INIT=RUNSCRIPT FROM './src/test/resources/initTT.sql'", "sa", "");
 
-                sqlm = new SSUSQLManager(c);
+            sqlm = new SSUSQLManager(c);
 
-                sqlm.setQueries(new H2Queries());
-            }
+            sqlm.setQueries(new H2Queries());
+        }
     }
 
     @Test
@@ -68,18 +68,17 @@ public class SSUSQLManagerTest {
     @Test
     public void b_testPutGroups() throws Exception {
         List<String> bfgroups = Arrays.asList(new String[]{"111", "222"});
-        List<String> gfgroups = Arrays.asList(new String[]{"121","StringGroup"});
+        List<String> gfgroups = Arrays.asList(new String[]{"121", "StringGroup"});
 
         sqlm.putGroups(bfgroups, "bf");
         sqlm.putGroups(gfgroups, "gf");
     }
 
 
-
     @Test
     public void c_testPutDateTime() throws Exception {
-        sqlm.putDateTime(1,1,3);
-        sqlm.putDateTime(2,2,3);
+        sqlm.putDateTime(1, 1, 3);
+        sqlm.putDateTime(2, 2, 3);
     }
 
     @Test
@@ -90,19 +89,19 @@ public class SSUSQLManagerTest {
 
     @Test
     public void e_testPutLessonRecord() throws Exception {
-        sqlm.putLessonRecord(1,1,1);
-        sqlm.putLessonRecord(2,2,2);
-        sqlm.putLessonRecord(4,2,1);
+        sqlm.putLessonRecord(1, 1, 1);
+        sqlm.putLessonRecord(2, 2, 2);
+        sqlm.putLessonRecord(4, 2, 1);
     }
 
     @Test
     public void f_testGetDepartments() throws Exception {
-        Map <String, Map<String, String>> expected = new LinkedHashMap<>();
+        Map<String, Map<String, String>> expected = new LinkedHashMap<>();
 
-        Map <String, String> biologydata = new HashMap<>();
+        Map<String, String> biologydata = new HashMap<>();
         biologydata.put("name", "Biology");
 
-        Map <String, String> geographydata = new HashMap<>();
+        Map<String, String> geographydata = new HashMap<>();
         geographydata.put("name", "Geography");
 
         expected.put("bf", biologydata);

@@ -55,7 +55,7 @@ public class JSONConverterTest {
 
     @Test
     public void testConvertGroupList() throws Exception {
-        List<String> groups = new ArrayList<>();
+        List<String> groups;
 
         String expected = "[\"111\",\"123\",\"145\",\"String group\"]";
 
@@ -91,8 +91,6 @@ public class JSONConverterTest {
 
     @Test
     public void testConvertStatus() throws Exception {
-
-
         String expected = "{\"module\":\"IO\",\"message\":\"URL Exception\"}";
 
         String result = jsc.convertStatus(TTStatus.IO, TTStatus.IOERR);
@@ -103,7 +101,7 @@ public class JSONConverterTest {
 
     @Test
     public void testReverseConvertGroup() throws Exception {
-        List<String> expected = new ArrayList<>();
+        List<String> expected;
 
         String groups = "[\"111\",\"123\",\"145\",\"String group\"]";
 
