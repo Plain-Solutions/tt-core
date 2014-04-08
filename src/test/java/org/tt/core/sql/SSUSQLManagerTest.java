@@ -26,15 +26,10 @@ import org.junit.runners.MethodSorters;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SSUSQLManagerTest {
     private static AbstractSQLManager sqlm;
 
@@ -56,7 +51,7 @@ public class SSUSQLManagerTest {
     }
 
     @Test
-    public void a_dbPrepare() throws Exception {
+    public void testPutDepartemnts() throws Exception {
         Map<String, String> departments = new LinkedHashMap<>();
         departments.put("Biology", "bf");
         departments.put("Geography", "gf");
@@ -66,7 +61,7 @@ public class SSUSQLManagerTest {
 
 
     @Test
-    public void b_testPutGroups() throws Exception {
+    public void testPutGroups() throws Exception {
         List<String> bfgroups = Arrays.asList(new String[]{"111", "222"});
         List<String> gfgroups = Arrays.asList(new String[]{"121", "StringGroup"});
 
@@ -76,26 +71,26 @@ public class SSUSQLManagerTest {
 
 
     @Test
-    public void c_testPutDateTime() throws Exception {
+    public void testPutDateTime() throws Exception {
         sqlm.putDateTime(1, 1, 3);
         sqlm.putDateTime(2, 2, 3);
     }
 
     @Test
-    public void d_testPutSubject() throws Exception {
+    public void testPutSubject() throws Exception {
         sqlm.putSubject("algebra");
         sqlm.putSubject("physics");
     }
 
     @Test
-    public void e_testPutLessonRecord() throws Exception {
+    public void testPutLessonRecord() throws Exception {
         sqlm.putLessonRecord(1, 1, 1);
         sqlm.putLessonRecord(2, 2, 2);
         sqlm.putLessonRecord(4, 2, 1);
     }
 
     @Test
-    public void f_testGetDepartments() throws Exception {
+    public void testGetDepartments() throws Exception {
         Map<String, Map<String, String>> expected = new LinkedHashMap<>();
 
         Map<String, String> biologydata = new HashMap<>();
@@ -114,22 +109,51 @@ public class SSUSQLManagerTest {
 
     @Test
     public void testGetDepartmentTags() throws Exception {
+        List<String> expected;
 
+        expected = Arrays.asList(new String[]{"bf", "gf"});
+
+        List<String> result = sqlm.getDepartmentTags();
+
+        assertEquals(expected, result);
     }
 
     @Test
     public void testGetGroups() throws Exception {
+        List<String> expected;
 
+        expected = new LinkedList<>(Arrays.asList(new String[]{"111", "222"}));
+
+        List<String> result = sqlm.getGroups("bf");
+
+        assertEquals(expected, result);
+
+        result.clear();
+        expected.clear();
+
+        expected = new LinkedList<>(Arrays.asList(new String[]{"121", "StringGroup"}));
+
+        result = sqlm.getGroups("gf");
+
+        assertEquals(expected, result);
     }
 
     @Test
     public void testGetGroupID() throws Exception {
+        int expected = 4;
 
+        int result = sqlm.getGroupID("gf", "StringGroup");
+
+        assertEquals(expected, result);
     }
 
     @Test
     public void testGetGroupName() throws Exception {
+        String expected = "StringGroup";
 
+        String result = sqlm.getGroupName("gf", 4);
+
+        assertEquals(expected, result);
     }
 
     @Test
