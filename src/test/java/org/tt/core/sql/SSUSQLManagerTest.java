@@ -159,7 +159,16 @@ public class SSUSQLManagerTest {
 
     @Test
     public void kTestGetTT() throws Exception {
+        String expected = "wed"+"even"+"1"+"algebra";
 
+        List<String[]> result = sqlm.getTT(1);
+
+        String res = "";
+        for (String[] s: result)
+            for (String k: s)
+                    res += k;
+
+        assertEquals(expected, res);
     }
 
     @Test
@@ -175,21 +184,43 @@ public class SSUSQLManagerTest {
 
     @Test
     public void mTestGroupExistsInDepartment() throws Exception {
+        boolean result = sqlm.groupExistsInDepartment("bf", "111");
 
+        assertTrue(result);
+
+        result = sqlm.groupExistsInDepartment("bf","999");
+
+        assertFalse(result);
     }
 
     @Test
     public void nTestGroupExistsAsID() throws Exception {
+        boolean result = sqlm.groupExistsAsID(4);
 
+        assertTrue(result);
+
+        result = sqlm.groupExistsAsID(5);
+
+        assertFalse(result);
     }
 
     @Test
     public void oTestLessonExists() throws Exception {
+        boolean result = sqlm.lessonExists(1,1,1);
 
+        assertTrue(result);
+
+        result = sqlm.lessonExists(5,1,2);
+
+        assertFalse(result);
     }
 
     @Test
     public void pTestGetLastID() throws Exception {
+        int expected = 4;
 
+        int result = sqlm.getLastID("groups");
+
+        assertEquals(expected, result);
     }
 }
