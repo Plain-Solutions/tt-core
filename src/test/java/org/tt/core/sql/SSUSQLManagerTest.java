@@ -15,7 +15,7 @@
  */
 package org.tt.core.sql;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
@@ -26,9 +26,13 @@ import org.junit.runners.MethodSorters;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SSUSQLManagerTest {
@@ -74,22 +78,39 @@ public class SSUSQLManagerTest {
 
     @Test
     public void c_testPutDateTime() throws Exception {
-
+        sqlm.putDateTime(1,1,3);
+        sqlm.putDateTime(2,2,3);
     }
 
     @Test
-    public void testPutSubject() throws Exception {
-
+    public void d_testPutSubject() throws Exception {
+        sqlm.putSubject("algebra");
+        sqlm.putSubject("physics");
     }
 
     @Test
-    public void testPutLessonRecord() throws Exception {
-
+    public void e_testPutLessonRecord() throws Exception {
+        sqlm.putLessonRecord(1,1,1);
+        sqlm.putLessonRecord(2,2,2);
+        sqlm.putLessonRecord(4,2,1);
     }
 
     @Test
-    public void testGetDepartments() throws Exception {
+    public void f_testGetDepartments() throws Exception {
+        Map <String, Map<String, String>> expected = new LinkedHashMap<>();
 
+        Map <String, String> biologydata = new HashMap<>();
+        biologydata.put("name", "Biology");
+
+        Map <String, String> geographydata = new HashMap<>();
+        geographydata.put("name", "Geography");
+
+        expected.put("bf", biologydata);
+        expected.put("gf", geographydata);
+
+        Map<String, Map<String, String>> result = sqlm.getDepartments();
+
+        assertEquals(expected, result);
     }
 
     @Test
