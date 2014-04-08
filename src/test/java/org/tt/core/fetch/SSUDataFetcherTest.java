@@ -13,8 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.tt.core.fetch;
 
-public class TestDataFetcher {
+import org.junit.Test;
+
+public class SSUDataFetcherTest {
+    @Test
+    public void testGetDepartments() throws Exception {
+
+    }
+
+    @Test
+    public void testGetGroups() throws Exception {
+
+    }
+
+    @Test
+    public void testGetTT() throws Exception {
+
+    }
 }
