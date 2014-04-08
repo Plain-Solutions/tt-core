@@ -30,6 +30,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SSUSQLManagerTest {
     private static AbstractSQLManager sqlm;
 
@@ -51,7 +52,7 @@ public class SSUSQLManagerTest {
     }
 
     @Test
-    public void testPutDepartemnts() throws Exception {
+    public void aTestPutDepartemnts() throws Exception {
         Map<String, String> departments = new LinkedHashMap<>();
         departments.put("Biology", "bf");
         departments.put("Geography", "gf");
@@ -61,7 +62,7 @@ public class SSUSQLManagerTest {
 
 
     @Test
-    public void testPutGroups() throws Exception {
+    public void bTestPutGroups() throws Exception {
         List<String> bfgroups = Arrays.asList(new String[]{"111", "222"});
         List<String> gfgroups = Arrays.asList(new String[]{"121", "StringGroup"});
 
@@ -71,26 +72,26 @@ public class SSUSQLManagerTest {
 
 
     @Test
-    public void testPutDateTime() throws Exception {
+    public void cTestPutDateTime() throws Exception {
         sqlm.putDateTime(1, 1, 3);
         sqlm.putDateTime(2, 2, 3);
     }
 
     @Test
-    public void testPutSubject() throws Exception {
+    public void dTestPutSubject() throws Exception {
         sqlm.putSubject("algebra");
         sqlm.putSubject("physics");
     }
 
     @Test
-    public void testPutLessonRecord() throws Exception {
+    public void eTestPutLessonRecord() throws Exception {
         sqlm.putLessonRecord(1, 1, 1);
         sqlm.putLessonRecord(2, 2, 2);
         sqlm.putLessonRecord(4, 2, 1);
     }
 
     @Test
-    public void testGetDepartments() throws Exception {
+    public void fTestGetDepartments() throws Exception {
         Map<String, Map<String, String>> expected = new LinkedHashMap<>();
 
         Map<String, String> biologydata = new HashMap<>();
@@ -108,7 +109,7 @@ public class SSUSQLManagerTest {
     }
 
     @Test
-    public void testGetDepartmentTags() throws Exception {
+    public void gTestGetDepartmentTags() throws Exception {
         List<String> expected;
 
         expected = Arrays.asList(new String[]{"bf", "gf"});
@@ -119,7 +120,7 @@ public class SSUSQLManagerTest {
     }
 
     @Test
-    public void testGetGroups() throws Exception {
+    public void hTestGetGroups() throws Exception {
         List<String> expected;
 
         expected = new LinkedList<>(Arrays.asList(new String[]{"111", "222"}));
@@ -139,7 +140,7 @@ public class SSUSQLManagerTest {
     }
 
     @Test
-    public void testGetGroupID() throws Exception {
+    public void iTestGetGroupID() throws Exception {
         int expected = 4;
 
         int result = sqlm.getGroupID("gf", "StringGroup");
@@ -148,7 +149,7 @@ public class SSUSQLManagerTest {
     }
 
     @Test
-    public void testGetGroupName() throws Exception {
+    public void jTestGetGroupName() throws Exception {
         String expected = "StringGroup";
 
         String result = sqlm.getGroupName("gf", 4);
@@ -157,32 +158,38 @@ public class SSUSQLManagerTest {
     }
 
     @Test
-    public void testGetTT() throws Exception {
+    public void kTestGetTT() throws Exception {
 
     }
 
     @Test
-    public void testDepartmentExists() throws Exception {
+    public void lTestDepartmentExists() throws Exception {
+        boolean result = sqlm.departmentExists("gf");
+
+        assertTrue(result);
+
+        result = sqlm.departmentExists("nonex");
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void mTestGroupExistsInDepartment() throws Exception {
 
     }
 
     @Test
-    public void testGroupExistsInDepartment() throws Exception {
+    public void nTestGroupExistsAsID() throws Exception {
 
     }
 
     @Test
-    public void testGroupExistsAsID() throws Exception {
+    public void oTestLessonExists() throws Exception {
 
     }
 
     @Test
-    public void testLessonExists() throws Exception {
-
-    }
-
-    @Test
-    public void testGetLastID() throws Exception {
+    public void pTestGetLastID() throws Exception {
 
     }
 }
