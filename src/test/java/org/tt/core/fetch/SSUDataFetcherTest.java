@@ -21,10 +21,10 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.MalformedURLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SSUDataFetcherTest {
     private static AbstractDataFetcher df;
@@ -56,8 +56,8 @@ public class SSUDataFetcherTest {
         boolean status = true;
         status = result.keySet().containsAll(expected.keySet());
 
-        for (String s: result.keySet()) {
-            if (result.get(s)==expected.get(s)) {
+        for (String s : result.keySet()) {
+            if (result.get(s) == expected.get(s)) {
                 status = false;
                 break;
             }
@@ -68,11 +68,50 @@ public class SSUDataFetcherTest {
 
     @Test
     public void testGetGroups() throws Exception {
+        List<String> expected = new LinkedList<>(Arrays.asList(new String[]{"442", "461"}));
 
+        String html;
+        try (BufferedReader br = new BufferedReader(new FileReader("./src/test/resources/groups.html"))) {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                line = br.readLine();
+            }
+            html = sb.toString();
+        }
+        List<String> result = df.getGroups(df.fetch(html, true), "bf");
+
+        assertEquals(expected, result);
     }
 
     @Test
     public void testGetTT() throws Exception {
+        String expected = "лек.  Математика Купцов С. Н. 9 корп. ауд. 201пр.  " +
+                "Практический курс иностранного языка перев. 1 Алексеева Д. А. 18 корп. ауд. 113 пр.  " +
+                "Практический курс иностранного языка перев. 3 Иголкина Н. И. 9 корп. ауд. 207 пр.  " +
+                "Практический курс иностранного языка перев. 2 Сосновская А. А. 9 корп. ауд. 205 пр.  " +
+                "Иностранный язык (английский) англ. 7 Смирнова А. Ю. 9 корп. ауд. 204";
+        String html;
+        try (BufferedReader br = new BufferedReader(new FileReader("./src/test/resources/timetable.html"))) {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                line = br.readLine();
+            }
+            html = sb.toString();
+        }
+        String[][] result = df.getTT(df.fetch(html, true));
+        StringBuilder sb = new StringBuilder();
+        for (String[] day : result) {
+            for (String lesson : day)
+                sb.append(lesson);
+        }
+
+        assertEquals(expected, sb.toString());
 
     }
 }

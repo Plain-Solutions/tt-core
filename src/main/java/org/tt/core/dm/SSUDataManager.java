@@ -54,6 +54,7 @@ public class SSUDataManager implements AbstractDataManager {
     private AbstractDataConverter dconv;
 
     private String scheduleURL = "";
+
     /**
      * Constructor with no params now is empty.
      */
@@ -63,10 +64,10 @@ public class SSUDataManager implements AbstractDataManager {
     /**
      * Constructor with all provided entities of data suppliers.
      *
-     * @param sqlm  SQLManager instance.
-     * @param qrs   Queries for SQL instance.
-     * @param df    DataFetcher instance.
-     * @param dconv DataConverter instance.
+     * @param sqlm            SQLManager instance.
+     * @param qrs             Queries for SQL instance.
+     * @param df              DataFetcher instance.
+     * @param dconv           DataConverter instance.
      * @param globalURLString Global schedule URL to use in data fetching
      * @see org.tt.core.sql.AbstractSQLManager
      * @see org.tt.core.sql.AbstractQueries
@@ -120,7 +121,7 @@ public class SSUDataManager implements AbstractDataManager {
     public TTData putDepartmentGroups(String departmentTag) {
         TTData result = new TTData();
         try {
-            String url = scheduleURL.concat("/"+departmentTag);
+            String url = scheduleURL.concat("/" + departmentTag);
             sqlm.putGroups(df.getGroups(df.fetch(url, false), departmentTag), departmentTag);
             result.setHttpCode(200);
             result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
@@ -183,7 +184,7 @@ public class SSUDataManager implements AbstractDataManager {
                 //and its contents
                 df.setGlobalURL(scheduleURL);
                 URL url = df.formatURL(departmentTag, groupName);
-                String[][] table = df.getTT(df.fetch(url.toString(),false));
+                String[][] table = df.getTT(df.fetch(url.toString(), false));
                 for (int i = 0; i < 8; i++) {
                     for (int j = 0; j < 6; j++) {
                         HTMLCellEntity ce = TableParser.parseCell(table[i][j], i, j);

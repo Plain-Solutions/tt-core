@@ -72,7 +72,7 @@ public class SSUDataFetcher implements AbstractDataFetcher {
     /**
      * Fetches data from some source, represented by String, containing URL or some file
      *
-     * @param source data source (URL String or path to file)
+     * @param source    data source (URL String or path to file)
      * @param isRawHTML <code>true</code> if html code string was passed, <code>false</code> if URL was passed
      * @since 1.3
      */
@@ -112,7 +112,7 @@ public class SSUDataFetcher implements AbstractDataFetcher {
     /**
      * Parses department pages to get the list of groupnames.
      *
-     * @param doc fetched data
+     * @param doc        fetched data
      * @param department token (tag) of the department, which we get in getDepartments()
      * @return List of names.
      * @since 1.0
@@ -123,7 +123,7 @@ public class SSUDataFetcher implements AbstractDataFetcher {
 
         Elements links = doc.select("a[href]");
         for (Element link : links) {
-            if (link.attr("href").startsWith("/schedule/" + department + "/do/")) {
+            if (link.attr("href").contains("/schedule/" + department + "/do/")) {
                 String[] esc = link.attr("abs:href").split("/");
 
                 result.add(link.ownText());
@@ -201,8 +201,8 @@ public class SSUDataFetcher implements AbstractDataFetcher {
 
     /**
      * Setting the global schedule url.
-     * @param url the url.
      *
+     * @param url the url.
      * @since 1.3
      */
     @Override

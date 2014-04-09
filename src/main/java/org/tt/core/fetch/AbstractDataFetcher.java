@@ -39,7 +39,7 @@ public interface AbstractDataFetcher {
     /**
      * Fetches data from some source, represented by String, containing URL or some file
      *
-     * @param source data source (URL String or path to file)
+     * @param source    data source (URL String or path to file)
      * @param isRawHTML <code>true</code> if html code string was passed, <code>false</code> if URL was passed
      * @see org.tt.core.fetch.SSUDataFetcher
      * @since 1.3
@@ -60,7 +60,7 @@ public interface AbstractDataFetcher {
     /**
      * Parses department pages to get the list of group names.
      *
-     * @param doc the fetched data
+     * @param doc        the fetched data
      * @param department token (tag) of the department, which we get in getDepartments()
      * @return List of names.
      * @see org.tt.core.fetch.SSUDataFetcher
