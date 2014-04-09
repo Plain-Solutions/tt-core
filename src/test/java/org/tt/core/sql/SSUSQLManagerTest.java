@@ -46,7 +46,6 @@ public class SSUSQLManagerTest {
                     getConnection("jdbc:h2:mem:localtest;INIT=RUNSCRIPT FROM './src/test/resources/initTT.sql'", "sa", "");
 
             sqlm = new SSUSQLManager(c);
-
             sqlm.setQueries(new H2Queries());
         }
     }
@@ -104,16 +103,12 @@ public class SSUSQLManagerTest {
         expected.put("gf", geographydata);
 
         Map<String, Map<String, String>> result = sqlm.getDepartments();
-
         assertEquals(expected, result);
     }
 
     @Test
     public void gTestGetDepartmentTags() throws Exception {
-        List<String> expected;
-
-        expected = Arrays.asList(new String[]{"bf", "gf"});
-
+        List<String> expected = Arrays.asList(new String[]{"bf", "gf"});
         List<String> result = sqlm.getDepartmentTags();
 
         assertEquals(expected, result);
@@ -121,10 +116,7 @@ public class SSUSQLManagerTest {
 
     @Test
     public void hTestGetGroups() throws Exception {
-        List<String> expected;
-
-        expected = new LinkedList<>(Arrays.asList(new String[]{"111", "222"}));
-
+        List<String> expected = new LinkedList<>(Arrays.asList(new String[]{"111", "222"}));
         List<String> result = sqlm.getGroups("bf");
 
         assertEquals(expected, result);
@@ -133,16 +125,13 @@ public class SSUSQLManagerTest {
         expected.clear();
 
         expected = new LinkedList<>(Arrays.asList(new String[]{"121", "StringGroup"}));
-
         result = sqlm.getGroups("gf");
-
         assertEquals(expected, result);
     }
 
     @Test
     public void iTestGetGroupID() throws Exception {
         int expected = 4;
-
         int result = sqlm.getGroupID("gf", "StringGroup");
 
         assertEquals(expected, result);
@@ -151,7 +140,6 @@ public class SSUSQLManagerTest {
     @Test
     public void jTestGetGroupName() throws Exception {
         String expected = "StringGroup";
-
         String result = sqlm.getGroupName("gf", 4);
 
         assertEquals(expected, result);
@@ -159,59 +147,67 @@ public class SSUSQLManagerTest {
 
     @Test
     public void kTestGetTT() throws Exception {
-        String expected = "wed"+"even"+"1"+"algebra";
-
+        String[] expected = new String[]{"wed", "even", "1", "algebra"};
         List<String[]> result = sqlm.getTT(1);
+        Comparator<String[]> compareStringArrays = new Comparator<String[]>() {
+            @Override
+            public int compare(String[] o1, String[] o2) {
+                int res = -1;
 
-        String res = "";
-        for (String[] s: result)
-            for (String k: s)
-                    res += k;
+                for (int i = 0; i < o1.length; i++) {
+                    res = o1[i].compareTo(o2[i]);
+                }
 
-        assertEquals(expected, res);
+                return res;
+            }
+        };
+
+        boolean status = false;
+
+
+        for (String[] elem: result) {
+            if (compareStringArrays.compare(expected, elem) == 0) {
+                status = true;
+            }
+        }
+
+
+        assertTrue(status);
     }
 
     @Test
     public void lTestDepartmentExists() throws Exception {
         boolean result = sqlm.departmentExists("gf");
-
         assertTrue(result);
 
         result = sqlm.departmentExists("nonex");
-
         assertFalse(result);
     }
 
     @Test
     public void mTestGroupExistsInDepartment() throws Exception {
         boolean result = sqlm.groupExistsInDepartment("bf", "111");
-
         assertTrue(result);
 
-        result = sqlm.groupExistsInDepartment("bf","999");
-
+        result = sqlm.groupExistsInDepartment("bf", "999");
         assertFalse(result);
     }
 
     @Test
     public void nTestGroupExistsAsID() throws Exception {
         boolean result = sqlm.groupExistsAsID(4);
-
         assertTrue(result);
 
         result = sqlm.groupExistsAsID(5);
-
         assertFalse(result);
     }
 
     @Test
     public void oTestLessonExists() throws Exception {
-        boolean result = sqlm.lessonExists(1,1,1);
-
+        boolean result = sqlm.lessonExists(1, 1, 1);
         assertTrue(result);
 
-        result = sqlm.lessonExists(5,1,2);
-
+        result = sqlm.lessonExists(5, 1, 2);
         assertFalse(result);
     }
 
@@ -220,7 +216,6 @@ public class SSUSQLManagerTest {
         int expected = 4;
 
         int result = sqlm.getLastID("groups");
-
         assertEquals(expected, result);
     }
 }

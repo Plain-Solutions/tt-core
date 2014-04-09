@@ -49,22 +49,16 @@ public class JSONConverterTest {
         }
 
         String result = jsc.convertDepartmentList(departments);
-
         assertEquals(expected, result);
     }
 
     @Test
     public void testConvertGroupList() throws Exception {
-        List<String> groups;
-
         String expected = "[\"111\",\"123\",\"145\",\"String group\"]";
-
-        groups = Arrays.asList(new String[]{"111", "123", "145", "String group"});
+        List<String> groups = Arrays.asList(new String[]{"111", "123", "145", "String group"});
 
         String result = jsc.convertGroupList(groups);
-
         assertEquals(expected, result);
-
     }
 
     @Test
@@ -84,9 +78,7 @@ public class JSONConverterTest {
                 "\"wed\":[{\"parity\":\"all\",\"sequence\":\"3\",\"info\":\"la\"}]}";
 
         String result = jsc.convertTT(tt);
-
         assertEquals(expected, result);
-
     }
 
     @Test
@@ -94,22 +86,15 @@ public class JSONConverterTest {
         String expected = "{\"module\":\"IO\",\"message\":\"URL Exception\"}";
 
         String result = jsc.convertStatus(TTStatus.IO, TTStatus.IOERR);
-
         assertEquals(expected, result);
-
     }
 
     @Test
     public void testReverseConvertGroup() throws Exception {
-        List<String> expected;
-
         String groups = "[\"111\",\"123\",\"145\",\"String group\"]";
-
-        expected = Arrays.asList(new String[]{"111", "123", "145", "String group"});
-
+        List<String> expected = Arrays.asList(new String[]{"111", "123", "145", "String group"});
         List<String> result = jsc.reverseConvertGroup(groups);
 
         assertArrayEquals(expected.toArray(), result.toArray());
-
     }
 }

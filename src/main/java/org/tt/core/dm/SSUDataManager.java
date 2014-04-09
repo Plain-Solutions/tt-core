@@ -351,6 +351,7 @@ public class SSUDataManager implements AbstractDataManager {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
         }
+
         return result;
     }
 
