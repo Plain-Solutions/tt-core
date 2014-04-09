@@ -68,6 +68,18 @@ public interface AbstractDataManager {
      */
     TTData putTT(String departmentTag, int groupID);
 
+
+    /**
+     * Adding temporary table from AbstractDataFetcher (parsed by HTML tags table) in a proper format to DB.
+     *
+     * @param departmentTag the tag of the department, where the group is located (allocation check).
+     * @param groupName     the name of the group
+     * @return TTData with <code>httpCode</code> 200
+     * <code>module:ok</code> and empty message String in case of success or error trace.
+     * @since 1.3
+     */
+    TTData putTT(String departmentTag, String groupName);
+
     /**
      * Get the map of stored departments.
      *
@@ -166,4 +178,14 @@ public interface AbstractDataManager {
      * @since 1.2
      */
     void deliverDataConverterProvider(AbstractDataConverter dconv);
+
+    /**
+     * As now we have a unified method to feth data in <code>org.tt.core.fetch.AbstractDataFetcher</code> we need to provide
+     * an URL in <code>DataManager</code> class. More, to have an opportunity to proper test our Core Lib we provide support
+     * for raw HTML strings
+     *
+     * @param globalURLString Global schedule URL to use in data fetching
+     * @since 1.3
+     */
+    void deliverGlobalURL(String globalURLString);
 }

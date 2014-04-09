@@ -15,6 +15,9 @@
  */
 package org.tt.core.fetch;
 
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,35 +37,47 @@ import java.util.Map;
  */
 public interface AbstractDataFetcher {
     /**
-     * Parses schedule URL to find the tokens (tags) and names of departments. In our case, these tags are just part
+     * Fetches data from some source, represented by String, containing URL or some file
+     *
+     * @param source data source (URL String or path to file)
+     * @param isRawHTML <code>true</code> if html code string was passed, <code>false</code> if URL was passed
+     * @see org.tt.core.fetch.SSUDataFetcher
+     * @since 1.3
+     */
+    Document fetch(String source, boolean isRawHTML) throws IOException;
+
+    /**
+     * Parses fetched data to find the tokens (tags) and names of departments. In our case, these tags are just part
      * of the url in the page.
      *
+     * @param doc the fetched data;
      * @return K-V of name-tag for departments
      * @see org.tt.core.fetch.SSUDataFetcher
-     * @since 1.0
+     * @since 1.3
      */
-    Map<String, String> getDepartments();
+    Map<String, String> getDepartments(Document doc);
 
     /**
      * Parses department pages to get the list of group names.
      *
+     * @param doc the fetched data
      * @param department token (tag) of the department, which we get in getDepartments()
      * @return List of names.
      * @see org.tt.core.fetch.SSUDataFetcher
-     * @since 1.0
+     * @since 1.3
      */
-    List<String> getGroups(String department);
+    List<String> getGroups(Document doc, String department);
 
     /**
      * Parse the resulting url of group to create a temporary, huge and complicated table from SSU website.
      *
-     * @param url the resulting (by getting groups and departments, checking non-numerical thing) url.
+     * @param doc the fetched data
      * @return String[][] statical representation (statical array 8*6) of HTML code.
      * @throws IOException
      * @see org.tt.core.fetch.SSUDataFetcher
      * @since 1.0
      */
-    String[][] getTT(URL url) throws IOException;
+    String[][] getTT(Document doc) throws IOException;
 
     /**
      * Formats url for ssu schedule website with conversion of non-numerical groups.
@@ -84,4 +99,11 @@ public interface AbstractDataFetcher {
      */
     String[] getExclusions();
 
+    /**
+     * Setter. Can be used to re-define main website. Used for now for testing purposes.
+     *
+     * @param url the url.
+     * @since 1.3
+     */
+    void setGlobalURL(String url);
 }

@@ -27,6 +27,7 @@ import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ public class SSUDataManager implements AbstractDataManager {
 
     private AbstractDataConverter dconv;
 
+    private String scheduleURL = "";
     /**
      * Constructor with no params now is empty.
      */
@@ -65,19 +67,22 @@ public class SSUDataManager implements AbstractDataManager {
      * @param qrs   Queries for SQL instance.
      * @param df    DataFetcher instance.
      * @param dconv DataConverter instance.
+     * @param globalURLString Global schedule URL to use in data fetching
      * @see org.tt.core.sql.AbstractSQLManager
      * @see org.tt.core.sql.AbstractQueries
      * @see org.tt.core.fetch.AbstractDataFetcher
      * @see org.tt.core.dm.AbstractDataConverter
-     * @since 1.2
+     * @since 1.3
      */
     public SSUDataManager(AbstractSQLManager sqlm,
                           AbstractQueries qrs,
                           AbstractDataFetcher df,
-                          AbstractDataConverter dconv) {
+                          AbstractDataConverter dconv,
+                          String globalURLString) {
         deliverDBProvider(sqlm, qrs);
         deliverDataFetcherProvider(df);
         deliverDataConverterProvider(dconv);
+        deliverGlobalURL(globalURLString);
     }
 
     /**
@@ -90,12 +95,15 @@ public class SSUDataManager implements AbstractDataManager {
     public TTData putDepartments() {
         TTData result = new TTData();
         try {
-            sqlm.putDepartments(df.getDepartments());
+            sqlm.putDepartments(df.getDepartments(df.fetch(scheduleURL, false)));
             result.setHttpCode(200);
             result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
         } catch (SQLException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        } catch (IOException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.IO, TTStatus.IOERR));
         }
         return result;
     }
@@ -112,7 +120,8 @@ public class SSUDataManager implements AbstractDataManager {
     public TTData putDepartmentGroups(String departmentTag) {
         TTData result = new TTData();
         try {
-            sqlm.putGroups(df.getGroups(departmentTag), departmentTag);
+            String url = scheduleURL.concat("/"+departmentTag);
+            sqlm.putGroups(df.getGroups(df.fetch(url, false), departmentTag), departmentTag);
             result.setHttpCode(200);
             result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
         } catch (SQLException e) {
@@ -121,6 +130,9 @@ public class SSUDataManager implements AbstractDataManager {
         } catch (NoSuchDepartmentException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
+        } catch (IOException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.IO, TTStatus.IOERR));
         }
         return result;
     }
@@ -169,7 +181,9 @@ public class SSUDataManager implements AbstractDataManager {
             //then we check that such group exists in the specified department
             if (sqlm.groupExistsInDepartment(departmentTag, groupName)) {
                 //and its contents
-                String[][] table = df.getTT(df.formatURL(departmentTag, groupName));
+                df.setGlobalURL(scheduleURL);
+                URL url = df.formatURL(departmentTag, groupName);
+                String[][] table = df.getTT(df.fetch(url.toString(),false));
                 for (int i = 0; i < 8; i++) {
                     for (int j = 0; j < 6; j++) {
                         HTMLCellEntity ce = TableParser.parseCell(table[i][j], i, j);
@@ -202,6 +216,35 @@ public class SSUDataManager implements AbstractDataManager {
         }
         return result;
     }
+
+    /**
+     * Adding temporary table from AbstractDataFetcher (parsed by HTML tags table) in a proper format to DB.
+     *
+     * @param departmentTag the tag of the department, where the group is located (allocation check).
+     * @param groupName     the name of the group
+     * @return TTData with <code>httpCode</code> 200
+     * <code>module:ok</code> and empty message String in case of success or error trace.
+     * @since 1.3
+     */
+    @Override
+    public TTData putTT(String departmentTag, String groupName) {
+        TTData result = new TTData();
+        try {
+            int id = sqlm.getGroupID(departmentTag, groupName);
+            result = putTT(departmentTag, id);
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
+        }
+        return result;
+    }
+
 
     /**
      * Get the map of stored departments.
@@ -406,6 +449,17 @@ public class SSUDataManager implements AbstractDataManager {
     @Override
     public void deliverDataConverterProvider(AbstractDataConverter dconv) {
         this.dconv = dconv;
+    }
+
+    /**
+     * Providing URL to fetch data from.
+     *
+     * @param globalURLString Global schedule URL to use in data fetching
+     * @since 1.3
+     */
+    @Override
+    public void deliverGlobalURL(String globalURLString) {
+        scheduleURL = globalURLString;
     }
 
     public JSONConverter getJSONConverter() {

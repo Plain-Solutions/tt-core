@@ -3,11 +3,15 @@ Changelog
 ###TT Core <@dev>
 
 * Added adequate testing module with correct independent tests with JUnit 4.
-* TTStatus rewritten to return actual messages. Backwards compatibility for TT Platform 1.0.3 is saved.
+* TTStatus rewritten to return actual messages.
 * Packages naming refactoring: `ssutt` replaced with `tt`
-* `org.tt.core.dm.AbstractDataManager` now has two new methods: `getTT(String departmentTag, String groupName)` to resemble TT API query and avoid
-conversion from name and tag to inner DB groupID on high level and `deliverDBProvider(AbstractSQLManager sqlm)` for pre-configured SQLManagers (with initialized
-Queries provider).
+* `org.tt.core.dm.AbstractDataManager` now has new methods:
+	 + `getTT(String departmentTag, String groupName)` to resemble TT API query and avoid conversion from name and tag to inner DB groupID on high level.
+	 + `deliverDBProvider(AbstractSQLManager sqlm)` for pre-configured SQLManagers (with initializedQueries provider).+
+	 + `putTT` - with the same reason as `getTT`
+	 + `deliverGlobalURL(String globalURLString)` - now parsed URL is placed in `DataManager`
+* Reworked logics of `AbstractDataFetcher`. Now it uses method `fetch` to unify fetching any data from any URL or even file (for unit testing purposes)
+* Due to `fetch` updated methods params in `AbstractDataFetcher`. Backwards compatibility with `1.0.3` is lost.
 
 ###TT Core 1.2.0
 

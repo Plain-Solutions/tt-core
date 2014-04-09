@@ -52,7 +52,7 @@ public class SSUDataFetcher implements AbstractDataFetcher {
     private String globalScheduleURL = "http://www.sgu.ru/schedule";
 
     /**
-     * Constructs an instance with link to website to parse and optional exclusions in it (here, just tokens,
+     * Constructs an instance with pre-defined link to website to parse and optional exclusions in it (here, just tokens,
      * see getDepartments)
      */
     public SSUDataFetcher() {
@@ -60,28 +60,45 @@ public class SSUDataFetcher implements AbstractDataFetcher {
     }
 
     /**
-     * Parses schedule URL to find the tokens (tags) and names of departments. In our case, these tags are just part
+     * Constructs an instance with custom link and initialized exclusions
+     *
+     * @since 1.3
+     */
+    public SSUDataFetcher(String url) {
+        setGlobalURL(url);
+        nonNumericalGroups = new HashMap<>();
+    }
+
+    /**
+     * Fetches data from some source, represented by String, containing URL or some file
+     *
+     * @param source data source (URL String or path to file)
+     * @param isRawHTML <code>true</code> if html code string was passed, <code>false</code> if URL was passed
+     * @since 1.3
+     */
+    @Override
+    public Document fetch(String source, boolean isRawHTML) throws IOException {
+        if (isRawHTML) {
+            return Jsoup.parse(source);
+        }
+        return Jsoup.connect(source).get();
+    }
+
+    /**
+     * Parses fetched data to find the tokens (tags) and names of departments. In our case, these tags are just part
      * of the url in the page.
      *
      * @return K-V of name-tag for departments
-     * @since 1.0
+     * @since 1.3
      */
     @Override
-    public Map<String, String> getDepartments() {
-        Map<String, String> result = new HashMap<>();
-        Document doc = null;
-
-        try {
-            doc = Jsoup.connect(globalScheduleURL).get();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(2);
-        }
+    public Map<String, String> getDepartments(Document doc) {
+        Map<String, String> result = new LinkedHashMap<>();
 
         Elements links = doc.select("a[href]");
         //parsing exceptions
         for (Element link : links) {
-            if (link.attr("href").startsWith("/schedule/")) {
+            if (link.attr("href").contains("/schedule/")) {
                 String[] test = link.attr("abs:href").split("/"); //test[4] - the last token like knt,mm,ff
 
                 if (!exclusions.contains(test[4]))
@@ -95,23 +112,14 @@ public class SSUDataFetcher implements AbstractDataFetcher {
     /**
      * Parses department pages to get the list of groupnames.
      *
+     * @param doc fetched data
      * @param department token (tag) of the department, which we get in getDepartments()
      * @return List of names.
      * @since 1.0
      */
     @Override
-    public List<String> getGroups(String department) {
+    public List<String> getGroups(Document doc, String department) {
         List<String> result = new ArrayList<>();
-
-        String url = globalScheduleURL + '/' + department;
-
-        Document doc = null;
-        try {
-            doc = Jsoup.connect(url).get();
-        } catch (IOException e) {
-            System.out.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(4);
-        }
 
         Elements links = doc.select("a[href]");
         for (Element link : links) {
@@ -128,22 +136,20 @@ public class SSUDataFetcher implements AbstractDataFetcher {
     }
 
     /**
-     * Parse the resulting url of group to create a temporary, huge and complicated table from SSU website.
+     * Parse the resulting fetch of group to create a temporary, huge and complicated table from SSU website.
      *
-     * @param url the resulting (by getting groups and departments, checking non-numerical thing) url.
+     * @param doc fetched data.
      * @return String[][] statical representation (statical array 8*6) of HTML code.
      * @throws IOException
      * @since 1.0
      */
     @Override
-    public String[][] getTT(URL url) throws IOException {
-        System.out.println("Parsing: " + url.toString());
+    public String[][] getTT(Document doc) throws IOException {
+        System.out.println("Parsing: " + doc.location());
         //see comment later. we need table with empty cells, not empty table
         String[][] table = createEmptyTable();
 
-        Document doc = Jsoup.parse(url, 5000);
         Elements tr = doc.getElementsByTag("tr");
-
         for (int i = 1; i < 9; ++i) {
             Elements data;
             try {
@@ -158,7 +164,7 @@ public class SSUDataFetcher implements AbstractDataFetcher {
             }
         }
 
-        System.out.println("Parsed: " + url.toString());
+        System.out.println("Parsed: " + doc.location());
         return table;
     }
 
@@ -191,6 +197,17 @@ public class SSUDataFetcher implements AbstractDataFetcher {
      */
     public String[] getExclusions() {
         return exclusions.toArray(new String[exclusions.size()]);
+    }
+
+    /**
+     * Setting the global schedule url.
+     * @param url the url.
+     *
+     * @since 1.3
+     */
+    @Override
+    public void setGlobalURL(String url) {
+        globalScheduleURL = url;
     }
 
     /**

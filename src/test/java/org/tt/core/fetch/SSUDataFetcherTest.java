@@ -15,12 +15,55 @@
  */
 package org.tt.core.fetch;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.net.MalformedURLException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static org.junit.Assert.*;
+
 public class SSUDataFetcherTest {
+    private static AbstractDataFetcher df;
+
+    @Before
+    public void initializeDataFetcher() throws MalformedURLException {
+        df = new SSUDataFetcher();
+    }
+
     @Test
     public void testGetDepartments() throws Exception {
+        Map<String, String> expected = new LinkedHashMap<>();
+        expected.put("Biology", "bf");
+        expected.put("Geography", "gf");
 
+        String html;
+        try (BufferedReader br = new BufferedReader(new FileReader("./src/test/resources/departments.html"))) {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                line = br.readLine();
+            }
+            html = sb.toString();
+        }
+        Map<String, String> result = df.getDepartments(df.fetch(html, true));
+
+        boolean status = true;
+        status = result.keySet().containsAll(expected.keySet());
+
+        for (String s: result.keySet()) {
+            if (result.get(s)==expected.get(s)) {
+                status = false;
+                break;
+            }
+        }
+
+        assertTrue(status);
     }
 
     @Test
