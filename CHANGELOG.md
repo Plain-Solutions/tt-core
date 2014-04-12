@@ -1,7 +1,19 @@
 Changelog
 =========
-###TT Core 1.2.0
+###TT Core 1.2.4
 
+* Added adequate testing module with correct independent tests with JUnit 4.
+* TTStatus rewritten to return actual messages.
+* Packages naming refactoring: `ssutt` replaced with `tt`
+* `org.tt.core.dm.AbstractDataManager` now has new methods:
+	 + `getTT(String departmentTag, String groupName)` to resemble TT API query and avoid conversion from name and tag to inner DB groupID on high level.
+	 + `deliverDBProvider(AbstractSQLManager sqlm)` for pre-configured SQLManagers (with initializedQueries provider).
+	 + `putTT` - with the same reason as `getTT`
+	 + `deliverGlobalURL(String globalURLString)` - now parsed URL is placed in `DataManager`
+* Reworked logics of `AbstractDataFetcher`. Now it uses method `fetch` to unify fetching any data from any URL or even file (for unit testing purposes).
+* Due to `fetch` updated methods params in `AbstractDataFetcher`. Backwards compatibility with `TT Platform 1.0.3` is lost.
+
+###TT Core 1.2.0
 
 * Added `org.ssutt.dm.json` (now is `org.ssutt.dm.convert.json`) - transfered from TT Platform - package to transform data from TTDataManager into JSON Strings.
 * `JSONConverter` now is an instance of `AbstractDataConverter` - interface to provide various output to user-agent in TT Platform. With this abstraction we can get not only JSON-formatted output, but anything, that can be converted to `String` 	
