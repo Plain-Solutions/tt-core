@@ -35,7 +35,7 @@ Concurrent Development Branch: [![Build Status](https://travis-ci.org/Plain-Solu
 
 Stable Master Branch:[![Build Status](https://travis-ci.org/Plain-Solutions/tt-core.svg?branch=master)](https://travis-ci.org/Plain-Solutions/tt-core)
 
-Current  Release: [1.2.0](https://github.com/Plain-Solutions/tt-core/releases/tag/1.2.0)
+Current  Release: [1.2.4](https://github.com/Plain-Solutions/tt-core/releases/tag/1.2.4)
 
 License
 =======
