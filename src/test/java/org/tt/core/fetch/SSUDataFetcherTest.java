@@ -68,7 +68,7 @@ public class SSUDataFetcherTest {
 
     @Test
     public void testGetGroups() throws Exception {
-        List<String> expected = new LinkedList<>(Arrays.asList(new String[]{"442", "461"}));
+        List<String> expected = new LinkedList<>(Arrays.asList("442", "461"));
 
         String html;
         try (BufferedReader br = new BufferedReader(new FileReader("./src/test/resources/groups.html"))) {
@@ -88,11 +88,7 @@ public class SSUDataFetcherTest {
 
     @Test
     public void testGetTT() throws Exception {
-        String expected = "лек.  Математика Купцов С. Н. 9 корп. ауд. 201пр.  " +
-                "Практический курс иностранного языка перев. 1 Алексеева Д. А. 18 корп. ауд. 113 пр.  " +
-                "Практический курс иностранного языка перев. 3 Иголкина Н. И. 9 корп. ауд. 207 пр.  " +
-                "Практический курс иностранного языка перев. 2 Сосновская А. А. 9 корп. ауд. 205 пр.  " +
-                "Иностранный язык (английский) англ. 7 Смирнова А. Ю. 9 корп. ауд. 204";
+        String expected = "lecture. Calculus. Some Teacher. 213";
         String html;
         try (BufferedReader br = new BufferedReader(new FileReader("./src/test/resources/timetable.html"))) {
             StringBuilder sb = new StringBuilder();
