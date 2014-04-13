@@ -43,7 +43,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <finalName>tt-core-1.2.4</finalName>
+                    <finalName>tt-core-1.2.5</finalName>
                 </configuration>
             </plugin>
             <plugin>
