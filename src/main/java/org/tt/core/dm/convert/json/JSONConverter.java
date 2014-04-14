@@ -165,5 +165,16 @@ public class JSONConverter implements AbstractDataConverter {
         return gson.fromJson(list, listType);
     }
 
+    /**
+     * General purposed converting from K-V structure to JSON
+     * @param data map
+     * @return resulting data
+     * @since 1.2
+     */
+    @Override
+    public String convertMap(Map<String, String> data) {
+        return gson.toJson(data);
+    }
+
 }
 

@@ -371,6 +371,21 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     /**
+     * Get some kind of formatted K-V structure
+     * @param list
+     * @return formatted output
+     * @see org.tt.core.dm.convert.json.JSONConverter
+     * @since 1.2
+     */
+    @Override
+    public TTData getFormattedString(Map<String, String> list) {
+        TTData result = new TTData();
+        result.setHttpCode(200);
+        result.setMessage(dconv.convertMap(list));
+        return result;
+    }
+
+    /**
      * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
      *
      * @param departmentTag the tag of the department
