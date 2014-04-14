@@ -62,8 +62,8 @@ public class SSUSQLManagerTest {
 
     @Test
     public void bTestPutGroups() throws Exception {
-        List<String> bfgroups = Arrays.asList(new String[]{"111", "222"});
-        List<String> gfgroups = Arrays.asList(new String[]{"121", "StringGroup"});
+        List<String> bfgroups = Arrays.asList("111", "222", "111");
+        List<String> gfgroups = Arrays.asList("121", "StringGroup");
 
         sqlm.putGroups(bfgroups, "bf");
         sqlm.putGroups(gfgroups, "gf");
@@ -108,7 +108,7 @@ public class SSUSQLManagerTest {
 
     @Test
     public void gTestGetDepartmentTags() throws Exception {
-        List<String> expected = Arrays.asList(new String[]{"bf", "gf"});
+        List<String> expected = Arrays.asList("bf", "gf");
         List<String> result = sqlm.getDepartmentTags();
 
         assertEquals(expected, result);
@@ -116,7 +116,7 @@ public class SSUSQLManagerTest {
 
     @Test
     public void hTestGetGroups() throws Exception {
-        List<String> expected = new LinkedList<>(Arrays.asList(new String[]{"111", "222"}));
+        List<String> expected = new LinkedList<>(Arrays.asList("111", "222"));
         List<String> result = sqlm.getGroups("bf");
 
         assertEquals(expected, result);
@@ -124,7 +124,7 @@ public class SSUSQLManagerTest {
         result.clear();
         expected.clear();
 
-        expected = new LinkedList<>(Arrays.asList(new String[]{"121", "StringGroup"}));
+        expected = new LinkedList<>(Arrays.asList("121", "StringGroup"));
         result = sqlm.getGroups("gf");
         assertEquals(expected, result);
     }

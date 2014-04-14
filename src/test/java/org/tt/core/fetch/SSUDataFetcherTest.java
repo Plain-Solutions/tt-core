@@ -53,8 +53,7 @@ public class SSUDataFetcherTest {
         }
         Map<String, String> result = df.getDepartments(df.fetch(html, true));
 
-        boolean status = true;
-        status = result.keySet().containsAll(expected.keySet());
+        boolean status = result.keySet().containsAll(expected.keySet());
 
         for (String s : result.keySet()) {
             if (result.get(s) == expected.get(s)) {
