@@ -47,6 +47,24 @@ CREATE TABLE IF NOT EXISTS lessons_records(
   FOREIGN KEY (subject_id) REFERENCES subjects(id)
 );
 
+CREATE TABLE IF NOT EXISTS teachers(
+  id MEDIUMINT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS locations(
+  id MEDIUMINT NOT NULL AUTO_INCREMENT,
+  building CHAR(30),
+  room CHAR(15),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS activities(
+  id TINYINT NOT NULL AUTO_INCREMENT,
+  activity CHAR(5),
+  PRIMARY KEY (id)
+);
 
 INSERT INTO week_states (state)
   SELECT * FROM (SELECT 'even') AS tmp

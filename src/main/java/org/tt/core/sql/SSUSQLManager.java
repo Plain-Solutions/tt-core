@@ -59,7 +59,8 @@ public class SSUSQLManager implements AbstractSQLManager {
         Statement stmt = conn.createStatement();
 
         for (String d : new TreeSet<>(departments.keySet())) {
-            stmt.executeUpdate(String.format(qrs.qAddDepartment(), d, departments.get(d)));
+            if (!departmentExists(departments.get((d))))
+                stmt.executeUpdate(String.format(qrs.qAddDepartment(), d, departments.get(d)));
         }
 
         stmt.close();
@@ -80,7 +81,8 @@ public class SSUSQLManager implements AbstractSQLManager {
             Statement stmt = conn.createStatement();
             Collections.sort(groups);
             for (String g : groups) {
-                stmt.executeUpdate(String.format(qrs.qAddGroups(), departmentTag, g));
+                if (!groupExistsInDepartment(departmentTag, g))
+                    stmt.executeUpdate(String.format(qrs.qAddGroups(), departmentTag, g));
             }
 
             stmt.close();
@@ -117,7 +119,7 @@ public class SSUSQLManager implements AbstractSQLManager {
     /**
      * Adds subject to respective table, if not exists.
      *
-     * @param info information about subject (displayble, like room, teacher, lesson activity, name).
+     * @param info information about subject (displayable, like room, teacher, lesson activity, name).
      * @return ID of the added/found subject.
      * @throws SQLException
      * @since 1.0
