@@ -16,6 +16,7 @@
 package org.tt.core.fetch;
 
 import org.tt.core.fetch.lexx.entity.Department;
+import org.tt.core.fetch.lexx.entity.Group;
 import org.tt.core.fetch.lexx.entity.Lesson;
 
 import java.io.IOException;
@@ -51,7 +52,7 @@ public interface AbstractDataFetcher {
      * @see org.tt.core.fetch.lexx.LexxDataFetcher
      * @since 1.3
      */
-    List<String> getGroups(String department);
+    List<Group> getGroups(String department);
 
     /**
      * Parse the resulting url of group to create a temporary, huge and complicated table from SSU website.

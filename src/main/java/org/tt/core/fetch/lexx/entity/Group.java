@@ -15,7 +15,7 @@
 */
 package org.tt.core.fetch.lexx.entity;
 
-public class Group {
+public class Group implements Comparable {
     String name;
 
     public Group() {
@@ -31,5 +31,10 @@ public class Group {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return name.compareTo(((Group) o).getName());
     }
 }

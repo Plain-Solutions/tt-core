@@ -2,6 +2,7 @@ package org.tt.core.fetch.lexx;
 
 import org.tt.core.fetch.AbstractDataFetcher;
 import org.tt.core.fetch.lexx.entity.Department;
+import org.tt.core.fetch.lexx.entity.Group;
 import org.tt.core.fetch.lexx.entity.Lesson;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -41,22 +42,32 @@ import java.util.List;
 public class LexxDataFetcher implements AbstractDataFetcher {
     private static final String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
     private static final String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
-    private static final String loginPassword = "";
+    private String loginPassword = "";
 
-    private static URLConnection getConnection(String globUrl) {
+    public LexxDataFetcher() {}
+
+    public String getLoginPassword() {
+        return loginPassword;
+    }
+
+    public void setLoginPassword(String loginPassword) {
+        this.loginPassword = loginPassword;
+    }
+
+    private URLConnection getConnection(String link) {
         URL url;
-        URLConnection connection = null;
+        URLConnection conn = null;
 
         try {
-            url = new URL(globUrl);
-            connection = url.openConnection();
+            url = new URL(link);
+            conn = url.openConnection();
             String encoded = new BASE64Encoder().encode(loginPassword.getBytes());
-            connection.setRequestProperty("Authorization", "Basic " + encoded);
+            conn.setRequestProperty("Authorization", "Basic " + encoded);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return connection;
+        return conn;
     }
 
     @Override
@@ -66,9 +77,9 @@ public class LexxDataFetcher implements AbstractDataFetcher {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(getConnection(globDepartmentsURL).getInputStream());
+            Document doc = builder.parse(getConnection(globDepartmentsURL).getInputStream());
 
-            NodeList nodeList = document.getDocumentElement().getChildNodes();
+            NodeList nodeList = doc.getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
                 NamedNodeMap attributes = node.getAttributes();
@@ -89,8 +100,8 @@ public class LexxDataFetcher implements AbstractDataFetcher {
     }
 
     @Override
-    public List<String> getGroups(String department) {
-        List<String> groups = new ArrayList<>();
+    public List<Group> getGroups(String department) {
+        List<Group> groups = new ArrayList<>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
@@ -106,7 +117,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
                 String type = attributes.getNamedItem("edu_form").getNodeValue();
 
                 if (type.equals("1")) continue;
-                groups.add(name);
+                groups.add(new Group(name));
             }
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
@@ -184,15 +195,8 @@ public class LexxDataFetcher implements AbstractDataFetcher {
                                 }
                             }
 
-                            curDayLessons.add(new Lesson(sequence,
-                                    parity,
-                                    subgroup,
-                                    activity,
-                                    subject,
-                                    teacher,
-                                    building,
-                                    room,
-                                    timestamp));
+                            curDayLessons.add(new Lesson(sequence, parity, subgroup, activity, subject,
+                                                         teacher, building, room, timestamp));
                         }
                     }
                     tt.add(curDayLessons);
