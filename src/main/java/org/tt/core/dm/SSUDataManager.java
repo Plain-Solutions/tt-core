@@ -184,7 +184,7 @@ public class SSUDataManager implements AbstractDataManager {
                 //and its contents
                 df.setGlobalURL(scheduleURL);
                 URL url = df.formatURL(departmentTag, groupName);
-                String[][] table = df.getTT(df.fetch(url.toString(), false));
+                String[][] table = df.getTT();
                 for (int i = 0; i < 8; i++) {
                     for (int j = 0; j < 6; j++) {
                         HTMLCellEntity ce = TableParser.parseCell(table[i][j], i, j);

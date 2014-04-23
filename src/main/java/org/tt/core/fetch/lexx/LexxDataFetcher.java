@@ -14,13 +14,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
 * Copyright 2014 Plain Solutions
@@ -44,42 +42,6 @@ public class LexxDataFetcher implements AbstractDataFetcher {
     private static final String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
     private static final String loginPassword = "";
 
-    @Deprecated
-    @Override
-    public org.jsoup.nodes.Document fetch(String source, boolean isRawHTML) throws IOException {
-        return null;
-    }
-
-    @Override
-    public Map<String, String> getDepartments(org.jsoup.nodes.Document doc) {
-        return null;
-    }
-
-    @Override
-    public List<String> getGroups(org.jsoup.nodes.Document doc, String department) {
-        return null;
-    }
-
-    @Override
-    public String[][] getTT(org.jsoup.nodes.Document doc) throws IOException {
-        return new String[0][];
-    }
-
-    @Override
-    public URL formatURL(String departmentTag, String groupDisplayName) throws MalformedURLException {
-        return null;
-    }
-
-    @Override
-    public String[] getExclusions() {
-        return new String[0];
-    }
-
-    @Override
-    public void setGlobalURL(String url) {
-
-    }
-
     private static URLConnection getConnection(String globUrl) {
         URL url;
         URLConnection connection = null;
@@ -96,6 +58,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         return connection;
     }
 
+    @Override
     public List<Department> getDepartments() {
         List<Department> departments = new ArrayList<>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -124,6 +87,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         return departments;
     }
 
+    @Override
     public List<String> getGroups(String department) {
         List<String> groups = new ArrayList<>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
