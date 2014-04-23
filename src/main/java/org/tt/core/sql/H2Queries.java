@@ -54,6 +54,11 @@ public class H2Queries implements AbstractQueries {
         return "INSERT INTO departments(name,tag) VALUES('%s','%s');";
     }
 
+    @Override
+    public String qAddDepartmentMessage() {
+        return null;
+    }
+
     /**
      * Query description. Adds group to <code>groups</code> table, based on department_tag information
      *
@@ -87,6 +92,21 @@ public class H2Queries implements AbstractQueries {
     @Override
     public String qAddSubject() {
         return "INSERT INTO subjects(info) VALUES ('%s');";
+    }
+
+    @Override
+    public String qAddTeacher() {
+        return null;
+    }
+
+    @Override
+    public String qAddLocation() {
+        return null;
+    }
+
+    @Override
+    public String qAddSubGroup() {
+        return null;
     }
 
     /**
@@ -156,6 +176,11 @@ public class H2Queries implements AbstractQueries {
         return "SELECT tag FROM departments WHERE name='%s'";
     }
 
+    @Override
+    public String qGetDepartmentMessage() {
+        return null;
+    }
+
     /**
      * Query description. Gets all the groups names (displayable) from <code>groups</code> table, based on the
      * department tag.
@@ -213,6 +238,21 @@ public class H2Queries implements AbstractQueries {
     @Override
     public String qGetSubjectID() {
         return "SELECT id FROM subjects WHERE info='%s';";
+    }
+
+    @Override
+    public String qGetTeacherID() {
+        return null;
+    }
+
+    @Override
+    public String qGetLocationID() {
+        return null;
+    }
+
+    @Override
+    public String qGetSubGroupID() {
+        return null;
     }
 
     /**

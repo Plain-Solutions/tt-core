@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.tt.core.fetch;
+package org.tt.core.fetch.ssudf;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.tt.core.fetch.AbstractDataFetcher;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -27,7 +28,7 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * SSUDataFetcher is an implementation of {@link AbstractDataFetcher} with restrictions and markup parsing for
+ * SSUDataFetcher is an implementation of {@link org.tt.core.fetch.AbstractDataFetcher} with restrictions and markup parsing for
  * <a href=sgu.ru/schedule>SSU Timetables Website</a>.
  *
  * @author Sevak Avetisyan,Vlad Slepukhin

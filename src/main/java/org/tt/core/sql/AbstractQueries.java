@@ -35,11 +35,19 @@ public interface AbstractQueries {
 
     String qAddDepartment();
 
+    String qAddDepartmentMessage();
+
     String qAddGroups();
 
     String qAddDateTime();
 
     String qAddSubject();
+
+    String qAddTeacher();
+
+    String qAddLocation();
+
+    String qAddSubGroup();
 
     String qAddLessonRecord();
 
@@ -53,6 +61,7 @@ public interface AbstractQueries {
 
     String qGetDepartmentTagByName();
 
+    String qGetDepartmentMessage();
 
     String qGetGroups();
 
@@ -63,6 +72,12 @@ public interface AbstractQueries {
     String qGetDateTimeID();
 
     String qGetSubjectID();
+
+    String qGetTeacherID();
+
+    String qGetLocationID();
+
+    String qGetSubGroupID();
 
     String qGetTT();
 

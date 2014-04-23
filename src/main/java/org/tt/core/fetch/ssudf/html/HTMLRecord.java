@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.tt.core.fetch.html;
+package org.tt.core.fetch.ssudf.html;
 
 /**
  * Entity of each cell from the parsed table.
