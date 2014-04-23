@@ -37,6 +37,7 @@ import java.util.List;
 * Author: Avetisyan Sevak
 * Date: 23.04.14.
  */
+
 public class LexxDataFetcher implements AbstractDataFetcher {
     private static final String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
     private static final String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
