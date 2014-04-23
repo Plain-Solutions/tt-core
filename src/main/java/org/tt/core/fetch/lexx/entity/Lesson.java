@@ -19,6 +19,7 @@ public class Lesson {
     private int sequence;
     private String parity;
     private String subgroup;
+    private String activity;
     private String subject;
     private String teacher;
     private String building;
@@ -28,10 +29,11 @@ public class Lesson {
     public Lesson() {
     }
 
-    public Lesson(int sequence, String parity, String subgroup, String subject, String teacher, String building, String room, long timestamp) {
+    public Lesson(int sequence, String parity, String subgroup, String activity, String subject, String teacher, String building, String room, long timestamp) {
         this.sequence = sequence;
         this.parity = parity;
         this.subgroup = subgroup;
+        this.activity = activity;
         this.subject = subject;
         this.teacher = teacher;
         this.building = building;
@@ -61,6 +63,14 @@ public class Lesson {
 
     public void setSubgroup(String subgroup) {
         this.subgroup = subgroup;
+    }
+
+    public String getActivity() {
+        return activity;
+    }
+
+    public void setActivity(String activity) {
+        this.activity = activity;
     }
 
     public String getSubject() {
@@ -102,5 +112,16 @@ public class Lesson {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
-}
 
+    public boolean isEmpty() {
+        return sequence == -1 &&
+                parity.equals("") &&
+                subgroup.equals("") &&
+                activity.equals("") &&
+                subgroup.equals("") &&
+                teacher.equals("") &&
+                building.equals("") &&
+                room.equals("") &&
+                timestamp == -1L;
+    }
+}
