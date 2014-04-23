@@ -103,4 +103,12 @@ public interface AbstractDataConverter {
      */
     List<String> reverseConvertGroup(String list);
 
+    /**
+     * General purposed K-V conversion
+     *
+     * @param data map
+     * @return formatted data
+     * @since 1.2
+     */
+    String convertMap(Map<String, String> data);
 }

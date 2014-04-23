@@ -1,6 +1,10 @@
 Changelog
+###TT Core 1.2.6
+
+* Added general-purposed K-V converter (Map to some (JSON) string) to avoid extra dependencies for TT Platform
+
 =========
-###TT Core 1.2.4
+###TT Core 1.2.5
 
 * Added adequate testing module with correct independent tests with JUnit 4.
 * TTStatus rewritten to return actual messages.

@@ -55,7 +55,7 @@ public class JSONConverterTest {
     @Test
     public void testConvertGroupList() throws Exception {
         String expected = "[\"111\",\"123\",\"145\",\"String group\"]";
-        List<String> groups = Arrays.asList(new String[]{"111", "123", "145", "String group"});
+        List<String> groups = Arrays.asList("111", "123", "145", "String group");
 
         String result = jsc.convertGroupList(groups);
         assertEquals(expected, result);
@@ -92,7 +92,7 @@ public class JSONConverterTest {
     @Test
     public void testReverseConvertGroup() throws Exception {
         String groups = "[\"111\",\"123\",\"145\",\"String group\"]";
-        List<String> expected = Arrays.asList(new String[]{"111", "123", "145", "String group"});
+        List<String> expected = Arrays.asList("111", "123", "145", "String group");
         List<String> result = jsc.reverseConvertGroup(groups);
 
         assertArrayEquals(expected.toArray(), result.toArray());

@@ -19,6 +19,9 @@ import org.tt.core.fetch.AbstractDataFetcher;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * AbstractDataManager is the main external interface of TT Core Library. Actually, it represents a connector
  * between all the internal modules and external interface.
@@ -129,12 +132,21 @@ public interface AbstractDataManager {
     TTData getTT(int groupID);
 
     /**
+     * Get some kind of formatted K-V structure
+     * @param list
+     * @return formatted output
+     * @see org.tt.core.dm.convert.json.JSONConverter
+     * @since 1.2
+     */
+    TTData getFormattedString(Map<String, String> list);
+
+    /**
      * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
      * Method was introduced to create a TT API resembling structure.
      *
      * @param departmentTag the tag of the department
      * @param groupName     the displayable name.
-     * @since 1.3
+     * @since 1.2
      */
     TTData getTT(String departmentTag, String groupName);
 
