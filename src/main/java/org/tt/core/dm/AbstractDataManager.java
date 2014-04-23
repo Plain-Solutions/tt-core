@@ -82,6 +82,8 @@ public interface AbstractDataManager {
      */
     TTData putTT(String departmentTag, String groupName);
 
+    TTData putAllTT();
+
     /**
      * Get the map of stored departments.
      *

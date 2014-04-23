@@ -44,6 +44,7 @@ import java.util.Map;
  * @author Vlad Slepukhin, Nickolay Yurin
  * @since 1.0
  */
+
 public class SSUDataManager implements AbstractDataManager {
 
     private AbstractDataFetcher df;
@@ -169,7 +170,7 @@ public class SSUDataManager implements AbstractDataManager {
         TTData result = new TTData();
         try {
             String name = sqlm.getGroupName(departmentTag, groupID);
-            result  = putTT(departmentTag, name);
+            result = putTT(departmentTag, name);
         } catch (SQLException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
@@ -198,37 +199,36 @@ public class SSUDataManager implements AbstractDataManager {
         TTData result = new TTData();
         try {
             int groupID = sqlm.getGroupID(departmentTag, groupName);
+            System.out.println(groupID);
             int day = 1;
             List<List<Lesson>> timetable = df.getTT(departmentTag, groupName);
 
-            for (List<Lesson> ls: timetable) {
-
+            for (List<Lesson> ls : timetable) {
+                System.out.println("here");
                 for (Lesson l : ls) {
+                    System.out.println("here");
                     if (!l.isEmpty()) {
                         int sequence = l.getSequence();
-                        System.out.println(sequence);
                         int parityID = sqlm.getParityID(l.getParity());
-                        System.out.println(parityID);
                         int subgrpID = sqlm.putSubGroup(groupID, l.getSubgroup());
-                        System.out.println(subgrpID);
                         int activityID = sqlm.getActivityID(l.getActivity());
-                        System.out.println(activityID);
                         int subjectID = sqlm.putSubject(l.getSubject());
-                        System.out.println(subjectID);
                         int teacherID = sqlm.putTeacher(l.getTeacher());
-                        System.out.println(teacherID);
                         int locationID = sqlm.putLocation(l.getBuilding(), l.getRoom());
-                        System.out.println(locationID);
                         int datatimeID = sqlm.putDateTime(parityID, sequence, day);
-                        System.out.println(datatimeID);
+
 
                         sqlm.putLessonRecord(groupID, datatimeID, activityID, subjectID, subgrpID, teacherID,
                                 locationID, l.getTimestamp());
                     }
-                    System.out.println("----");
+
                 }
-                   day++;
+                day++;
+
             }
+            System.out.println(String.format("added %s in %s", groupName, departmentTag));
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
         } catch (SQLException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
@@ -240,6 +240,26 @@ public class SSUDataManager implements AbstractDataManager {
             result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public TTData putAllTT() {
+        TTData result = new TTData();
+        try {
+            for (String d : sqlm.getDepartmentTags()) {
+                for (Group grp : sqlm.getGroups(d))
+                    putTT(d, grp.getName());
+            }
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
         }
         return result;
     }
@@ -351,16 +371,17 @@ public class SSUDataManager implements AbstractDataManager {
     public TTData getTT(int groupID) {
         TTData result = new TTData();
 
-            //List<String[]> raw = sqlm.getTT(groupID);
-            result.setHttpCode(200);
-            //result.setMessage(dconv.convertTT(raw));
-            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.TABLERR));
+        //List<String[]> raw = sqlm.getTT(groupID);
+        result.setHttpCode(200);
+        //result.setMessage(dconv.convertTT(raw));
+        result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.TABLERR));
 
         return result;
     }
 
     /**
      * Get some kind of formatted K-V structure
+     *
      * @param list
      * @return formatted output
      * @see org.tt.core.dm.convert.json.JSONConverter
