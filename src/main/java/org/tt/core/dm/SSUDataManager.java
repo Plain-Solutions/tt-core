@@ -198,16 +198,36 @@ public class SSUDataManager implements AbstractDataManager {
         TTData result = new TTData();
         try {
             int groupID = sqlm.getGroupID(departmentTag, groupName);
+            int day = 1;
             List<List<Lesson>> timetable = df.getTT(departmentTag, groupName);
+
             for (List<Lesson> ls: timetable) {
+
                 for (Lesson l : ls) {
-                    System.out.printf("%d %s _%s_ %s %s %s %s %s %d\n", l.getSequence(),
-                            l.getParity(), l.getSubgroup(), l.getActivity(), l.getSubject(), l.getTeacher(),
-                            l.getBuilding(), l.getRoom(), l.getTimestamp());
+                    if (!l.isEmpty()) {
+                        int sequence = l.getSequence();
+                        System.out.println(sequence);
+                        int parityID = sqlm.getParityID(l.getParity());
+                        System.out.println(parityID);
+                        int subgrpID = sqlm.putSubGroup(groupID, l.getSubgroup());
+                        System.out.println(subgrpID);
+                        int activityID = sqlm.getActivityID(l.getActivity());
+                        System.out.println(activityID);
+                        int subjectID = sqlm.putSubject(l.getSubject());
+                        System.out.println(subjectID);
+                        int teacherID = sqlm.putTeacher(l.getTeacher());
+                        System.out.println(teacherID);
+                        int locationID = sqlm.putLocation(l.getBuilding(), l.getRoom());
+                        System.out.println(locationID);
+                        int datatimeID = sqlm.putDateTime(parityID, sequence, day);
+                        System.out.println(datatimeID);
+
+                        sqlm.putLessonRecord(groupID, datatimeID, activityID, subjectID, subgrpID, teacherID,
+                                locationID, l.getTimestamp());
+                    }
+                    System.out.println("----");
                 }
-                System.out.println("-----");
-
-
+                   day++;
             }
         } catch (SQLException e) {
             result.setHttpCode(404);

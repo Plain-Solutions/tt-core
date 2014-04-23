@@ -83,6 +83,10 @@ public interface AbstractSQLManager {
 
     int getLastID(String table) throws SQLException;
 
+    int getParityID (String state) throws SQLException;
+
+    int getActivityID (String type) throws SQLException;
+
     void setQueries(AbstractQueries qrs);
 
 }

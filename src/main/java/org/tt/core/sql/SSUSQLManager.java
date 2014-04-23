@@ -147,7 +147,7 @@ public class SSUSQLManager implements AbstractSQLManager{
     @Override
     public int putSubGroup(int groupID, String name) throws SQLException {
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetSubGroupID(), name));
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetSubGroupID(), groupID, name));
         int id = 0;
 
         while (rs.next()) id = rs.getInt("id");
@@ -166,7 +166,7 @@ public class SSUSQLManager implements AbstractSQLManager{
     public void putLessonRecord(int groupID, int dateTimeID, int activityID, int subjectID, int subGroupID, int teacherID,
                                 int locationID, long timestamp) throws SQLException {
         Statement stmt = conn.createStatement();
-        if (!lessonExists(groupID, dateTimeID, subjectID))
+        //if (!lessonExists(groupID, dateTimeID, subjectID))
             stmt.executeUpdate(String.format(qrs.qAddLessonRecord(), groupID, dateTimeID, activityID, subjectID, subGroupID, teacherID,
                     locationID, timestamp));
 
@@ -347,6 +347,34 @@ public class SSUSQLManager implements AbstractSQLManager{
         int id = 0;
         while (rs.next())
             id = rs.getInt("MAX(id)");
+        return id;
+    }
+
+    @Override
+    public int getParityID(String state) throws SQLException {
+        Statement stmt = conn.createStatement();
+
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetParityID(), state));
+
+        int id = 0;
+
+        while (rs.next())
+            id = rs.getInt("id");
+
+        return id;
+    }
+
+    @Override
+    public int getActivityID(String type) throws SQLException {
+        Statement stmt = conn.createStatement();
+
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetActivityID(), type));
+
+        int id = 0;
+
+        while (rs.next())
+            id = rs.getInt("id");
+
         return id;
     }
 

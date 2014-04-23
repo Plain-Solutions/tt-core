@@ -77,6 +77,10 @@ public interface AbstractQueries {
 
     String qGetSubGroupID();
 
+    String qGetParityID();
+
+    String qGetActivityID();
+
     String qGetTT();
 
     String qDepartmentExists();

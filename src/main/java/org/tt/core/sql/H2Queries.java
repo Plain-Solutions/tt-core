@@ -254,8 +254,14 @@ public class H2Queries implements AbstractQueries {
 
     @Override
     public String qGetSubGroupID() {
-        return "SELECT id FROM subgroups WHERE name='%s' AND group_id=%d;";
+        return "SELECT id FROM subgroups WHERE  group_id=%d AND name='%s';";
     }
+
+    @Override
+    public String qGetParityID() { return "SELECT id FROM week_states WHERE state='%s';";}
+
+    @Override
+    public String qGetActivityID() { return "SELECT id FROM activities WHERE type='%s';";}
 
     /**
      * Query description. Gets structured information about the whole timetable for the selected group
