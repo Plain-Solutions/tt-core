@@ -16,7 +16,6 @@
 package org.tt.core.fetch;
 
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -41,7 +40,7 @@ public interface AbstractDataFetcher {
      *
      * @param source    data source (URL String or path to file)
      * @param isRawHTML <code>true</code> if html code string was passed, <code>false</code> if URL was passed
-     * @see org.tt.core.fetch.SSUDataFetcher
+     * @see org.tt.core.fetch.ssudf.SSUDataFetcher
      * @since 1.3
      */
     Document fetch(String source, boolean isRawHTML) throws IOException;
@@ -52,7 +51,7 @@ public interface AbstractDataFetcher {
      *
      * @param doc the fetched data;
      * @return K-V of name-tag for departments
-     * @see org.tt.core.fetch.SSUDataFetcher
+     * @see org.tt.core.fetch.ssudf.SSUDataFetcher
      * @since 1.3
      */
     Map<String, String> getDepartments(Document doc);
@@ -63,7 +62,7 @@ public interface AbstractDataFetcher {
      * @param doc        the fetched data
      * @param department token (tag) of the department, which we get in getDepartments()
      * @return List of names.
-     * @see org.tt.core.fetch.SSUDataFetcher
+     * @see org.tt.core.fetch.ssudf.SSUDataFetcher
      * @since 1.3
      */
     List<String> getGroups(Document doc, String department);
@@ -74,7 +73,7 @@ public interface AbstractDataFetcher {
      * @param doc the fetched data
      * @return String[][] statical representation (statical array 8*6) of HTML code.
      * @throws IOException
-     * @see org.tt.core.fetch.SSUDataFetcher
+     * @see org.tt.core.fetch.ssudf.SSUDataFetcher
      * @since 1.0
      */
     String[][] getTT(Document doc) throws IOException;
@@ -86,7 +85,7 @@ public interface AbstractDataFetcher {
      * @param groupDisplayName the displayed name. Usually the same as the token in the URL, but some groups needed
      *                         to be converted.
      * @return Ready to parse URL.
-     * @see org.tt.core.fetch.SSUDataFetcher
+     * @see org.tt.core.fetch.ssudf.SSUDataFetcher
      * @since 1.1
      */
     URL formatURL(String departmentTag, String groupDisplayName) throws MalformedURLException;

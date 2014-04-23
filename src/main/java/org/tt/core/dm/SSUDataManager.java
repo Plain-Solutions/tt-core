@@ -17,9 +17,9 @@ package org.tt.core.dm;
 
 import org.tt.core.dm.convert.json.JSONConverter;
 import org.tt.core.fetch.AbstractDataFetcher;
-import org.tt.core.fetch.html.HTMLCellEntity;
-import org.tt.core.fetch.html.HTMLRecord;
-import org.tt.core.fetch.html.TableParser;
+import org.tt.core.fetch.ssudf.html.HTMLCellEntity;
+import org.tt.core.fetch.ssudf.html.HTMLRecord;
+import org.tt.core.fetch.ssudf.html.TableParser;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
 import org.tt.core.sql.ex.EmptyTableException;
@@ -62,7 +62,7 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     /**
-     * Constructor with all provided entities of data suppliers.
+     * Constructor with all provided entity of data suppliers.
      *
      * @param sqlm            SQLManager instance.
      * @param qrs             Queries for SQL instance.
@@ -290,7 +290,7 @@ public class SSUDataManager implements AbstractDataManager {
 
     /**
      * Get displayable group names (151, 451) as Strings (see non-numerical groups in
-     * {@link org.tt.core.fetch.SSUDataFetcher})on specified department.
+     * {@link org.tt.core.fetch.ssudf.SSUDataFetcher})on specified department.
      *
      * @param departmentTag the tag of the department.
      * @return JSON List of tags.

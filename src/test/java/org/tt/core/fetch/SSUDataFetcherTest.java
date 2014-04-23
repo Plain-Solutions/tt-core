@@ -17,6 +17,7 @@ package org.tt.core.fetch;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.tt.core.fetch.ssudf.SSUDataFetcher;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

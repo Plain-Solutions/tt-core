@@ -19,7 +19,6 @@ import org.tt.core.fetch.AbstractDataFetcher;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -102,7 +101,7 @@ public interface AbstractDataManager {
 
     /**
      * Get displayable group names (151, 451) as Strings (see non-numerical groups in
-     * {@link org.tt.core.fetch.SSUDataFetcher})on specified department.
+     * {@link org.tt.core.fetch.ssudf.SSUDataFetcher})on specified department.
      *
      * @param departmentTag the tag of the department.
      * @return JSON List of tags.

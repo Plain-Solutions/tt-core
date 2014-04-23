@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.tt.core.fetch.html;
+package org.tt.core.fetch.ssudf.html;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class HTMLCellEntity {
 
     /**
      * Accessor for usage in the DB.
-     * @return List of {@link org.tt.core.fetch.html.HTMLRecord} entities
+     * @return List of {@link org.tt.core.fetch.ssudf.html.HTMLRecord} entity
      */
     public List<HTMLRecord> getCell() {
         return cell;

@@ -215,7 +215,7 @@ public class SSUSQLManager implements AbstractSQLManager {
      * Get group names from groups table, based on department tag ('knt', 'ff' or so)
      *
      * @param departmentTag department tag.
-     * @return List of strings (some groups has non-numerical names @see org.tt.core.fetch.SSUDataFetcher)
+     * @return List of strings (some groups has non-numerical names @see org.tt.core.fetch.ssudf.SSUDataFetcher)
      * @throws SQLException
      * @throws NoSuchDepartmentException
      * @since 1.0

@@ -34,7 +34,7 @@ import java.util.Map;
 
 /**
  * JSONConverter is an implementation of {@link org.tt.core.dm.AbstractDataConverter}, which formats raw data,
- * represented by Java Objects, mainly Collections to JSON Strings via GSON with help of some entities for manual
+ * represented by Java Objects, mainly Collections to JSON Strings via GSON with help of some entity for manual
  * conversion and serializers for them.
  *
  * @author Vlad Slepukhin
