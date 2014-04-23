@@ -265,12 +265,16 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qGetTT() {
-        return "SELECT ws.state, d.name, ldt.sequence, s.name " +
+        return "SELECT ws.state, d.name, ldt.sequence, a.type, s.name, t.name, loc.building, loc.room " +
                 "FROM week_states as ws " +
                 "JOIN datetimes as ldt on ldt.week_id=ws.id " +
                 "JOIN days as d on d.id=ldt.day_id " +
                 "JOIN lessons as lr on lr.datetime_id = ldt.id " +
-                "JOIN subjects as s on s.id = lr.subject_id " +
+                "JOIN activities as a on lr.activity_id = a.id " +
+                "JOIN subjects as s on lr.subject_id = s.id  " +
+                "JOIN subgroups as sgrp on  lr.subgroup_id = sgrp.id " +
+                "JOIN teachers as t on lr.teacher_id = t.id " +
+                "JOIN locations as loc on lr.location_id = loc.id " +
                 "JOIN groups as g on g.id = lr.group_id AND g.id=%d " +
                 "ORDER BY d.id ASC, ldt.sequence ASC ";
     }

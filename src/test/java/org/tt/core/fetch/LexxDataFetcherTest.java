@@ -3,6 +3,7 @@ package org.tt.core.fetch;
 import org.junit.Test;
 import org.tt.core.fetch.lexx.LexxDataFetcher;
 import org.tt.core.fetch.lexx.entity.Department;
+import org.tt.core.fetch.lexx.entity.Group;
 import org.tt.core.fetch.lexx.entity.Lesson;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class LexxDataFetcherTest {
     //@Test
     public void testGroups() {
         LexxDataFetcher ldf = new LexxDataFetcher();
-        List<String> knt = ldf.getGroups("knt");
+        List<Group> knt = ldf.getGroups("knt");
         System.out.println(knt);
     }
 

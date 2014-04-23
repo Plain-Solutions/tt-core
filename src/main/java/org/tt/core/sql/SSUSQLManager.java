@@ -147,16 +147,16 @@ public class SSUSQLManager implements AbstractSQLManager{
     @Override
     public int putSubGroup(int groupID, String name) throws SQLException {
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTeacherID(), name));
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetSubGroupID(), name));
         int id = 0;
 
         while (rs.next()) id = rs.getInt("id");
 
         if (id == 0) {
-            stmt.executeUpdate(String.format(qrs.qAddTeacher(), name));
+            stmt.executeUpdate(String.format(qrs.qAddSubGroup(), groupID, name));
             stmt.close();
 
-            id = getLastID("teachers");
+            id = getLastID("subgroups");
         }
 
         return id;
@@ -273,6 +273,17 @@ public class SSUSQLManager implements AbstractSQLManager{
 
     @Override
     public List<List<DBLesson>> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException {
+           if (groupExistsAsID(groupID)) {
+               List<List<DBLesson>> result = Collections.emptyList();
+
+               Statement stmt = conn.createStatement();
+               ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTT(), groupID));
+
+//               while(rs.next()) {
+//
+//               }
+
+           } else throw new NoSuchGroupException();
         return null;
     }
 

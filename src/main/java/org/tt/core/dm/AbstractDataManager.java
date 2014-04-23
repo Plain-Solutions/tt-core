@@ -100,8 +100,7 @@ public interface AbstractDataManager {
     TTData getDepartmentTags();
 
     /**
-     * Get displayable group names (151, 451) as Strings (see non-numerical groups in
-     * {@link org.tt.core.fetch.ssudf.SSUDataFetcher})on specified department.
+     * Get displayable group names (151, 451) as Strings on specified department.
      *
      * @param departmentTag the tag of the department.
      * @return JSON List of tags.

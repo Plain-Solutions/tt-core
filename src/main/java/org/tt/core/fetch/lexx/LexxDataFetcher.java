@@ -46,6 +46,8 @@ public class LexxDataFetcher implements AbstractDataFetcher {
 
     public LexxDataFetcher() {}
 
+    public LexxDataFetcher(String loginPassword) { this.loginPassword = loginPassword; }
+
     public String getLoginPassword() {
         return loginPassword;
     }

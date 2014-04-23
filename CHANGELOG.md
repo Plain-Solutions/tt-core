@@ -1,9 +1,19 @@
 Changelog
+=========
+###TT Core 2.0.0
+
+* Introduced `LexxDataFetcher` - an instance of ADM working with SSU internal database. 
+* `SSUDataFetcher` is deprecated and removed from distribution. We plan to bring it back as soon as we clean everything up. Or not. It cannot provide complete data in discrete format as it does LDF.
+* Refactored `SSUSQLManager` to work with objects of same structue - lsit of some compoun object. Only 6 methods from version 1.0 are preserved.
+* Updated database scheme with Lexx-like structure.
+
+=======
+
 ###TT Core 1.2.6
 
 * Added general-purposed K-V converter (Map to some (JSON) string) to avoid extra dependencies for TT Platform
 
-=========
+
 ###TT Core 1.2.5
 
 * Added adequate testing module with correct independent tests with JUnit 4.
