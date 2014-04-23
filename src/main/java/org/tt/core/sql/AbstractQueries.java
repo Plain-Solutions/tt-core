@@ -35,8 +35,6 @@ public interface AbstractQueries {
 
     String qAddDepartment();
 
-    String qAddDepartmentMessage();
-
     String qAddGroups();
 
     String qAddDateTime();
@@ -86,4 +84,6 @@ public interface AbstractQueries {
     String qGroupIDExists();
 
     String qSubjectExists();
+
+    String qGroupTTExists();
 }

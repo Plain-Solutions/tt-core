@@ -15,13 +15,14 @@
  */
 package org.tt.core.sql;
 
+import org.tt.core.fetch.lexx.entity.Department;
+import org.tt.core.fetch.lexx.entity.Group;
 import org.tt.core.sql.ex.EmptyTableException;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * AbstractSQLManager is one the core workers in TT Core library that serves as a bridge
@@ -35,22 +36,31 @@ import java.util.Map;
  * @since 1.0
  */
 public interface AbstractSQLManager {
-    void putDepartments(Map<String, String> departments) throws SQLException;
+    void putDepartments(List<Department> departments) throws SQLException;
 
-    void putGroups(List<String> groups, String departmentTag) throws SQLException, NoSuchDepartmentException;
+    void putGroups(List<Group> groups, String departmentTag) throws SQLException, NoSuchDepartmentException;
 
     int putDateTime(int weekID, int sequence, int dayID) throws SQLException;
 
     int putSubject(String info) throws SQLException;
 
-    void putLessonRecord(int groupID, int dateTimeID, int subjectID) throws SQLException;
+    int putLocation(String building, String room) throws SQLException;
+
+    int putTeacher(String name) throws  SQLException;
+
+    int putSubGroup(int groupID, String name) throws SQLException;
+
+    void putLessonRecord(int groupID, int dateTimeID, int activityID, int subjectID, int subGroupID, int teacherID,
+                         int locationID, long timestamp) throws SQLException;
 
 
-    Map<String, Map<String, String>> getDepartments() throws SQLException;
+    List<Department> getDepartments() throws SQLException;
 
     List<String> getDepartmentTags() throws SQLException;
 
-    List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
+    List<Group> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
+
+    List<Group> getNonEmptyGroups(String departmentTag) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
     int getGroupID(String departmentTag, String groupName) throws SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
@@ -58,7 +68,7 @@ public interface AbstractSQLManager {
     String getGroupName(String departmentTag, int groupID) throws SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
 
-    List<String[]> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
+    List<List<DBLesson>> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
 
 
     boolean departmentExists(String departmentTag) throws SQLException;
@@ -68,6 +78,8 @@ public interface AbstractSQLManager {
     boolean groupExistsAsID(int groupID) throws SQLException;
 
     boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException;
+
+    boolean groupHasTable(int groupID) throws SQLException;
 
     int getLastID(String table) throws SQLException;
 
