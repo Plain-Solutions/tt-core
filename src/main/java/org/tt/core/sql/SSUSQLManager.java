@@ -166,7 +166,6 @@ public class SSUSQLManager implements AbstractSQLManager{
     public void putLessonRecord(int groupID, int dateTimeID, int activityID, int subjectID, int subGroupID, int teacherID,
                                 int locationID, long timestamp) throws SQLException {
         Statement stmt = conn.createStatement();
-        //if (!lessonExists(groupID, dateTimeID, subjectID))
             stmt.executeUpdate(String.format(qrs.qAddLessonRecord(), groupID, dateTimeID, activityID, subjectID, subGroupID, teacherID,
                     locationID, timestamp));
 
@@ -175,7 +174,7 @@ public class SSUSQLManager implements AbstractSQLManager{
 
     @Override
     public List<Department> getDepartments() throws SQLException {
-        List<Department> result = Collections.emptyList();
+        List<Department> result = new ArrayList<>();
 
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(qrs.qGetDepartments());
@@ -334,7 +333,7 @@ public class SSUSQLManager implements AbstractSQLManager{
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(String.format(qrs.qGroupTTExists(), groupID));
         int num = 0;
-        while (rs.next()) num = rs.getInt("COUNT(group_id)");
+        while (rs.next()) num = rs.getInt("result");
 
         return num!=0;
     }

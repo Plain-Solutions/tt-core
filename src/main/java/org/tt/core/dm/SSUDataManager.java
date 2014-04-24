@@ -199,7 +199,7 @@ public class SSUDataManager implements AbstractDataManager {
         TTData result = new TTData();
         try {
             int groupID = sqlm.getGroupID(departmentTag, groupName);
-            System.out.println(groupID);
+
             int day = 1;
             List<List<Lesson>> timetable = df.getTT(departmentTag, groupName);
 
@@ -276,7 +276,7 @@ public class SSUDataManager implements AbstractDataManager {
         try {
             List<Department> raw = sqlm.getDepartments();
             result.setHttpCode(200);
-            //result.setMessage(dconv.convertDepartmentList(raw));
+            result.setMessage(dconv.convertDepartmentList(raw));
         } catch (SQLException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
@@ -317,13 +317,33 @@ public class SSUDataManager implements AbstractDataManager {
         try {
             List<Group> raw = sqlm.getGroups(departmentTag);
             result.setHttpCode(200);
-            //result.setMessage(dconv.convertGroupList(raw));
+            result.setMessage(dconv.convertGroupList(raw));
         } catch (SQLException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
         } catch (NoSuchDepartmentException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
+        }
+        return result;
+    }
+
+    @Override
+    public TTData getNonEmptyGroups(String departmentTag) {
+        TTData result = new TTData();
+        try {
+            List<Group> raw = sqlm.getNonEmptyGroups(departmentTag);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertGroupList(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
         }
         return result;
     }

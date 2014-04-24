@@ -110,6 +110,8 @@ public interface AbstractDataManager {
      */
     TTData getGroups(String departmentTag);
 
+    TTData getNonEmptyGroups(String departmentTag);
+
     /**
      * Converts name of group of the specified department (allocation check, throws NoSuchGroupException) to its global
      * id in the database. Used by TT Platform&Servlets.

@@ -15,6 +15,9 @@
  */
 package org.tt.core.dm;
 
+import org.tt.core.fetch.lexx.entity.Department;
+import org.tt.core.fetch.lexx.entity.Group;
+
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +41,7 @@ public interface AbstractDataConverter {
      * @param departments raw data.
      * @return String of some format.
      */
-    String convertDepartmentList(Map<String, Map<String, String>> departments);
+    String convertDepartmentList(List<Department> departments);
 
     /**
      * Converts raw data in Java Object, containing information about all groups of the department to
@@ -47,7 +50,7 @@ public interface AbstractDataConverter {
      * @param names raw data.
      * @return String of some format.
      */
-    String convertGroupList(List<String> names);
+    String convertGroupList(List<Group> names);
 
 
     /**

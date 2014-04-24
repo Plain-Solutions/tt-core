@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.tt.core.dm.convert.json.entity.DepartmentEntity;
+import org.tt.core.fetch.lexx.entity.Department;
 
 import java.lang.reflect.Type;
 
@@ -37,7 +38,7 @@ import java.lang.reflect.Type;
  * @author Vlad Slepukhin
  * @since 1.2
  */
-public class DepartmentSerializer implements JsonSerializer<DepartmentEntity> {
+public class DepartmentSerializer implements JsonSerializer<Department> {
 
     /**
      * Converts DepartmentEntity to JsonElement, saving order in information in right representation.
@@ -49,13 +50,13 @@ public class DepartmentSerializer implements JsonSerializer<DepartmentEntity> {
      * @since 1.2
      */
     @Override
-    public JsonElement serialize(DepartmentEntity departmentEntity, Type type, JsonSerializationContext jsonSerializationContext) {
+    public JsonElement serialize(Department department, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject result = new JsonObject();
         JsonObject props = new JsonObject();
-        for (String data : departmentEntity.getData().keySet())
-            props.addProperty(data, departmentEntity.getData().get(data));
+        props.addProperty("name", department.getName());
+        props.addProperty("msg", department.getMessage());
 
-        result.add(departmentEntity.getTag(), props);
+        result.add(department.getTag(), props);
         return result;
     }
 }

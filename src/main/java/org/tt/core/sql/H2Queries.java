@@ -315,11 +315,11 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qSubjectExists() {
-        return "SELECT group_id FROM lessons_records WHERE group_id=%d AND datetime_id=%d AND subject_id=%d;";
+        return "SELECT group_id FROM lessons WHERE group_id=%d AND datetime_id=%d AND subject_id=%d;";
     }
 
     @Override
     public String qGroupTTExists() {
-        return "SELECT COUNT(group_id) As GrpInLessons FROM lessons WHERE group_id=%d;";
+        return "SELECT COUNT(group_id) As result FROM lessons WHERE group_id=%d;";
     }
 }

@@ -24,7 +24,10 @@ import org.tt.core.dm.convert.json.entity.DepartmentEntity;
 import org.tt.core.dm.convert.json.entity.StatusEntity;
 import org.tt.core.dm.convert.json.entity.TimeTableEntity;
 import org.tt.core.dm.convert.json.serializer.DepartmentSerializer;
+import org.tt.core.dm.convert.json.serializer.GroupListSerializer;
 import org.tt.core.dm.convert.json.serializer.TimeTableSerializer;
+import org.tt.core.fetch.lexx.entity.Department;
+import org.tt.core.fetch.lexx.entity.Group;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -58,9 +61,9 @@ public class JSONConverter implements AbstractDataConverter {
      * @return JSON-formatted representation of raw object. See {@link org.tt.core.dm.convert.json.serializer.DepartmentSerializer}
      * or API reference for the output format.
      */
-    public String convertDepartmentList(Map<String, Map<String, String>> departments) {
+    public String convertDepartmentList(List<Department> departments) {
         GsonBuilder gsb = new GsonBuilder();
-        gsb.registerTypeAdapter(DepartmentEntity.class, new DepartmentSerializer());
+        gsb.registerTypeAdapter(Department.class, new DepartmentSerializer());
 
         return gsb.create().toJson(departments);
     }
@@ -71,8 +74,12 @@ public class JSONConverter implements AbstractDataConverter {
      * @param names list of departments represented in Java Object entity.
      * @return JSON-formatted representation of raw object. <code>List<String></code> to <code>[""]</code>
      */
-    public String convertGroupList(List<String> names) {
-        return convertAbstractList(names);
+    public String convertGroupList(List<Group> names) {
+        GsonBuilder gsb = new GsonBuilder();
+        gsb.registerTypeAdapter(Group.class, new GroupListSerializer());
+
+        return gsb.create().toJson(names);
+
     }
 
     /**
