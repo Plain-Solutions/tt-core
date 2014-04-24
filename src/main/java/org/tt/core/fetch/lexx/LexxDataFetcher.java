@@ -14,12 +14,14 @@ import sun.misc.BASE64Encoder;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 /**
 * Copyright 2014 Plain Solutions
@@ -44,7 +46,15 @@ public class LexxDataFetcher implements AbstractDataFetcher {
     private static final String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
     private String loginPassword = "";
 
-    public LexxDataFetcher() {}
+    public LexxDataFetcher() {
+        try {
+            Properties properties = new Properties();
+            properties.load(new FileInputStream("property"));
+            loginPassword = properties.getProperty("loginPassword");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public LexxDataFetcher(String loginPassword) { this.loginPassword = loginPassword; }
 

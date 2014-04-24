@@ -8,3 +8,4 @@ target/*
 *.ear
 WorkAround.java
 localtest.h2.db
+property
