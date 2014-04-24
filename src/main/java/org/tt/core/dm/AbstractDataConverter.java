@@ -17,6 +17,7 @@ package org.tt.core.dm;
 
 import org.tt.core.fetch.entity.Department;
 import org.tt.core.fetch.entity.Group;
+import org.tt.core.sql.TTEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,7 @@ public interface AbstractDataConverter {
      * @param table data from database sorted by day tags, sequence of lessons and parity (even<odd).
      * @return String of some format.
      */
-    String convertTT(List<String[]> table);
+    String convertTT(TTEntity table);
 
     /**
      * Creates error report.

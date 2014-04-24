@@ -20,11 +20,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.tt.core.dm.convert.json.TimeTableEntity;
+import org.tt.core.sql.TTEntity;
 
 import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
 
 /**
  * TimeTableSerializer is override of standard GSON <code>JsonSerializer</code> to properly create table of group.
@@ -50,7 +48,7 @@ import java.util.Map;
  * @author Vlad Slepukhin
  * @since 1.2
  */
-public class TimeTableSerializer implements JsonSerializer<TimeTableEntity> {
+public class TimeTableSerializer implements JsonSerializer<TTEntity> {
 
     /**
      * Converts TimeTableEntity to JsonElement, saving order in information in right representation.
@@ -62,21 +60,9 @@ public class TimeTableSerializer implements JsonSerializer<TimeTableEntity> {
      * @since 1.2
      */
     @Override
-    public JsonElement serialize(TimeTableEntity tt, Type type, JsonSerializationContext jsonSerializationContext) {
+    public JsonElement serialize(TTEntity tt, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject result = new JsonObject();
         JsonObject day = new JsonObject();
-
-        List<Map<String, String>> data = tt.getData();
-
-        for (Map<String, String> aLesson : data) {
-            JsonObject lesson = new JsonObject();
-            for (String key : aLesson.keySet()) {
-                lesson.addProperty(key, aLesson.get(key));
-            }
-            day.add(tt.getWeekday(), lesson);
-        }
-
-        result.add(tt.getWeekday(), day);
         return result;
     }
 }

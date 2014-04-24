@@ -390,19 +390,17 @@ public class SSUDataManager implements AbstractDataManager {
     public TTData getTT(int groupID) {
         TTData result = new TTData();
 
-
-            try {
-                TTEntity raw = sqlm.getTT(groupID);
-            } catch (SQLException e) {
-                result.setHttpCode(404);
-                result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
-            } catch (NoSuchGroupException e) {
-                result.setHttpCode(404);
-                result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
-            }
-
-
-
+        try {
+            TTEntity raw = sqlm.getTT(groupID);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertTT(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
+        }
 
         return result;
     }

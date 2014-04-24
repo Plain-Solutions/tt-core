@@ -25,10 +25,9 @@ import org.tt.core.dm.convert.json.serializer.GroupListSerializer;
 import org.tt.core.dm.convert.json.serializer.TimeTableSerializer;
 import org.tt.core.fetch.entity.Department;
 import org.tt.core.fetch.entity.Group;
+import org.tt.core.sql.TTEntity;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -108,29 +107,13 @@ public class JSONConverter implements AbstractDataConverter {
      * @return JSON-formatted representation of raw object. See {@link org.tt.core.dm.convert.json.serializer.TimeTableSerializer}
      * or API reference for the output format.
      */
-    public String convertTT(List<String[]> table) {
+    public String convertTT(TTEntity table) {
         GsonBuilder gsb = new GsonBuilder();
 
-        Map<String, List<Map<String, String>>> temp = new LinkedHashMap<>();
 
-        for (String[] record : table) {
-            String weekday = record[0];
-            Map<String, String> t = new LinkedHashMap<>();
-            t.put("parity", record[1]);
-            t.put("sequence", record[2]);
-            t.put("info", record[3]);
-            if (temp.containsKey(weekday)) {
-                temp.get(weekday).add(t);
-            } else {
-                List<Map<String, String>> tT = new ArrayList<>();
-                tT.add(t);
-                temp.put(weekday, tT);
-            }
 
-        }
-
-        gsb.registerTypeAdapter(TimeTableEntity.class, new TimeTableSerializer());
-        return gsb.create().toJson(temp);
+        gsb.registerTypeAdapter(TTEntity.class, new TimeTableSerializer());
+        return gsb.create().toJson(table);
     }
 
     /**
