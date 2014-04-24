@@ -16,13 +16,13 @@
 
 package org.tt.core.dm.convert.json.serializer;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
+import org.tt.core.sql.TTDayEntity;
 import org.tt.core.sql.TTEntity;
+import org.tt.core.sql.TTLesson;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * TimeTableSerializer is override of standard GSON <code>JsonSerializer</code> to properly create table of group.
@@ -61,8 +61,56 @@ public class TimeTableSerializer implements JsonSerializer<TTEntity> {
      */
     @Override
     public JsonElement serialize(TTEntity tt, Type type, JsonSerializationContext jsonSerializationContext) {
-        JsonObject result = new JsonObject();
-        JsonObject day = new JsonObject();
+        JsonArray result = new JsonArray();
+        List<TTDayEntity> days = tt.getTimetable();
+
+        for (int i = 0; i < days.size(); i ++)  {
+            JsonObject day = new JsonObject();
+            List<TTLesson> lessonEntity = days.get(i).getLessons();
+            JsonArray lessons = new JsonArray();
+            for (int j = 0; j < lessonEntity.size(); j++) {
+                JsonObject entry =  new JsonObject();
+                entry.addProperty("parity", lessonEntity.get(j).getParity());
+                entry.addProperty("sequence", lessonEntity.get(j).getSequence());
+
+                JsonArray subjInfo = new JsonArray();
+                List<TTLesson.TTLessonRecord> lrs = lessonEntity.get(j).getRecords();
+                for (int k = 0; k < lrs.size(); k++) {
+                    JsonObject lrEntry = new JsonObject();
+                    lrEntry.addProperty("activity", lrs.get(k).getActivity());
+                    lrEntry.addProperty("subject", lrs.get(k).getSubject());
+
+
+                    JsonArray creInfo = new JsonArray();
+                    List<TTLesson.TTClassRoomEntity> cres = lrs.get(k).getClassRoomEntities();
+
+
+                    for (int m = 0; m < cres.size(); m++) {
+                        JsonObject creEntry = new JsonObject();
+                        creEntry.addProperty("subgroup", cres.get(m).getSubgroup());
+                        creEntry.addProperty("teacher", cres.get(m).getTeacher());
+                        creEntry.addProperty("building", cres.get(m).getBuilding());
+                        creEntry.addProperty("room", cres.get(m).getRoom());
+                        creInfo.add(creEntry);
+                    }
+                    lrEntry.add("subinfo", creInfo);
+                    subjInfo.add(lrEntry);
+
+                }
+                entry.add("info", subjInfo);
+
+
+
+
+                lessons.add(entry);
+            }
+            day.add(days.get(i).getName(), lessons);
+            result.add(day);
+
+        }
+
+
+
         return result;
     }
 }
