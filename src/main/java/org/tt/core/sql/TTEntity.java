@@ -31,32 +31,35 @@ public class TTEntity {
             //if this day already in the list
             if (timetable.get(i).getName().equals(day)) {
                 List<TTLesson> lessons = timetable.get(i).getLessons();
-                for (TTLesson aLesson: lessons) {
-                    if (aLesson.getParity().equals(parity)&&aLesson.getSequence() == seq) {
-                        aLesson.append(activity, subject, subgroup, teacher, building, room);
+                for (int j = 0;  j < lessons.size() ; j++) {
+                    if (lessons.get(j).getParity().equals(parity)&&lessons.get(j).getSequence() == seq) {
+                        lessons.get(j).append(activity, subject, subgroup, teacher, building, room);
                         return;
                     }
                 }
                 //else no lessons yet
-                TTLesson aLesson = new TTLesson();
-                aLesson.setParity(parity);
-                aLesson.setSequence(seq);
-                aLesson.append(activity, subject, subgroup, teacher, building, room);
-                timetable.get(i).append(aLesson);
+
+                timetable.get(i).append(createLesson(parity, seq, activity, subject, subgroup, teacher, building, room));
                 return;
             }
         }
         TTDayEntity aDay = new TTDayEntity();
         aDay.setName(day);
+        aDay.append(createLesson(parity, seq, activity, subject, subgroup, teacher, building, room));
 
+
+        timetable.add(aDay);
+
+    }
+
+    private TTLesson createLesson(String parity, int seq, String activity, String subject, String subgroup,
+                                  String teacher, String building, String room)                          {
         TTLesson aLesson = new TTLesson();
         aLesson.setParity(parity);
         aLesson.setSequence(seq);
         aLesson.append(activity, subject, subgroup, teacher, building, room);
-        aDay.append(aLesson);
 
-
-        timetable.add(aDay);
+        return aLesson;
 
     }
 
