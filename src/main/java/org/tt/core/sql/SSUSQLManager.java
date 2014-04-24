@@ -17,7 +17,6 @@ package org.tt.core.sql;
 
 import org.tt.core.fetch.entity.Department;
 import org.tt.core.fetch.entity.Group;
-import org.tt.core.sql.ex.EmptyTableException;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
@@ -269,7 +268,7 @@ public class SSUSQLManager implements AbstractSQLManager {
     }
 
     @Override
-    public TTEntity getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException {
+    public TTEntity getTT(int groupID) throws SQLException, NoSuchGroupException {
         if (groupExistsAsID(groupID)) {
             TTEntity result = new TTEntity();
             Statement stmt = conn.createStatement();

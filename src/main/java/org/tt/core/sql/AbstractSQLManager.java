@@ -17,7 +17,6 @@ package org.tt.core.sql;
 
 import org.tt.core.fetch.entity.Department;
 import org.tt.core.fetch.entity.Group;
-import org.tt.core.sql.ex.EmptyTableException;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
@@ -68,7 +67,7 @@ public interface AbstractSQLManager {
     String getGroupName(String departmentTag, int groupID) throws SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
 
-    TTEntity getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
+    TTEntity getTT(int groupID) throws SQLException, NoSuchGroupException;
 
 
     boolean departmentExists(String departmentTag) throws SQLException;
