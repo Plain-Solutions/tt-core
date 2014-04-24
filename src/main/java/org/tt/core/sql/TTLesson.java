@@ -24,7 +24,7 @@ public class TTLesson {
 
     private List<TTLessonRecord> records;
 
-    private class TTLessonRecord {
+    public class TTLessonRecord {
         private String activity;
         private String subject;
         private List<TTClassRoomEntity> classRoomEntities;
@@ -68,18 +68,20 @@ public class TTLesson {
         }
     }
 
-    private class TTClassRoomEntity {
+    public class TTClassRoomEntity {
         private String subgroup;
         private String teacher;
-        private String location;
+        private String building;
+        private String room;
 
         private TTClassRoomEntity() {
         }
 
-        private TTClassRoomEntity(String subgroup, String teacher, String location) {
+        private TTClassRoomEntity(String subgroup, String teacher, String building, String room) {
             this.subgroup = subgroup;
             this.teacher = teacher;
-            this.location = location;
+            this.building = building;
+            this.room = room;
         }
 
         public String getSubgroup() {
@@ -98,12 +100,20 @@ public class TTLesson {
             this.teacher = teacher;
         }
 
-        public String getLocation() {
-            return location;
+        public String getBuilding() {
+            return building;
         }
 
-        public void setLocation(String location) {
-            this.location = location;
+        public void setBuilding(String building) {
+            this.building = building;
+        }
+
+        public String getRoom() {
+            return room;
+        }
+
+        public void setRoom(String room) {
+            this.room = room;
         }
     }
 
@@ -134,12 +144,18 @@ public class TTLesson {
         this.sequence = sequence;
     }
 
-    public void append(String activity, String subject, String subgroup, String teacher, String location) {
+    public void append(String activity, String subject, String subgroup, String teacher, String building, String room) {
         //optimizing
+
         for (int i=0; i < records.size(); i++) {
-            if (records.get(i).getSubject().equals(subject)) {
-                //such activity on this week and date exists
-                //adding subgroup
+            if (records.get(i).getSubject() == subject) {
+
+//                TTClassRoomEntity cre = new TTClassRoomEntity();
+//                cre.setSubgroup(subgroup);
+//                cre.setTeacher(teacher);
+//                cre.setBuilding(building);
+               // records.get(i).appendClassRoomEntity(cre);
+                createCRE(i, subgroup, teacher, building, room);
                 return;
             }
         }
@@ -147,14 +163,31 @@ public class TTLesson {
         TTLessonRecord record = new TTLessonRecord();
         record.setActivity(activity);
         record.setSubject(subject);
+        records.add(record);
+        int index = records.size() -1;
+        createCRE(index, subgroup, teacher, building, room);
 
+//        TTClassRoomEntity cre = new TTClassRoomEntity();
+//        cre.setSubgroup(subgroup);
+//        cre.setTeacher(teacher);
+//        cre.setBuilding(building);
+//
+//        record.appendClassRoomEntity(cre);
+
+
+    }
+
+    private void createCRE(int recordsIndex, String subgroup, String teacher, String building, String room) {
         TTClassRoomEntity cre = new TTClassRoomEntity();
         cre.setSubgroup(subgroup);
         cre.setTeacher(teacher);
-        cre.setLocation(location);
+        cre.setBuilding(building);
+        cre.setRoom(room);
+        records.get(recordsIndex).appendClassRoomEntity(cre);
 
-        record.appendClassRoomEntity(cre);
+    }
 
-        records.add(record);
+    public List<TTLessonRecord> getRecords() {
+        return records;
     }
 }

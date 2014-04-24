@@ -68,7 +68,7 @@ public interface AbstractSQLManager {
     String getGroupName(String departmentTag, int groupID) throws SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
 
-    List<List<DBLesson>> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
+    TTEntity getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
 
 
     boolean departmentExists(String departmentTag) throws SQLException;

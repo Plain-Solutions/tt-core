@@ -26,11 +26,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
-public class SSUSQLManager implements AbstractSQLManager{
+public class SSUSQLManager implements AbstractSQLManager {
     private static Connection conn;
     private static AbstractQueries qrs;
 
@@ -47,7 +45,7 @@ public class SSUSQLManager implements AbstractSQLManager{
     public void putDepartments(List<Department> departments) throws SQLException {
         Statement stmt = conn.createStatement();
 
-        for(Department dep: departments) {
+        for (Department dep : departments) {
             if (!departmentExists(dep.getTag())) {
                 stmt.executeUpdate(String.format(qrs.qAddDepartment(), dep.getName(), dep.getTag(), dep.getMessage()));
             }
@@ -61,15 +59,14 @@ public class SSUSQLManager implements AbstractSQLManager{
         if (departmentExists(departmentTag)) {
             Statement stmt = conn.createStatement();
 
-            for (Group g: groups) {
+            for (Group g : groups) {
                 if (!groupExistsInDepartment(departmentTag, g.getName())) {
                     stmt.executeUpdate(String.format(qrs.qAddGroups(), departmentTag, g.getName()));
                 }
             }
 
             stmt.close();
-        }
-        else throw new NoSuchDepartmentException();
+        } else throw new NoSuchDepartmentException();
     }
 
     @Override
@@ -167,8 +164,8 @@ public class SSUSQLManager implements AbstractSQLManager{
     public void putLessonRecord(int groupID, int dateTimeID, int activityID, int subjectID, int subGroupID, int teacherID,
                                 int locationID, long timestamp) throws SQLException {
         Statement stmt = conn.createStatement();
-            stmt.executeUpdate(String.format(qrs.qAddLessonRecord(), groupID, dateTimeID, activityID, subjectID, subGroupID, teacherID,
-                    locationID, timestamp));
+        stmt.executeUpdate(String.format(qrs.qAddLessonRecord(), groupID, dateTimeID, activityID, subjectID, subGroupID, teacherID,
+                locationID, timestamp));
 
         stmt.close();
     }
@@ -272,35 +269,46 @@ public class SSUSQLManager implements AbstractSQLManager{
     }
 
     @Override
-    public List<List<DBLesson>> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException {
-           if (groupExistsAsID(groupID)) {
-               List<List<DBLesson>> result = new ArrayList<>();
-               List<DBLesson> tmpLessonPool = new ArrayList<>();
-               Statement stmt = conn.createStatement();
-               ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTT(), groupID));
+    public TTEntity getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException {
+        if (groupExistsAsID(groupID)) {
+            TTEntity result = new TTEntity();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTT(), groupID));
 
-               while(rs.next()) {
-                   DBLesson l = new DBLesson();
-                   l.setDay(rs.getString("dayName"));
-                   l.setParity(rs.getString("parity"));
-                   l.setSequence(rs.getInt("seq"));
-                   l.setActivity(rs.getString("activity"));
-                   l.setSubject(rs.getString("subject"));
-                   l.setTeacher(rs.getString("teacher"));
-                   l.setSubgroup(rs.getString("sub"));
-                   l.setBuilding(rs.getString("locb"));
-                   l.setRoom(rs.getString("locr"));
-                   tmpLessonPool.add(l);
-                   System.out.println(l.toString());
-               }
+            while (rs.next()) {
 
-               Set<String> availableDays = new LinkedHashSet<>();
-               for (DBLesson l: tmpLessonPool) {
-                   availableDays.add(l.getDay());
-               }
+                result.append(rs.getString("dayName"),
+                        rs.getString("parity"),
+                        rs.getInt("seq"),
+                        rs.getString("activity"),
+                        rs.getString("subject"),
+                        rs.getString("sub"),
+                        rs.getString("teacher"),
+                        rs.getString("locb"),
+                        rs.getString("locr")
+                );
+
+            }
+            for (TTDayEntity ttde: result.getTimetable()) {
+                System.out.println(ttde.getName());
+                for (TTLesson ttl: ttde.getLessons()) {
+                        for (TTLesson.TTLessonRecord ttlrd: ttl.getRecords()) {
+                            System.out.print(
+                                    ttl.getParity() + " " +
+                                            ttl.getSequence() + " " + ttlrd.getActivity() + " " + ttlrd.getSubject()
+                            );
+                            for (TTLesson.TTClassRoomEntity ttcre: ttlrd.getClassRoomEntities()) {
+                                System.out.print(" " + ttcre.getTeacher()+ " "+ttcre.getSubgroup()+" "+ttcre.getBuilding());
+                            }
+                            System.out.println();
+                        }
+                    System.out.println();
+                    }
+                System.out.println();
+                }
 
 
-           } else throw new NoSuchGroupException();
+        } else throw new NoSuchGroupException();
         return null;
     }
 
@@ -353,7 +361,7 @@ public class SSUSQLManager implements AbstractSQLManager{
         int num = 0;
         while (rs.next()) num = rs.getInt("result");
 
-        return num!=0;
+        return num != 0;
     }
 
     @Override

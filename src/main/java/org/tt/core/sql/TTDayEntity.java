@@ -19,9 +19,9 @@ package org.tt.core.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TTDayEntity {
-    String name;
-    List<TTLesson> lessons;
+public class     TTDayEntity {
+    private String name;
+    private List<TTLesson> lessons;
 
     public TTDayEntity() {
         lessons = new ArrayList<>();
@@ -50,7 +50,7 @@ public class TTDayEntity {
         this.lessons = lessons;
     }
 
-    public void appendLesson(TTLesson lesson) {
+    public void append(TTLesson lesson) {
         lessons.add(lesson);
     }
 }
