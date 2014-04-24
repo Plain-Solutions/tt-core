@@ -148,14 +148,8 @@ public class TTLesson {
         //optimizing
 
         for (int i=0; i < records.size(); i++) {
-            if (records.get(i).getSubject() == subject) {
-
-//                TTClassRoomEntity cre = new TTClassRoomEntity();
-//                cre.setSubgroup(subgroup);
-//                cre.setTeacher(teacher);
-//                cre.setBuilding(building);
-               // records.get(i).appendClassRoomEntity(cre);
-                createCRE(i, subgroup, teacher, building, room);
+            if (records.get(i).getSubject().equals(subject)) {
+                records.get(i).appendClassRoomEntity(createCRE(subgroup, teacher, building, room));
                 return;
             }
         }
@@ -163,28 +157,18 @@ public class TTLesson {
         TTLessonRecord record = new TTLessonRecord();
         record.setActivity(activity);
         record.setSubject(subject);
+        record.appendClassRoomEntity(createCRE(subgroup, teacher, building, room));
         records.add(record);
-        int index = records.size() -1;
-        createCRE(index, subgroup, teacher, building, room);
-
-//        TTClassRoomEntity cre = new TTClassRoomEntity();
-//        cre.setSubgroup(subgroup);
-//        cre.setTeacher(teacher);
-//        cre.setBuilding(building);
-//
-//        record.appendClassRoomEntity(cre);
-
-
     }
 
-    private void createCRE(int recordsIndex, String subgroup, String teacher, String building, String room) {
+    private TTClassRoomEntity createCRE(String subgroup, String teacher, String building, String room) {
         TTClassRoomEntity cre = new TTClassRoomEntity();
         cre.setSubgroup(subgroup);
         cre.setTeacher(teacher);
         cre.setBuilding(building);
         cre.setRoom(room);
-        records.get(recordsIndex).appendClassRoomEntity(cre);
 
+        return cre;
     }
 
     public List<TTLessonRecord> getRecords() {
