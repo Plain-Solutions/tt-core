@@ -26,8 +26,8 @@ import org.tt.core.dm.convert.json.entity.TimeTableEntity;
 import org.tt.core.dm.convert.json.serializer.DepartmentSerializer;
 import org.tt.core.dm.convert.json.serializer.GroupListSerializer;
 import org.tt.core.dm.convert.json.serializer.TimeTableSerializer;
-import org.tt.core.fetch.lexx.entity.Department;
-import org.tt.core.fetch.lexx.entity.Group;
+import org.tt.core.fetch.entity.Department;
+import org.tt.core.fetch.entity.Group;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

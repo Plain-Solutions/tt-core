@@ -15,8 +15,8 @@
  */
 package org.tt.core.dm;
 
-import org.tt.core.fetch.lexx.entity.Department;
-import org.tt.core.fetch.lexx.entity.Group;
+import org.tt.core.fetch.entity.Department;
+import org.tt.core.fetch.entity.Group;
 
 import java.util.List;
 import java.util.Map;

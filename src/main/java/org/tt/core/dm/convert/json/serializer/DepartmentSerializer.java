@@ -21,7 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.tt.core.dm.convert.json.entity.DepartmentEntity;
-import org.tt.core.fetch.lexx.entity.Department;
+import org.tt.core.fetch.entity.Department;
 
 import java.lang.reflect.Type;
 

@@ -17,7 +17,7 @@ package org.tt.core.dm.convert.json.serializer;
 
 
 import com.google.gson.*;
-import org.tt.core.fetch.lexx.entity.Group;
+import org.tt.core.fetch.entity.Group;
 
 import java.lang.reflect.Type;
 
