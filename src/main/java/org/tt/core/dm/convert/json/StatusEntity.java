@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.tt.core.dm.convert.json.entity;
+package org.tt.core.dm.convert.json;
 
 
 /**

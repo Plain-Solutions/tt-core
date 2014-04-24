@@ -20,9 +20,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.tt.core.dm.AbstractDataConverter;
 import org.tt.core.dm.TTStatus;
-import org.tt.core.dm.convert.json.entity.DepartmentEntity;
-import org.tt.core.dm.convert.json.entity.StatusEntity;
-import org.tt.core.dm.convert.json.entity.TimeTableEntity;
 import org.tt.core.dm.convert.json.serializer.DepartmentSerializer;
 import org.tt.core.dm.convert.json.serializer.GroupListSerializer;
 import org.tt.core.dm.convert.json.serializer.TimeTableSerializer;
@@ -141,7 +138,7 @@ public class JSONConverter implements AbstractDataConverter {
      *
      * @param module element of {@link org.tt.core.dm.TTStatus} enum.
      * @param msg    the message about error/success.
-     * @return JSON representation. See {@link org.tt.core.dm.convert.json.entity.StatusEntity}.
+     * @return JSON representation. See {@link StatusEntity}.
      */
     @Override
     public String convertStatus(TTStatus module, String msg) {
@@ -153,7 +150,7 @@ public class JSONConverter implements AbstractDataConverter {
      *
      * @param module element of {@link org.tt.core.dm.TTStatus} enum.
      * @param state    element of {@link org.tt.core.dm.TTStatus} enum.
-     * @return JSON representation. See {@link org.tt.core.dm.convert.json.entity.StatusEntity}.
+     * @return JSON representation. See {@link StatusEntity}.
      */
     @Override
     public String convertStatus(TTStatus module, TTStatus state) {

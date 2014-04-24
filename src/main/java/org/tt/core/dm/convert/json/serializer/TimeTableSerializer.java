@@ -20,7 +20,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.tt.core.dm.convert.json.entity.TimeTableEntity;
+import org.tt.core.dm.convert.json.TimeTableEntity;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -55,7 +55,7 @@ public class TimeTableSerializer implements JsonSerializer<TimeTableEntity> {
     /**
      * Converts TimeTableEntity to JsonElement, saving order in information in right representation.
      *
-     * @param tt                       an initialized entity of {@link org.tt.core.dm.convert.json.entity.TimeTableEntity}
+     * @param tt                       an initialized entity of {@link org.tt.core.dm.convert.json.TimeTableEntity}
      * @param type                     default GSON parameter.
      * @param jsonSerializationContext default GSON parameter.
      * @return JsonElement in a proper format.
