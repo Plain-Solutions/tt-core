@@ -22,6 +22,7 @@ import org.tt.core.fetch.entity.Group;
 import org.tt.core.fetch.entity.Lesson;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
+import org.tt.core.sql.ex.EmptyTableException;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
@@ -389,7 +390,16 @@ public class SSUDataManager implements AbstractDataManager {
     public TTData getTT(int groupID) {
         TTData result = new TTData();
 
-        //List<String[]> raw = sqlm.getTT(groupID);
+        //List<String[]> raw =
+        try {
+            sqlm.getTT(groupID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NoSuchGroupException e) {
+            e.printStackTrace();
+        } catch (EmptyTableException e) {
+            e.printStackTrace();
+        }
         result.setHttpCode(200);
         //result.setMessage(dconv.convertTT(raw));
         result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.TABLERR));

@@ -26,8 +26,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SSUSQLManager implements AbstractSQLManager{
     private static Connection conn;
@@ -273,14 +274,31 @@ public class SSUSQLManager implements AbstractSQLManager{
     @Override
     public List<List<DBLesson>> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException {
            if (groupExistsAsID(groupID)) {
-               List<List<DBLesson>> result = Collections.emptyList();
-
+               List<List<DBLesson>> result = new ArrayList<>();
+               List<DBLesson> tmpLessonPool = new ArrayList<>();
                Statement stmt = conn.createStatement();
                ResultSet rs = stmt.executeQuery(String.format(qrs.qGetTT(), groupID));
 
-//               while(rs.next()) {
-//
-//               }
+               while(rs.next()) {
+                   DBLesson l = new DBLesson();
+                   l.setDay(rs.getString("dayName"));
+                   l.setParity(rs.getString("parity"));
+                   l.setSequence(rs.getInt("seq"));
+                   l.setActivity(rs.getString("activity"));
+                   l.setSubject(rs.getString("subject"));
+                   l.setTeacher(rs.getString("teacher"));
+                   l.setSubgroup(rs.getString("sub"));
+                   l.setBuilding(rs.getString("locb"));
+                   l.setRoom(rs.getString("locr"));
+                   tmpLessonPool.add(l);
+                   System.out.println(l.toString());
+               }
+
+               Set<String> availableDays = new LinkedHashSet<>();
+               for (DBLesson l: tmpLessonPool) {
+                   availableDays.add(l.getDay());
+               }
+
 
            } else throw new NoSuchGroupException();
         return null;
