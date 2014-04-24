@@ -203,10 +203,9 @@ public class SSUDataManager implements AbstractDataManager {
             int day = 1;
             List<List<Lesson>> timetable = df.getTT(departmentTag, groupName);
 
+
             for (List<Lesson> ls : timetable) {
-                System.out.println("here");
                 for (Lesson l : ls) {
-                    System.out.println("here");
                     if (!l.isEmpty()) {
                         int sequence = l.getSequence();
                         int parityID = sqlm.getParityID(l.getParity());
@@ -221,7 +220,6 @@ public class SSUDataManager implements AbstractDataManager {
                         sqlm.putLessonRecord(groupID, datatimeID, activityID, subjectID, subgrpID, teacherID,
                                 locationID, l.getTimestamp());
                     }
-
                 }
                 day++;
 
