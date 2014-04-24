@@ -271,7 +271,7 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qGetTT() {
-        return "SELECT ws.state, d.name, ldt.sequence, a.type, s.name, sgrp.name, t.name, loc.building, loc.room " +
+        return "SELECT d.name, ws.state, ldt.sequence, a.type, s.name, sgrp.name, t.name, loc.building, loc.room " +
                 "FROM week_states as ws " +
                 "JOIN datetimes as ldt on ldt.week_id=ws.id " +
                 "JOIN days as d on d.id=ldt.day_id " +

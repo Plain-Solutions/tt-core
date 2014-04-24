@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS teachers(
 
 CREATE TABLE IF NOT EXISTS locations(
   id MEDIUMINT NOT NULL auto_increment,
-  building VARCHAR(20),
-  room VARCHAR(30),
+  building VARCHAR(50),
+  room VARCHAR(50),
   PRIMARY KEY(id)
 );
 
