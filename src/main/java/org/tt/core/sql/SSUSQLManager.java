@@ -15,8 +15,8 @@
 */
 package org.tt.core.sql;
 
-import org.tt.core.fetch.lexx.entity.Department;
-import org.tt.core.fetch.lexx.entity.Group;
+import org.tt.core.fetch.entity.Department;
+import org.tt.core.fetch.entity.Group;
 import org.tt.core.sql.ex.EmptyTableException;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;

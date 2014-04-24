@@ -17,9 +17,9 @@ package org.tt.core.dm;
 
 import org.tt.core.dm.convert.json.JSONConverter;
 import org.tt.core.fetch.AbstractDataFetcher;
-import org.tt.core.fetch.lexx.entity.Department;
-import org.tt.core.fetch.lexx.entity.Group;
-import org.tt.core.fetch.lexx.entity.Lesson;
+import org.tt.core.fetch.entity.Department;
+import org.tt.core.fetch.entity.Group;
+import org.tt.core.fetch.entity.Lesson;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
 import org.tt.core.sql.ex.NoSuchDepartmentException;

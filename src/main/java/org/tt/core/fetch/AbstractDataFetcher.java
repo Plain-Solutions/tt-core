@@ -15,9 +15,9 @@
  */
 package org.tt.core.fetch;
 
-import org.tt.core.fetch.lexx.entity.Department;
-import org.tt.core.fetch.lexx.entity.Group;
-import org.tt.core.fetch.lexx.entity.Lesson;
+import org.tt.core.fetch.entity.Department;
+import org.tt.core.fetch.entity.Group;
+import org.tt.core.fetch.entity.Lesson;
 
 import java.io.IOException;
 import java.util.List;
