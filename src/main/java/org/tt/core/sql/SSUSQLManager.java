@@ -306,9 +306,9 @@ public class SSUSQLManager implements AbstractSQLManager {
                 System.out.println();
                 }
 
-
+            return result;
         } else throw new NoSuchGroupException();
-        return null;
+
     }
 
     @Override
