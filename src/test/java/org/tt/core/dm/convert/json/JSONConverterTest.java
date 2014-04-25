@@ -89,12 +89,4 @@ public class JSONConverterTest {
         assertEquals(expected, result);
     }
 
-    @Test
-    public void testReverseConvertGroup() throws Exception {
-        String groups = "[\"111\",\"123\",\"145\",\"String group\"]";
-        List<String> expected = Arrays.asList("111", "123", "145", "String group");
-        List<String> result = jsc.reverseConvertGroup(groups);
-
-        assertArrayEquals(expected.toArray(), result.toArray());
-    }
 }
