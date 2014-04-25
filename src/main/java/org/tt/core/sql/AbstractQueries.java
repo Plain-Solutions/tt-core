@@ -75,6 +75,16 @@ public interface AbstractQueries {
 
     String qGetTT();
 
+    String qDeleteDepartment();
+
+    String qUpdateDepartmentMessage();
+
+    String qUpdateDepartmentData();
+
+    String qDeleteDepartmentGroups();
+
+    String qAddGroup();
+
     String qDepartmentExists();
 
     String qGroupIDExists();

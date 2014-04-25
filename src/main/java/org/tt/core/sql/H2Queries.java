@@ -279,6 +279,34 @@ public class H2Queries implements AbstractQueries {
                 "ORDER BY d.id ASC, ldt.sequence ASC , sgrp.name ASC;";
     }
 
+    @Override
+    public String qDeleteDepartment() {
+        return "DELETE FROM departments WHERE name='%s' AND tag='%s';";
+    }
+
+    @Override
+    public String qUpdateDepartmentMessage() {
+        return "UPDATE departments SET message='%s' WHERE name='%s' AND tag='%s';";
+    }
+
+    @Override
+    public String qUpdateDepartmentData() {
+        return "UPDATE departments SET name='%s', tag='%s', message='%s' WHERE name='%s' AND tag='%s';";
+    }
+
+    @Override
+    public String qDeleteDepartmentGroups() {
+        return "DELETE FROM groups as gr, departments as dp " +
+        "WHERE gr.department_id = dp.id AND dp.tag = '%s'";
+    }
+
+
+
+    @Override
+    public String qAddGroup() {
+        return null;
+    }
+
     /**
      * Query description. Utility. Gets id of the department to proof its existence.
      *
