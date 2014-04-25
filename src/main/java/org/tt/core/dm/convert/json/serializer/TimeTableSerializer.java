@@ -108,7 +108,7 @@ public class TimeTableSerializer implements JsonSerializer<TTEntity> {
                         creEntry.addProperty("room", cres.get(m).getRoom());
                         creInfo.add(creEntry);
                     }
-                    lrEntry.add("subinfo", creInfo);
+                    lrEntry.add("subgroups", creInfo);
                     subjInfo.add(lrEntry);
 
                 }
