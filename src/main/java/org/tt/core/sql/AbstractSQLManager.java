@@ -45,7 +45,7 @@ public interface AbstractSQLManager {
 
     int putLocation(String building, String room) throws SQLException;
 
-    int putTeacher(String name) throws  SQLException;
+    int putTeacher(String name) throws SQLException;
 
     int putSubGroup(int groupID, String name) throws SQLException;
 
@@ -69,22 +69,9 @@ public interface AbstractSQLManager {
 
     TTEntity getTT(int groupID) throws SQLException, NoSuchGroupException;
 
+    int getParityID(String state) throws SQLException;
 
-    boolean departmentExists(String departmentTag) throws SQLException;
-
-    boolean groupExistsInDepartment(String departmentTag, String groupName) throws SQLException;
-
-    boolean groupExistsAsID(int groupID) throws SQLException;
-
-    boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException;
-
-    boolean groupHasTable(int groupID) throws SQLException;
-
-    int getLastID(String table) throws SQLException;
-
-    int getParityID (String state) throws SQLException;
-
-    int getActivityID (String type) throws SQLException;
+    int getActivityID(String type) throws SQLException;
 
     void setQueries(AbstractQueries qrs);
 

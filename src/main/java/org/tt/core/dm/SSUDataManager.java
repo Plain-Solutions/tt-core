@@ -58,21 +58,21 @@ public class SSUDataManager implements AbstractDataManager {
     /**
      * Constructor with all provided entity of data suppliers.
      *
-     * @param sqlm            SQLManager instance.
-     * @param qrs             Queries for SQL instance.
-     * @param df              DataFetcher instance.
-     * @param dconv           DataConverter instance.
+     * @param sqlm  SQLManager instance.
+     * @param qrs   Queries for SQL instance.
+     * @param df    DataFetcher instance.
+     * @param dconv DataConverter instance.
      * @see org.tt.core.sql.AbstractSQLManager
      * @see org.tt.core.sql.AbstractQueries
      * @see org.tt.core.fetch.AbstractDataFetcher
      * @see org.tt.core.dm.AbstractDataConverter
-     * @since 2.0
+     * @since 1.2
      */
     public SSUDataManager(AbstractSQLManager sqlm,
                           AbstractQueries qrs,
                           AbstractDataFetcher df,
                           AbstractDataConverter dconv
-                          ) {
+    ) {
         deliverDBProvider(sqlm, qrs);
         deliverDataFetcherProvider(df);
         deliverDataConverterProvider(dconv);
@@ -153,37 +153,6 @@ public class SSUDataManager implements AbstractDataManager {
 
     /**
      * Adding temporary table from AbstractDataFetcher in a proper format to DB.
-     * <p/>
-     *
-     * @param departmentTag the tag of the department, where the group is located (allocation check).
-     * @param groupID       the global id of group.
-     * @return TTData with <code>httpCode</code> 200
-     * <code>module:ok</code> and empty message String in case of success or error trace.
-     * @since 1.0
-     */
-    @Deprecated
-    @Override
-    public TTData putTT(String departmentTag, int groupID) {
-        TTData result = new TTData();
-        try {
-            String name = sqlm.getGroupName(departmentTag, groupID);
-            result = putTT(departmentTag, name);
-        } catch (SQLException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
-        } catch (NoSuchDepartmentException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
-        } catch (NoSuchGroupException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
-        }
-
-        return result;
-    }
-
-    /**
-     * Adding temporary table from AbstractDataFetcher in a proper format to DB.
      *
      * @param departmentTag the tag of the department, where the group is located (allocation check).
      * @param groupName     the name of the group
@@ -241,6 +210,7 @@ public class SSUDataManager implements AbstractDataManager {
 
     /**
      * Adding temporary table of all groups in all the departments from AbstractDataFetcher in a proper format to DB.
+     *
      * @return TTData with <code>httpCode</code> 200
      * <code>module:ok</code> and empty message String in case of success or error trace.
      * @since 2.0
@@ -312,8 +282,8 @@ public class SSUDataManager implements AbstractDataManager {
      * Gets displayable group names (151, 451) as list.
      *
      * @param departmentTag the tag of the department.
-     * @see org.tt.core.dm.convert.json.serializer.GroupListSerializer
      * @return JSON List of tags.
+     * @see org.tt.core.dm.convert.json.serializer.GroupListSerializer
      * @since 2.0
      */
     @Override
@@ -335,9 +305,10 @@ public class SSUDataManager implements AbstractDataManager {
 
     /**
      * Gets displayable group names (151, 451) which have timetables in the database as list.
+     *
      * @param departmentTag the tag of the department.
-     * @see org.tt.core.dm.convert.json.serializer.GroupListSerializer
      * @return JSON List of tags.
+     * @see org.tt.core.dm.convert.json.serializer.GroupListSerializer
      * @since 2.0
      */
     @Override
@@ -359,7 +330,6 @@ public class SSUDataManager implements AbstractDataManager {
         }
         return result;
     }
-
 
     /**
      * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.

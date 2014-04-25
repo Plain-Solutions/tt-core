@@ -40,6 +40,7 @@ public interface AbstractDataConverter {
      *
      * @param departments raw data.
      * @return String of some format.
+     * @since 1.2
      */
     String convertDepartmentList(List<Department> departments);
 
@@ -49,9 +50,9 @@ public interface AbstractDataConverter {
      *
      * @param names raw data.
      * @return String of some format.
+     * @since 1.2
      */
     String convertGroupList(List<Group> names);
-
 
     /**
      * General-purposed converter of <code>List<String></code> to string view.
@@ -59,6 +60,7 @@ public interface AbstractDataConverter {
      *
      * @param list raw data.
      * @return String of some format.
+     * @since 1.2
      */
     String convertAbstractList(List<String> list);
 
@@ -67,6 +69,7 @@ public interface AbstractDataConverter {
      *
      * @param table data from database sorted by day tags, sequence of lessons and parity (even<odd).
      * @return String of some format.
+     * @since 2.0
      */
     String convertTT(TTEntity table);
 
@@ -76,6 +79,7 @@ public interface AbstractDataConverter {
      * @param module failing class or module.
      * @param msg    the detailed information.
      * @return Error report.
+     * @since 1.2
      */
     String convertStatus(TTStatus module, String msg);
 
@@ -85,6 +89,7 @@ public interface AbstractDataConverter {
      * @param module failing class or module.
      * @param err    the detailed information as listed in {@link TTStatus}.
      * @return Error report.
+     * @since 1.2
      */
     String convertStatus(TTStatus module, TTStatus err);
 }

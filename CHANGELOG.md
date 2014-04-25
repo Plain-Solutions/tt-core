@@ -11,11 +11,15 @@ Changelog
 * Implemented non-empty groups fetching. Later, the respective API call will be added. It allows to fetch list of groups which have timetable filled.
 * Global updates and improvements in classes in the fashion of reducing unused and extra elements:
 	+ `AbstractDataManager`:
-		+ Removed: `getFormattedString`, `deliverGlobalURL`, `getGroupID`, `getJSONConverter`
+		+ Removed: `getFormattedString`, `deliverGlobalURL`, `getGroupID`, `getJSONConverter`, `putTT(departmentTaag, groupID)`
 		+ `getTT(int id)` moved to `SSUDM` and became private
 	+ `AbstractDataConverter`:
 		+ `convertGroupName` - as removed `getGroupID`
 		+ raw backwards converters are also removed
+	+ `AbstractQueries`:
+		+ `qGetDepartmentTagByID` ,`...NameByID`, `TagByName` are also removed.
+	+ `AbstractSQLManager`:
+		+ `getLastID` and all the checks moved to `SSUSQLManager` and became private.		
 		
 
 

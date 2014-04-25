@@ -21,12 +21,27 @@ import org.tt.core.fetch.entity.Group;
 
 import java.lang.reflect.Type;
 
-public class GroupListSerializer  implements JsonSerializer<Group> {
+/**
+ * GroupSerializer is override of standard GSON  <code>JsonSerializer</code> to properly create the list of groups.
+ * Actually, it is an override over List<String> serializer
+ * <code>["111", "123", "234"]</code>
+ *
+ * @author Vlad Slepukhin
+ * @since 2.0
+ */
+public class GroupListSerializer implements JsonSerializer<Group> {
 
-
+    /**
+     * Converts a Group element to JsonElement, saving order in information in right representation.
+     *
+     * @param group                    the instance of {@link org.tt.core.fetch.entity.Group}.
+     * @param type                     default GSON parameter.
+     * @param jsonSerializationContext default GSON parameter.
+     * @return Formatted JSON Element - sub-array with info about the department and its tag.
+     * @since 2.0
+     */
     @Override
     public JsonElement serialize(Group group, Type type, JsonSerializationContext jsonSerializationContext) {
-        JsonPrimitive result = new JsonPrimitive(group.getName());
-        return result;
+        return new JsonPrimitive(group.getName());
     }
 }

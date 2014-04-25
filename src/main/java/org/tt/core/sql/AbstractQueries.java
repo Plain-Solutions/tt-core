@@ -53,14 +53,6 @@ public interface AbstractQueries {
 
     String qGetDepartmentTags();
 
-    String qGetDepartmentTagByID();
-
-    String qGetDepartmentNameByID();
-
-    String qGetDepartmentTagByName();
-
-    String qGetDepartmentMessage();
-
     String qGetGroups();
 
     String qGetGroupID();

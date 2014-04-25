@@ -146,44 +146,6 @@ public class H2Queries implements AbstractQueries {
     }
 
     /**
-     * Query description. Converts department tag to the id.
-     *
-     * @return <code>String</code> containing SQL query.
-     * @since 1.0
-     */
-    @Override
-    public String qGetDepartmentTagByID() {
-        return "SELECT tag FROM departments WHERE id=%d";
-    }
-
-    /**
-     * Query description. Converts department id to the printed name
-     *
-     * @return <code>String</code> containing SQL query.
-     * @since 1.0
-     */
-    @Override
-    public String qGetDepartmentNameByID() {
-        return "SELECT name FROM departments WHERE id=%d";
-    }
-
-    /**
-     * Query description. Gets tag of the department by the name.
-     *
-     * @return <code>String</code> containing SQL query.
-     * @since 1.0
-     */
-    @Override
-    public String qGetDepartmentTagByName() {
-        return "SELECT tag FROM departments WHERE name='%s'";
-    }
-
-    @Override
-    public String qGetDepartmentMessage() {
-        return null;
-    }
-
-    /**
      * Query description. Gets all the groups names (displayable) from <code>groups</code> table, based on the
      * department tag.
      *
@@ -242,24 +204,54 @@ public class H2Queries implements AbstractQueries {
         return "SELECT id FROM subjects WHERE name='%s';";
     }
 
+    /**
+     * Query description. Gets id of the teacher from <code>teachers</code> table.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
     @Override
     public String qGetTeacherID() {
         return "SELECT id FROM teachers WHERE name='%s';";
     }
 
+    /**
+     * Query description. Gets id of the location (building + room) from <code>locations</code> table.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
     @Override
     public String qGetLocationID() {
         return "SELECT id FROM locations WHERE building='%s' AND room='%s';";
     }
 
+    /**
+     * Query description. Gets id of the subgroup from <code>subgroups</code> table.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
     @Override
     public String qGetSubGroupID() {
         return "SELECT id FROM subgroups WHERE  group_id=%d AND name='%s';";
     }
 
+    /**
+     * Query description. Gets id of parity state from <code>week_states</code> table.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
     @Override
     public String qGetParityID() { return "SELECT id FROM week_states WHERE state='%s';";}
 
+    /**
+     * Query description. Gets id of the activity type (lecture and so on) from <code>activities</code> table.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
     @Override
     public String qGetActivityID() { return "SELECT id FROM activities WHERE type='%s';";}
 
@@ -320,6 +312,12 @@ public class H2Queries implements AbstractQueries {
         return "SELECT group_id FROM lessons WHERE group_id=%d AND datetime_id=%d AND subject_id=%d;";
     }
 
+    /**
+     * Query description. Utility. Checks if any lesson entries belong to selected group.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
     @Override
     public String qGroupTTExists() {
         return "SELECT COUNT(group_id) As result FROM lessons WHERE group_id=%d;";

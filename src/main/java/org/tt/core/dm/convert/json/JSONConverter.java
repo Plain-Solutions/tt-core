@@ -17,7 +17,6 @@ package org.tt.core.dm.convert.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import org.tt.core.dm.AbstractDataConverter;
 import org.tt.core.dm.TTStatus;
 import org.tt.core.dm.convert.json.serializer.DepartmentSerializer;
@@ -27,9 +26,7 @@ import org.tt.core.fetch.entity.Department;
 import org.tt.core.fetch.entity.Group;
 import org.tt.core.sql.TTEntity;
 
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
 
 /**
  * JSONConverter is an implementation of {@link org.tt.core.dm.AbstractDataConverter}, which formats raw data,
@@ -124,9 +121,9 @@ public class JSONConverter implements AbstractDataConverter {
      * Converts status information for JSON output in TT Platform.
      *
      * @param module element of {@link org.tt.core.dm.TTStatus} enum.
-     * @param state    element of {@link org.tt.core.dm.TTStatus} enum.
+     * @param state  element of {@link org.tt.core.dm.TTStatus} enum.
      * @return JSON representation. See {@link StatusEntity}.
-     * @since 2.0
+     * @since 1.2
      */
     @Override
     public String convertStatus(TTStatus module, TTStatus state) {

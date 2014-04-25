@@ -30,7 +30,7 @@ import java.lang.reflect.Type;
  * mails, phones, locations.
  * <code>    <br>
  * {"bf": <br>
- * {"name":"Some department"}, <br>
+ * {"name":"Some department", "msg":"Department message"}, <br>
  * "gf":{"name":"Another department"}} <br>
  * </code>
  *
@@ -40,13 +40,13 @@ import java.lang.reflect.Type;
 public class DepartmentSerializer implements JsonSerializer<Department> {
 
     /**
-     * Converts DepartmentEntity to JsonElement, saving order in information in right representation.
+     * Converts Department element to JsonElement, saving order in information in right representation.
      *
-     * @param departmentEntity         the instance of {@link org.tt.core.dm.convert.json.entity.DepartmentEntity}.
+     * @param department               the instance of {@link org.tt.core.fetch.entity.Department}.
      * @param type                     default GSON parameter.
      * @param jsonSerializationContext default GSON parameter.
      * @return Formatted JSON Element - sub-array with info about the department and its tag.
-     * @since 1.2
+     * @since 2.0
      */
     @Override
     public JsonElement serialize(Department department, Type type, JsonSerializationContext jsonSerializationContext) {

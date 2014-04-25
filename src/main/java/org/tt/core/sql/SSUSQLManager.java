@@ -312,69 +312,6 @@ public class SSUSQLManager implements AbstractSQLManager {
     }
 
     @Override
-    public boolean departmentExists(String departmentTag) throws SQLException {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qDepartmentExists(), departmentTag));
-        int id = 0;
-        while (rs.next()) id = rs.getInt("id");
-
-        stmt.close();
-        return id != 0;
-    }
-
-    @Override
-    public boolean groupExistsInDepartment(String departmentTag, String groupName) throws SQLException {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroupID(), departmentTag, groupName));
-        int id = 0;
-        while (rs.next()) id = rs.getInt("id");
-        stmt.close();
-        return (id != 0);
-    }
-
-    @Override
-    public boolean groupExistsAsID(int groupID) throws SQLException {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qGroupIDExists(), groupID));
-        int id = 0;
-        while (rs.next()) id = rs.getInt("id");
-        stmt.close();
-        return (id != 0);
-    }
-
-    @Override
-    public boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qSubjectExists(), groupID, dateTimeID, subjectID));
-        int id = 0;
-
-        while (rs.next()) id = rs.getInt("group_id");
-
-        return id != 0;
-    }
-
-    @Override
-    public boolean groupHasTable(int groupID) throws SQLException {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(String.format(qrs.qGroupTTExists(), groupID));
-        int num = 0;
-        while (rs.next()) num = rs.getInt("result");
-
-        return num != 0;
-    }
-
-    @Override
-    public int getLastID(String table) throws SQLException {
-        Statement stmt = conn.createStatement();
-
-        ResultSet rs = stmt.executeQuery(String.format(qrs.getLastID(), table));
-        int id = 0;
-        while (rs.next())
-            id = rs.getInt("MAX(id)");
-        return id;
-    }
-
-    @Override
     public int getParityID(String state) throws SQLException {
         Statement stmt = conn.createStatement();
 
@@ -405,5 +342,66 @@ public class SSUSQLManager implements AbstractSQLManager {
     @Override
     public void setQueries(AbstractQueries qrs) {
         SSUSQLManager.qrs = qrs;
+    }
+
+    private boolean departmentExists(String departmentTag) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qDepartmentExists(), departmentTag));
+        int id = 0;
+        while (rs.next()) id = rs.getInt("id");
+
+        stmt.close();
+        return id != 0;
+    }
+
+
+    private boolean groupExistsInDepartment(String departmentTag, String groupName) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetGroupID(), departmentTag, groupName));
+        int id = 0;
+        while (rs.next()) id = rs.getInt("id");
+        stmt.close();
+        return (id != 0);
+    }
+
+
+    private boolean groupExistsAsID(int groupID) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGroupIDExists(), groupID));
+        int id = 0;
+        while (rs.next()) id = rs.getInt("id");
+        stmt.close();
+        return (id != 0);
+    }
+
+
+    private boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qSubjectExists(), groupID, dateTimeID, subjectID));
+        int id = 0;
+
+        while (rs.next()) id = rs.getInt("group_id");
+
+        return id != 0;
+    }
+
+
+    private boolean groupHasTable(int groupID) throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGroupTTExists(), groupID));
+        int num = 0;
+        while (rs.next()) num = rs.getInt("result");
+
+        return num != 0;
+    }
+
+    private int getLastID(String table) throws SQLException {
+        Statement stmt = conn.createStatement();
+
+        ResultSet rs = stmt.executeQuery(String.format(qrs.getLastID(), table));
+        int id = 0;
+        while (rs.next())
+            id = rs.getInt("MAX(id)");
+        return id;
     }
 }
