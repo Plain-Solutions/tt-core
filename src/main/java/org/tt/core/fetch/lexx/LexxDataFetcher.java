@@ -42,8 +42,8 @@ import java.util.Properties;
  */
 
 public class LexxDataFetcher implements AbstractDataFetcher {
-    private static final String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
-    private static final String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
+    private static String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
+    private static String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
     private String loginPassword = "";
 
     public LexxDataFetcher() {
@@ -203,6 +203,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
                                         break;
                                     case "teacher":
                                         teacher = les.getChildNodes().item(3).getTextContent();
+                                        teacher = teacher.replace('.', ' ').trim();
                                         break;
                                 }
                             }
