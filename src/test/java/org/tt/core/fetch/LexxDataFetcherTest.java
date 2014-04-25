@@ -1,10 +1,10 @@
 package org.tt.core.fetch;
 
 import org.junit.Test;
-import org.tt.core.fetch.lexx.LexxDataFetcher;
 import org.tt.core.fetch.entity.Department;
 import org.tt.core.fetch.entity.Group;
 import org.tt.core.fetch.entity.Lesson;
+import org.tt.core.fetch.lexx.LexxDataFetcher;
 
 import java.util.List;
 
@@ -33,7 +33,8 @@ public class LexxDataFetcherTest {
         List<Department> departmentList = ldf.getDepartments();
 
         for (Department d : departmentList) {
-            System.out.printf("%s %s %s\n", d.getTag(), d.getName(), d.getMessage());
+            //System.out.printf("%s %s %s\n", d.getTag(), d.getName(), d.getMessage());
+            System.out.printf("%s %s\n", d.getTag(), d.getName());
         }
     }
 
@@ -47,7 +48,7 @@ public class LexxDataFetcherTest {
     @Test
     public void testTT() {
         LexxDataFetcher ldf = new LexxDataFetcher();
-        List<List<Lesson>> tt = ldf.getTT("knt", "151");
+        List<List<Lesson>> tt = ldf.getTT("fps", "164");
 
         for (List<Lesson> days : tt) {
             for (Lesson lesson : days) {

@@ -42,8 +42,8 @@ import java.util.Properties;
  */
 
 public class LexxDataFetcher implements AbstractDataFetcher {
-    private static String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
-    private static String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
+    private static final String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
+    private static final String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
     private String loginPassword = "";
 
     public LexxDataFetcher() {
@@ -186,7 +186,16 @@ public class LexxDataFetcher implements AbstractDataFetcher {
                             activity = lessonAttr.getNamedItem("type").getNodeValue();
                             parity = lessonAttr.getNamedItem("weektype").getNodeValue();
                             sequence = Integer.parseInt(lessonAttr.getNamedItem("num").getNodeValue());
-                            timestamp = Long.parseLong(lessonAttr.getNamedItem("updated").getNodeValue());
+                            timestamp = Long.parseLong(lessonAttr.getNamedItem("updated").getNodeValue()) * 1000;
+                            String dateBeginStr = lessonAttr.getNamedItem("date_begin").getNodeValue();
+                            String dateEndStr = lessonAttr.getNamedItem("date_end").getNodeValue();
+
+                            if(!(dateBeginStr.equals("") && dateEndStr.equals(""))) {
+                                long dateBegin = Long.parseLong(dateBeginStr) * 1000;
+                                long dateEnd = Long.parseLong(dateEndStr) * 1000;
+                                long curTime = System.currentTimeMillis();
+                                if(!(curTime >= dateBegin && curTime <= dateEnd)) continue;
+                            }
 
                             NodeList lessonChild = curLesson.getChildNodes();
                             for (int f = 0; f < lessonChild.getLength(); ++f) {
