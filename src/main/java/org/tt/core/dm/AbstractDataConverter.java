@@ -20,7 +20,6 @@ import org.tt.core.fetch.entity.Group;
 import org.tt.core.sql.TTEntity;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * AbstractDataConverter is an interface, which allows to convert raw data to
@@ -64,15 +63,6 @@ public interface AbstractDataConverter {
     String convertAbstractList(List<String> list);
 
     /**
-     * <code>int</code> to <code>String</code> encapsulated conversion, used internally for getting timetables
-     * by group id (faster, as it is should be a primary key). The value should be checked, no Exception is thrown.
-     *
-     * @param id some integer.
-     * @return String representation.
-     */
-    String convertGroupName(int id);
-
-    /**
      * Converts list of all classes in group to formatted output.
      *
      * @param table data from database sorted by day tags, sequence of lessons and parity (even<odd).
@@ -97,22 +87,4 @@ public interface AbstractDataConverter {
      * @return Error report.
      */
     String convertStatus(TTStatus module, TTStatus err);
-
-
-    /**
-     * General-purposed converter string back to <code>List<String></code>  suitable representation.
-     *
-     * @param list of some format.
-     * @return raw data.
-     */
-    List<String> reverseConvertGroup(String list);
-
-    /**
-     * General purposed K-V conversion
-     *
-     * @param data map
-     * @return formatted data
-     * @since 1.2
-     */
-    String convertMap(Map<String, String> data);
 }

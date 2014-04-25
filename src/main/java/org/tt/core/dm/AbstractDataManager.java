@@ -19,8 +19,6 @@ import org.tt.core.fetch.AbstractDataFetcher;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
 
-import java.util.Map;
-
 /**
  * AbstractDataManager is the main external interface of TT Core Library. Actually, it represents a connector
  * between all the internal modules and external interface.
@@ -102,7 +100,7 @@ public interface AbstractDataManager {
     TTData getDepartmentTags();
 
     /**
-     * Get displayable group names (151, 451) as Strings on specified department.
+     * Get displayable group names (151, 451) on specified department.
      *
      * @param departmentTag the tag of the department.
      * @return JSON List of tags.
@@ -110,43 +108,19 @@ public interface AbstractDataManager {
      */
     TTData getGroups(String departmentTag);
 
+    /**
+     * Get displayable of groups which have actual timetable on specified department
+     * @param departmentTag the the tag of the department.
+     * @return JSON List of tags.
+     * @since 2.0
+     */
     TTData getNonEmptyGroups(String departmentTag);
-
-    /**
-     * Converts name of group of the specified department (allocation check, throws NoSuchGroupException) to its global
-     * id in the database. Used by TT Platform&Servlets.
-     *
-     * @param departmentTag the tag of the department.
-     * @param groupName     the displayable name.
-     * @return TTData instance with JSON-formatted String and success/error code.
-     * @since 1.0
-     */
-    TTData getGroupID(String departmentTag, String groupName);
-
-    /**
-     * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
-     *
-     * @param groupID the global id of group to get the timetable.
-     * @return TTData instance with JSON-formatted String and success/error code.
-     * @see org.tt.core.dm.convert.json.serializer.TimeTableSerializer
-     * @since 1.1
-     */
-    TTData getTT(int groupID);
-
-    /**
-     * Get some kind of formatted K-V structure
-     * @param list
-     * @return formatted output
-     * @see org.tt.core.dm.convert.json.JSONConverter
-     * @since 1.2
-     */
-    TTData getFormattedString(Map<String, String> list);
 
     /**
      * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
      * Method was introduced to create a TT API resembling structure.
      *
-     * @param departmentTag the tag of the department
+     * @param departmentTag the tag of the department.
      * @param groupName     the displayable name.
      * @since 1.2
      */
@@ -169,7 +143,7 @@ public interface AbstractDataManager {
      * Deliver a pre-configured with some kind of queries provider.
      *
      * @param sqlm AbstractSQLManager instance realization with pre-configured Queries
-     * @since 1.3
+     * @since 1.2.5
      */
     void deliverDBProvider(AbstractSQLManager sqlm);
 
@@ -193,13 +167,4 @@ public interface AbstractDataManager {
      */
     void deliverDataConverterProvider(AbstractDataConverter dconv);
 
-    /**
-     * As now we have a unified method to feth data in <code>org.tt.core.fetch.AbstractDataFetcher</code> we need to provide
-     * an URL in <code>DataManager</code> class. More, to have an opportunity to proper test our Core Lib we provide support
-     * for raw HTML strings
-     *
-     * @param globalURLString Global schedule URL to use in data fetching
-     * @since 1.3
-     */
-    void deliverGlobalURL(String globalURLString);
 }

@@ -54,8 +54,9 @@ public class JSONConverter implements AbstractDataConverter {
      * Converts <code>getDepartments</code> of {@link org.tt.core.sql.AbstractSQLManager} to JSON String.
      *
      * @param departments list of departments represented in Java Object entity.
-     * @return JSON-formatted representation of raw object. See {@link org.tt.core.dm.convert.json.serializer.DepartmentSerializer}
-     * or API reference for the output format.
+     * @return JSON-formatted representation of raw object.
+     * @see org.tt.core.dm.convert.json.serializer.DepartmentSerializer
+     * @since 2.0
      */
     public String convertDepartmentList(List<Department> departments) {
         GsonBuilder gsb = new GsonBuilder();
@@ -69,11 +70,11 @@ public class JSONConverter implements AbstractDataConverter {
      *
      * @param names list of departments represented in Java Object entity.
      * @return JSON-formatted representation of raw object. <code>List<String></code> to <code>[""]</code>
+     * @since 2.0
      */
     public String convertGroupList(List<Group> names) {
         GsonBuilder gsb = new GsonBuilder();
         gsb.registerTypeAdapter(Group.class, new GroupListSerializer());
-
         return gsb.create().toJson(names);
 
     }
@@ -83,35 +84,25 @@ public class JSONConverter implements AbstractDataConverter {
      *
      * @param list some generic <code>java.lang.List<String></code>
      * @return [""] representation of List.
+     * @since 1.2
      */
     @Override
     public String convertAbstractList(List<String> list) {
         return gson.toJson(list);
     }
 
-    /**
-     * Inner-used conversion <code>getGroupID</code> of {@link org.tt.core.dm.AbstractDataManager} for JSON format. Actually int
-     * to String conversion due to encapsulation and the unified TTData interface packed as String.
-     *
-     * @param id the numerical representation.
-     * @return String representation.
-     */
-    public String convertGroupName(int id) {
-        return gson.toJson(id);
-    }
 
     /**
      * Converts <code>getTT</code> of {@link org.tt.core.sql.AbstractSQLManager} to JSON String.
      *
-     * @param table list of classes, sorted ascending by days, times of classes and parity.
+     * @param table special object, containing sorted results of SQL query, resembling future JSON format
      * @return JSON-formatted representation of raw object. See {@link org.tt.core.dm.convert.json.serializer.TimeTableSerializer}
      * or API reference for the output format.
+     * @since 2.0
      */
+    @Override
     public String convertTT(TTEntity table) {
         GsonBuilder gsb = new GsonBuilder();
-
-
-
         gsb.registerTypeAdapter(TTEntity.class, new TimeTableSerializer());
         return gsb.create().toJson(table);
     }
@@ -122,6 +113,7 @@ public class JSONConverter implements AbstractDataConverter {
      * @param module element of {@link org.tt.core.dm.TTStatus} enum.
      * @param msg    the message about error/success.
      * @return JSON representation. See {@link StatusEntity}.
+     * @since 1.2
      */
     @Override
     public String convertStatus(TTStatus module, String msg) {
@@ -134,34 +126,13 @@ public class JSONConverter implements AbstractDataConverter {
      * @param module element of {@link org.tt.core.dm.TTStatus} enum.
      * @param state    element of {@link org.tt.core.dm.TTStatus} enum.
      * @return JSON representation. See {@link StatusEntity}.
+     * @since 2.0
      */
     @Override
     public String convertStatus(TTStatus module, TTStatus state) {
         return gson.toJson(new StatusEntity(module.toString(), state.message(state)));
     }
 
-    /**
-     * General-purposed converter string back to <code>List<String></code>  suitable representation.
-     *
-     * @param list of some format.
-     * @return raw data.
-     */
-    @Override
-    public List<String> reverseConvertGroup(String list) {
-        Type listType = new TypeToken<List<String>>() {}.getType();
-        return gson.fromJson(list, listType);
-    }
-
-    /**
-     * General purposed converting from K-V structure to JSON
-     * @param data map
-     * @return resulting data
-     * @since 1.2
-     */
-    @Override
-    public String convertMap(Map<String, String> data) {
-        return gson.toJson(data);
-    }
 
 }
 

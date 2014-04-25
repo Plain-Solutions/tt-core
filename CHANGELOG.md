@@ -9,6 +9,14 @@ Changelog
 	+ Updated safety checks.
 * Updated database scheme with Lexx-like structure.
 * Implemented non-empty groups fetching. Later, the respective API call will be added. It allows to fetch list of groups which have timetable filled.
+* Global updates and improvements in classes in the fashion of reducing unused and extra elements:
+	+ `AbstractDataManager`:
+		+ Removed: `getFormattedString`, `deliverGlobalURL`, `getGroupID`, `getJSONConverter`
+		+ `getTT(int id)` moved to `SSUDM` and became private
+	+ `AbstractDataConverter`:
+		+ `convertGroupName` - as removed `getGroupID`
+		+ raw backwards converters are also removed
+		
 
 
 =======
