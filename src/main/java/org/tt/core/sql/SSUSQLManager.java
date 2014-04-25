@@ -288,23 +288,23 @@ public class SSUSQLManager implements AbstractSQLManager {
                 );
 
             }
-            for (TTDayEntity ttde: result.getTimetable()) {
-                System.out.println(ttde.getName());
-                for (TTLesson ttl: ttde.getLessons()) {
-                        for (TTLesson.TTLessonRecord ttlrd: ttl.getRecords()) {
-                            System.out.print(
-                                    ttl.getParity() + " " +
-                                            ttl.getSequence() + " " + ttlrd.getActivity() + " " + ttlrd.getSubject()
-                            );
-                            for (TTLesson.TTClassRoomEntity ttcre: ttlrd.getClassRoomEntities()) {
-                                System.out.print(" " + ttcre.getTeacher()+ " "+ttcre.getSubgroup()+" "+ttcre.getBuilding());
-                            }
-                            System.out.println();
-                        }
-                    System.out.println();
-                    }
-                System.out.println();
-                }
+//            for (TTDayEntity ttde: result.getTimetable()) {
+//                System.out.println(ttde.getName());
+//                for (TTLesson ttl: ttde.getLessons()) {
+//                        for (TTLesson.TTLessonRecord ttlrd: ttl.getRecords()) {
+//                            System.out.print(
+//                                    ttl.getParity() + " " +
+//                                            ttl.getSequence() + " " + ttlrd.getActivity() + " " + ttlrd.getSubject()
+//                            );
+//                            for (TTLesson.TTClassRoomEntity ttcre: ttlrd.getClassRoomEntities()) {
+//                                System.out.print(" " + ttcre.getTeacher()+ " "+ttcre.getSubgroup()+" "+ttcre.getBuilding());
+//                            }
+//                            System.out.println();
+//                        }
+//                    System.out.println();
+//                    }
+//                System.out.println();
+//                }
 
             return result;
         } else throw new NoSuchGroupException();
