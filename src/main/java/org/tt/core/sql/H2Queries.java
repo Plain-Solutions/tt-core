@@ -284,7 +284,7 @@ public class H2Queries implements AbstractQueries {
                 "JOIN teachers as t on lr.teacher_id = t.id " +
                 "JOIN locations as loc on lr.location_id = loc.id " +
                 "JOIN groups as g on g.id = lr.group_id AND g.id=%d " +
-                "ORDER BY d.id ASC, ldt.sequence ASC ";
+                "ORDER BY d.id ASC, ldt.sequence ASC , sgrp.name ASC;";
     }
 
     /**
