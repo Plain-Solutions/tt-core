@@ -21,6 +21,7 @@ Changelog
 		+ `qGetDepartmentTagByID` ,`...NameByID`, `TagByName` are also removed.
 	+ `AbstractSQLManager`:
 		+ `getLastID` and all the checks moved to `SSUSQLManager` and became private.		
+ * `org.jsoup` is no more required.
 		
 
 
