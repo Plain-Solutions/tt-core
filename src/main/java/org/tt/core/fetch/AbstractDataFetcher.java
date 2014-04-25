@@ -15,12 +15,14 @@
  */
 package org.tt.core.fetch;
 
-import org.tt.core.fetch.entity.Department;
-import org.tt.core.fetch.entity.Group;
-import org.tt.core.fetch.entity.Lesson;
+
+import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.datafetcher.Lesson;
 
 import java.io.IOException;
 import java.util.List;
+
 
 /**
  * AbstractDataFetcher is an abstraction that should communicate with university web services and format temporary

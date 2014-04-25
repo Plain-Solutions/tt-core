@@ -4,9 +4,10 @@ Changelog
 
 * Introduced `LexxDataFetcher` - an instance of ADM working with SSU internal database. 
 * `SSUDataFetcher` is deprecated and removed from distribution. We plan to bring it back as soon as we clean everything up. Or not. It cannot provide complete data in discrete format as it does LDF.
-* Refactored `SSUSQLManager` to work with objects of same structue - lsit of some compound object. Only 6 methods from version 1.0 are preserved.  
+* Refactored `SSUSQLManager` to work with objects of same structue - lsit of some compound object. Only 6 methods from version 1.0 are preserved!  
 	+ Totally reworked timetable fetching from the database. The assembly of `TTEntity`, `TTDayEntity` and `TTLesson` create transparent and clear for understanding structure of object to be converted as they are.
 	+ Updated safety checks.
+* All the entities and entity-like classes are now stored in `entity` package
 * Updated database scheme with Lexx-like structure.
 * Implemented non-empty groups fetching. Later, the respective API call will be added. It allows to fetch list of groups which have timetable filled.
 * Global updates and improvements in classes in the fashion of reducing unused and extra elements:

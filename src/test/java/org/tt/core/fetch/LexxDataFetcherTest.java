@@ -1,9 +1,9 @@
 package org.tt.core.fetch;
 
 import org.junit.Test;
-import org.tt.core.fetch.entity.Department;
-import org.tt.core.fetch.entity.Group;
-import org.tt.core.fetch.entity.Lesson;
+import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.datafetcher.Lesson;
 import org.tt.core.fetch.lexx.LexxDataFetcher;
 
 import java.util.List;

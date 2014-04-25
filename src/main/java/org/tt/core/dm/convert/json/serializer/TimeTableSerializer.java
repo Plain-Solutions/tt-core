@@ -17,9 +17,9 @@
 package org.tt.core.dm.convert.json.serializer;
 
 import com.google.gson.*;
-import org.tt.core.sql.TTDayEntity;
-import org.tt.core.sql.TTEntity;
-import org.tt.core.sql.TTLesson;
+import org.tt.core.entity.db.TTDayEntity;
+import org.tt.core.entity.db.TTEntity;
+import org.tt.core.entity.db.TTLesson;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -68,7 +68,7 @@ public class TimeTableSerializer implements JsonSerializer<TTEntity> {
     /**
      * Converts TimeTableEntity to JsonElement, saving order in information in right representation.
      *
-     * @param tt                       an entity of {@link org.tt.core.sql.TTEntity}
+     * @param tt                       an datafetcher of {@link org.tt.core.entity.db.TTEntity}
      * @param type                     default GSON parameter.
      * @param jsonSerializationContext default GSON parameter.
      * @return JsonElement in a proper format.

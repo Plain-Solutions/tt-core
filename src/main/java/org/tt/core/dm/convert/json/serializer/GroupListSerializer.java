@@ -17,7 +17,7 @@ package org.tt.core.dm.convert.json.serializer;
 
 
 import com.google.gson.*;
-import org.tt.core.fetch.entity.Group;
+import org.tt.core.entity.datafetcher.Group;
 
 import java.lang.reflect.Type;
 
@@ -34,7 +34,7 @@ public class GroupListSerializer implements JsonSerializer<Group> {
     /**
      * Converts a Group element to JsonElement, saving order in information in right representation.
      *
-     * @param group                    the instance of {@link org.tt.core.fetch.entity.Group}.
+     * @param group                    the instance of {@link org.tt.core.entity.datafetcher.Group}.
      * @param type                     default GSON parameter.
      * @param jsonSerializationContext default GSON parameter.
      * @return Formatted JSON Element - sub-array with info about the department and its tag.

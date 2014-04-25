@@ -15,6 +15,7 @@
  */
 package org.tt.core.dm;
 
+import org.tt.core.entity.datamanager.TTData;
 import org.tt.core.fetch.AbstractDataFetcher;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;

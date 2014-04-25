@@ -1,9 +1,24 @@
+/*
+* Copyright 2014 Plain Solutions
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package org.tt.core.fetch.lexx;
 
+import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.datafetcher.Lesson;
 import org.tt.core.fetch.AbstractDataFetcher;
-import org.tt.core.fetch.entity.Department;
-import org.tt.core.fetch.entity.Group;
-import org.tt.core.fetch.entity.Lesson;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -24,23 +39,12 @@ import java.util.List;
 import java.util.Properties;
 
 /**
-* Copyright 2014 Plain Solutions
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* Author: Avetisyan Sevak
-* Date: 23.04.14.
+ * LexxDataFetcher is an implementation of AbstractDataFetcher. LDF is a set of XML files brought to us by SSU from
+ * their internal database.
+ *
+ * @author Sevak Avetisyan
+ * @since 2.0
  */
-
 public class LexxDataFetcher implements AbstractDataFetcher {
     private static final String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
     private static final String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";

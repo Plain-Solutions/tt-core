@@ -18,19 +18,20 @@ package org.tt.core.dm.convert.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.tt.core.dm.AbstractDataConverter;
-import org.tt.core.dm.TTStatus;
+import org.tt.core.entity.datamanager.TTStatus;
 import org.tt.core.dm.convert.json.serializer.DepartmentSerializer;
 import org.tt.core.dm.convert.json.serializer.GroupListSerializer;
 import org.tt.core.dm.convert.json.serializer.TimeTableSerializer;
-import org.tt.core.fetch.entity.Department;
-import org.tt.core.fetch.entity.Group;
-import org.tt.core.sql.TTEntity;
+import org.tt.core.entity.json.StatusEntity;
+import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.db.TTEntity;
 
 import java.util.List;
 
 /**
  * JSONConverter is an implementation of {@link org.tt.core.dm.AbstractDataConverter}, which formats raw data,
- * represented by Java Objects, mainly Collections to JSON Strings via GSON with help of some entity for manual
+ * represented by Java Objects, mainly Collections to JSON Strings via GSON with help of some datafetcher for manual
  * conversion and serializers for them.
  *
  * @author Vlad Slepukhin
@@ -50,7 +51,7 @@ public class JSONConverter implements AbstractDataConverter {
     /**
      * Converts <code>getDepartments</code> of {@link org.tt.core.sql.AbstractSQLManager} to JSON String.
      *
-     * @param departments list of departments represented in Java Object entity.
+     * @param departments list of departments represented in Java Object datafetcher.
      * @return JSON-formatted representation of raw object.
      * @see org.tt.core.dm.convert.json.serializer.DepartmentSerializer
      * @since 2.0
@@ -65,7 +66,7 @@ public class JSONConverter implements AbstractDataConverter {
     /**
      * Converts <code>getGroupNames</code> of {@link org.tt.core.sql.AbstractSQLManager} to JSON String.
      *
-     * @param names list of departments represented in Java Object entity.
+     * @param names list of departments represented in Java Object datafetcher.
      * @return JSON-formatted representation of raw object. <code>List<String></code> to <code>[""]</code>
      * @since 2.0
      */
@@ -107,9 +108,9 @@ public class JSONConverter implements AbstractDataConverter {
     /**
      * Converts status information for JSON output in TT Platform.
      *
-     * @param module element of {@link org.tt.core.dm.TTStatus} enum.
+     * @param module element of {@link org.tt.core.entity.datamanager.TTStatus} enum.
      * @param msg    the message about error/success.
-     * @return JSON representation. See {@link StatusEntity}.
+     * @return JSON representation. See {@link org.tt.core.entity.json.StatusEntity}.
      * @since 1.2
      */
     @Override
@@ -120,8 +121,8 @@ public class JSONConverter implements AbstractDataConverter {
     /**
      * Converts status information for JSON output in TT Platform.
      *
-     * @param module element of {@link org.tt.core.dm.TTStatus} enum.
-     * @param state  element of {@link org.tt.core.dm.TTStatus} enum.
+     * @param module element of {@link org.tt.core.entity.datamanager.TTStatus} enum.
+     * @param state  element of {@link org.tt.core.entity.datamanager.TTStatus} enum.
      * @return JSON representation. See {@link StatusEntity}.
      * @since 1.2
      */

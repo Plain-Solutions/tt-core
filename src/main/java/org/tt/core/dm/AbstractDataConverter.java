@@ -15,9 +15,10 @@
  */
 package org.tt.core.dm;
 
-import org.tt.core.fetch.entity.Department;
-import org.tt.core.fetch.entity.Group;
-import org.tt.core.sql.TTEntity;
+import org.tt.core.entity.datamanager.TTStatus;
+import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.db.TTEntity;
 
 import java.util.List;
 

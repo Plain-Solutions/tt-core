@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.tt.core.dm;
+package org.tt.core.entity.datamanager;
 
 /**
  * TTData is a library-wide class which provides delivering converted raw data (in JSON or some other format) to

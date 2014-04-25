@@ -15,13 +15,15 @@
  */
 package org.tt.core.dm;
 
+import org.tt.core.entity.datamanager.TTData;
+import org.tt.core.entity.datamanager.TTStatus;
 import org.tt.core.fetch.AbstractDataFetcher;
-import org.tt.core.fetch.entity.Department;
-import org.tt.core.fetch.entity.Group;
-import org.tt.core.fetch.entity.Lesson;
+import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.datafetcher.Lesson;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
-import org.tt.core.sql.TTEntity;
+import org.tt.core.entity.db.TTEntity;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
@@ -56,7 +58,7 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     /**
-     * Constructor with all provided entity of data suppliers.
+     * Constructor with all provided datafetcher of data suppliers.
      *
      * @param sqlm  SQLManager instance.
      * @param qrs   Queries for SQL instance.

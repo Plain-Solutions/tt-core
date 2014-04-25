@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.tt.core.dm.convert.json;
+package org.tt.core.entity.json;
 
 
 /**
  * StatusEntity is a accessor class for {@link org.tt.core.dm.convert.json.JSONConverter} to
- * reformat Java Object of {@link org.tt.core.dm.TTStatus} to JsonObject properly.
+ * reformat Java Object of {@link org.tt.core.entity.datamanager.TTStatus} to JsonObject properly.
  * <p/>
  * It is formatted as <code>{"module":"SOMEMODULE", "message":"exact info"}</code>
  *
@@ -31,7 +31,7 @@ public class StatusEntity {
     private String message;
 
     /**
-     * Creates entity.
+     * Creates datafetcher.
      *
      * @param module   a string describing error/success (module, usually).
      * @param message a string with detailed information on error.

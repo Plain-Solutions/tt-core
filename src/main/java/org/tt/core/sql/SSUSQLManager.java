@@ -15,8 +15,9 @@
 */
 package org.tt.core.sql;
 
-import org.tt.core.fetch.entity.Department;
-import org.tt.core.fetch.entity.Group;
+import org.tt.core.entity.db.TTEntity;
+import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 

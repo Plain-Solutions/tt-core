@@ -18,7 +18,7 @@ package org.tt.core.dm.convert.json;
 
 
 import org.junit.Test;
-import org.tt.core.dm.TTStatus;
+import org.tt.core.entity.datamanager.TTStatus;
 
 import java.util.ArrayList;
 import java.util.Arrays;

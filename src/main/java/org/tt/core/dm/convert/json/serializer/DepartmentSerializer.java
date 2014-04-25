@@ -20,7 +20,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.tt.core.fetch.entity.Department;
+import org.tt.core.entity.datafetcher.Department;
 
 import java.lang.reflect.Type;
 
@@ -42,7 +42,7 @@ public class DepartmentSerializer implements JsonSerializer<Department> {
     /**
      * Converts Department element to JsonElement, saving order in information in right representation.
      *
-     * @param department               the instance of {@link org.tt.core.fetch.entity.Department}.
+     * @param department               the instance of {@link org.tt.core.entity.datafetcher.Department}.
      * @param type                     default GSON parameter.
      * @param jsonSerializationContext default GSON parameter.
      * @return Formatted JSON Element - sub-array with info about the department and its tag.
