@@ -339,8 +339,6 @@ public class SSUSQLManager implements AbstractSQLManager {
         List<Group> groups = getGroups(department.getTag());
 
         for (Group g: groups) {
-            deleteLessons(department, g);
-            deleteSubGroups(department, g);
             deleteGroupFromDepartment(department, g);
         }
 
@@ -356,6 +354,9 @@ public class SSUSQLManager implements AbstractSQLManager {
         Statement stmt = conn.createStatement();
 
         int id = getGroupID(department.getTag(), group.getName());
+
+        deleteLessons(department, group);
+        deleteSubGroups(department, group);
 
         stmt.executeUpdate(String.format(qrs.qDeleteGroup(), id));
 
