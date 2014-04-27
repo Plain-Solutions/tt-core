@@ -171,6 +171,17 @@ public class SSUSQLManager implements AbstractSQLManager {
     }
 
     @Override
+    public void updateDepartmentMessage(String departmentTag) throws SQLException {
+            Statement stmt = conn.createStatement();
+            //stmt.executeUpdate(String.format(qrs.qUpdateDepartmentMessage())
+    }
+
+    @Override
+    public void updateDepartmentInfo(String departmentName, String departmentTag, String departmentMessage, String originalTag) {
+
+    }
+
+    @Override
     public List<Department> getDepartments() throws SQLException {
         List<Department> result = new ArrayList<>();
 
