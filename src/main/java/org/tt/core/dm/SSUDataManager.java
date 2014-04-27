@@ -80,6 +80,15 @@ public class SSUDataManager implements AbstractDataManager {
         deliverDataConverterProvider(dconv);
     }
 
+    @Override
+    public TTData initUpdateJobs() {
+        //here should be job creator;
+        //but now we put here test functions
+        //UpdateManager will be called from Timer!!
+
+        return null;
+    }
+
     /**
      * Connect AbstractDataFetcher to get departments map and store it into DB with AbstractSQLManager.
      *

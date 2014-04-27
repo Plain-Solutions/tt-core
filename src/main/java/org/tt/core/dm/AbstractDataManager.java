@@ -32,6 +32,8 @@ import org.tt.core.sql.AbstractSQLManager;
  */
 public interface AbstractDataManager {
 
+    TTData initUpdateJobs();
+
     /**
      * Fetch and put departments list with connected information to the database.
      *

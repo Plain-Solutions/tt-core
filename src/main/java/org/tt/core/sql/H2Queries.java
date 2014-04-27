@@ -306,7 +306,7 @@ public class H2Queries implements AbstractQueries {
 
     @Override
     public String qUpdateDepartmentData() {
-        return "UPDATE name, tag, message SET message='%s', tag='%s', name='%s' WHERE tag='%s';";
+        return "UPDATE name, tag, message SET name='%s', tag='%s', message='%s'  WHERE tag='%s';";
     }
 
     /**

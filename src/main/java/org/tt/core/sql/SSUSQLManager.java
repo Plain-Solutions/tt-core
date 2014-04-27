@@ -15,9 +15,9 @@
 */
 package org.tt.core.sql;
 
-import org.tt.core.entity.db.TTEntity;
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.db.TTEntity;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
@@ -171,14 +171,20 @@ public class SSUSQLManager implements AbstractSQLManager {
     }
 
     @Override
-    public void updateDepartmentMessage(String departmentTag) throws SQLException {
-            Statement stmt = conn.createStatement();
-            //stmt.executeUpdate(String.format(qrs.qUpdateDepartmentMessage())
+    public void updateDepartmentMessage(String departmentTag, String newMessage) throws SQLException {
+        Statement stmt = conn.createStatement();
+        stmt.executeUpdate(String.format(qrs.qUpdateDepartmentMessage(), newMessage, departmentTag));
+
+        stmt.close();
     }
 
     @Override
-    public void updateDepartmentInfo(String departmentName, String departmentTag, String departmentMessage, String originalTag) {
+    public void updateDepartmentInfo(String departmentName, String departmentTag, String departmentMessage, String originalTag) throws SQLException {
+        Statement stmt = conn.createStatement();
+        stmt.executeUpdate(String.format(String.format(qrs.qUpdateDepartmentData()),
+                departmentName, departmentTag, departmentMessage, originalTag));
 
+        stmt.close();
     }
 
     @Override
