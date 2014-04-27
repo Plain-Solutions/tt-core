@@ -77,7 +77,7 @@ public interface AbstractQueries {
 
     String qDeleteDepartment();
 
-    String qDeleteDepartmentGroups();
+    String qDeleteGroup();
 
     String qDeleteGroupSubgroups();
 

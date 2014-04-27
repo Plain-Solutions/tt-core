@@ -285,18 +285,18 @@ public class H2Queries implements AbstractQueries {
     }
 
     @Override
-    public String qDeleteDepartmentGroups() {
-        return "DELETE FROM groups WHERE department_id='%d';";
+    public String qDeleteGroup() {
+        return "DELETE FROM groups WHERE id=%d;";
     }
 
     @Override
     public String qDeleteGroupSubgroups() {
-        return "DELETE FROM subgroups WHERE group_id='%d';";
+        return "DELETE FROM subgroups WHERE group_id=%d;";
     }
 
     @Override
     public String qDeleteGroupLessons() {
-        return "DELETE FROM lessons WHERE group_id='%d';";
+        return "DELETE FROM lessons WHERE group_id=%d;";
     }
 
     @Override
@@ -306,7 +306,7 @@ public class H2Queries implements AbstractQueries {
 
     @Override
     public String qUpdateDepartmentData() {
-        return "UPDATE name, tag, message SET name='%s', tag='%s', message='%s'  WHERE tag='%s';";
+        return "UPDATE departments SET name='%s', tag='%s', message='%s'  WHERE tag='%s';";
     }
 
     /**

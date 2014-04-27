@@ -36,6 +36,8 @@ import java.util.List;
  * @since 1.0
  */
 public interface AbstractSQLManager {
+    void putDepartment(Department department) throws  SQLException;
+
     void putDepartments(List<Department> departments) throws SQLException;
 
     void putGroups(List<Group> groups, String departmentTag) throws SQLException, NoSuchDepartmentException;
@@ -72,6 +74,14 @@ public interface AbstractSQLManager {
             NoSuchDepartmentException, NoSuchGroupException;
 
     TTEntity getTT(int groupID) throws SQLException, NoSuchGroupException;
+
+    void deleteDepartment(Department department) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
+
+    void deleteGroupFromDepartment(Department department, Group group) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
+
+    void deleteLessons(Department department, Group group) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
+
+    void deleteSubGroups(Department department, Group group) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
     int getParityID(String state) throws SQLException;
 

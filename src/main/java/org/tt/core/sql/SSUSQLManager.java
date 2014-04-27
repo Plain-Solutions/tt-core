@@ -21,6 +21,7 @@ import org.tt.core.entity.db.TTEntity;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,16 +43,20 @@ public class SSUSQLManager implements AbstractSQLManager {
     }
 
     @Override
-    public void putDepartments(List<Department> departments) throws SQLException {
+    public void putDepartment(Department department) throws SQLException {
         Statement stmt = conn.createStatement();
-
-        for (Department dep : departments) {
-            if (!departmentExists(dep.getTag())) {
-                stmt.executeUpdate(String.format(qrs.qAddDepartment(), dep.getName(), dep.getTag(), dep.getMessage()));
-            }
+        if (!departmentExists(department.getTag())) {
+            stmt.executeUpdate(String.format(qrs.qAddDepartment(), department.getName(), department.getTag(),
+                    department.getMessage()));
         }
-
         stmt.close();
+    }
+
+    @Override
+    public void putDepartments(List<Department> departments) throws SQLException {
+        for (Department dep : departments) {
+            putDepartment(dep);
+        }
     }
 
     @Override
@@ -181,8 +186,8 @@ public class SSUSQLManager implements AbstractSQLManager {
     @Override
     public void updateDepartmentInfo(String departmentName, String departmentTag, String departmentMessage, String originalTag) throws SQLException {
         Statement stmt = conn.createStatement();
-        stmt.executeUpdate(String.format(String.format(qrs.qUpdateDepartmentData()),
-                departmentName, departmentTag, departmentMessage, originalTag));
+        stmt.executeUpdate(String.format(String.format(qrs.qUpdateDepartmentData(),
+                departmentName, departmentTag, departmentMessage, originalTag)));
 
         stmt.close();
     }
@@ -328,6 +333,57 @@ public class SSUSQLManager implements AbstractSQLManager {
         } else throw new NoSuchGroupException();
 
     }
+
+    @Override
+    public void deleteDepartment(Department department) throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
+        List<Group> groups = getGroups(department.getTag());
+
+        for (Group g: groups) {
+            deleteLessons(department, g);
+            deleteSubGroups(department, g);
+            deleteGroupFromDepartment(department, g);
+        }
+
+        Statement stmt = conn.createStatement();
+
+        stmt.executeUpdate(String.format(qrs.qDeleteDepartment(), department.getTag()));
+
+        stmt.close();
+    }
+
+    @Override
+    public void deleteGroupFromDepartment(Department department, Group group) throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
+        Statement stmt = conn.createStatement();
+
+        int id = getGroupID(department.getTag(), group.getName());
+
+        stmt.executeUpdate(String.format(qrs.qDeleteGroup(), id));
+
+        stmt.close();
+    }
+
+    @Override
+    public void deleteLessons(Department department, Group group) throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
+        Statement stmt = conn.createStatement();
+
+        int id = getGroupID(department.getTag(), group.getName());
+
+        stmt.executeUpdate(String.format(qrs.qDeleteGroupLessons(), id));
+
+        stmt.close();
+    }
+
+    @Override
+    public void deleteSubGroups(Department department, Group group) throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
+        Statement stmt = conn.createStatement();
+
+        int id = getGroupID(department.getTag(), group.getName());
+
+        stmt.executeUpdate(String.format(qrs.qDeleteGroupSubgroups(), id));
+
+        stmt.close();
+    }
+
 
     @Override
     public int getParityID(String state) throws SQLException {
