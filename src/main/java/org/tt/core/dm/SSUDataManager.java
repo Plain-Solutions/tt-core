@@ -47,8 +47,8 @@ import java.util.List;
  */
 
 public class SSUDataManager implements AbstractDataManager {
-    private AbstractDataFetcher df;
-    private AbstractSQLManager sqlm;
+    protected AbstractDataFetcher df;
+    protected AbstractSQLManager sqlm;
     private AbstractDataConverter dconv;
 
     /**

@@ -11,29 +11,23 @@ import java.util.Comparator;
 import java.util.List;
 
 public class UpdateManager extends SSUDataManager {
-    private static AbstractSQLManager usqlm;
-    private static AbstractDataFetcher udf;
+
     public UpdateManager() {
     }
 
-    public UpdateManager(AbstractSQLManager usqlm, AbstractDataFetcher udf) {
-        this.usqlm = usqlm;
-        this.udf = udf;
-    }
-
     public void checkDepartments() throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
-        List<Department> ssuDeps = udf.getDepartments();
-        List<Department> dbDeps = usqlm.getDepartments();
+        List<Department> ssuDeps = df.getDepartments();
+        List<Department> dbDeps = sqlm.getDepartments();
 
         for (Department d: dbDeps) {
             if (!ssuDeps.contains(d)) {
-                usqlm.deleteDepartment(d);
+                sqlm.deleteDepartment(d);
             }
         }
 
         for (Department d: ssuDeps) {
             if (!dbDeps.contains(d))
-               usqlm.putDepartment(d);
+               sqlm.putDepartment(d);
             }
 
         for (Department sd: ssuDeps) {
@@ -41,12 +35,12 @@ public class UpdateManager extends SSUDataManager {
                 if (dbD.getTag().equals(sd.getTag())&&
                         (dbD.getName().equals(sd.getName()))) {
                     if (!(dbD.getMessage().equals(sd.getMessage()))) {
-                        usqlm.updateDepartmentMessage(dbD.getTag(), sd.getMessage());
+                        sqlm.updateDepartmentMessage(dbD.getTag(), sd.getMessage());
                     }
                 }
 
                 if (dbD.getTag().equals(sd.getTag())&&(!dbD.getName().equals(sd.getName()))) {
-                    usqlm.updateDepartmentInfo(sd.getName(), sd.getTag(), sd.getMessage(), dbD.getTag());
+                    sqlm.updateDepartmentInfo(sd.getName(), sd.getTag(), sd.getMessage(), dbD.getTag());
                 }
             }
         }
