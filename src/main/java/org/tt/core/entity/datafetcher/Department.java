@@ -52,4 +52,14 @@ public class Department {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o != null && o.getClass() ==  Department.class) {
+            return tag.equals(((Department) o).getTag()) &&
+                    name.equals(((Department) o).getName());
+        }
+
+        return false;
+    }
 }

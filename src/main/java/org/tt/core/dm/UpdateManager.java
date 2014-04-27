@@ -1,9 +1,12 @@
 package org.tt.core.dm;
 
+import org.tt.core.dm.convert.json.JSONConverter;
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
 import org.tt.core.fetch.AbstractDataFetcher;
+import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
+import org.tt.core.sql.H2Queries;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
@@ -12,8 +15,9 @@ import java.util.Comparator;
 import java.util.List;
 
 public class UpdateManager extends SSUDataManager {
-
-    public UpdateManager() {
+    
+    public UpdateManager(AbstractSQLManager sqlm, AbstractQueries qrs, AbstractDataFetcher df, AbstractDataConverter dconv) {
+            super(sqlm, qrs, df, dconv);
     }
 
     public void checkDepartments() throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
@@ -21,9 +25,9 @@ public class UpdateManager extends SSUDataManager {
 
         List<Department> ssuDeps = df.getDepartments();
         List<Department> dbDeps = sqlm.getDepartments();
-
+        
         for (Department d: dbDeps) {
-                if (!ssuDeps.contains(d)) {
+                if (!(ssuDeps.contains(d))) {
                     System.out.println("Removed: "+d.getTag());
                     sqlm.deleteDepartment(d);
                 }

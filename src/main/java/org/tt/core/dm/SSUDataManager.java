@@ -24,6 +24,7 @@ import org.tt.core.entity.datafetcher.Lesson;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
 import org.tt.core.entity.db.TTEntity;
+import org.tt.core.sql.H2Queries;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
@@ -85,7 +86,16 @@ public class SSUDataManager implements AbstractDataManager {
         //here should be job creator;
         //but now we put here test functions
         //UpdateManager will be called from Timer!!
-
+        UpdateManager updm = new UpdateManager(sqlm, new H2Queries(), df, dconv);
+        try {
+            updm.checkDepartments();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NoSuchDepartmentException e) {
+            e.printStackTrace();
+        } catch (NoSuchGroupException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
