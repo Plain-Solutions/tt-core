@@ -281,30 +281,32 @@ public class H2Queries implements AbstractQueries {
 
     @Override
     public String qDeleteDepartment() {
-        return "DELETE FROM departments WHERE name='%s' AND tag='%s';";
-    }
-
-    @Override
-    public String qUpdateDepartmentMessage() {
-        return "UPDATE departments SET message='%s' WHERE name='%s' AND tag='%s';";
-    }
-
-    @Override
-    public String qUpdateDepartmentData() {
-        return "UPDATE departments SET name='%s', tag='%s', message='%s' WHERE name='%s' AND tag='%s';";
+        return "DELETE FROM departments WHERE tag='%s';";
     }
 
     @Override
     public String qDeleteDepartmentGroups() {
-        return "DELETE FROM groups as gr, departments as dp " +
-        "WHERE gr.department_id = dp.id AND dp.tag = '%s'";
+        return "DELETE FROM groups WHERE department_id='%d';";
     }
 
-
+    @Override
+    public String qDeleteGroupSubgroups() {
+        return "DELETE FROM subgroups WHERE group_id='%d';";
+    }
 
     @Override
-    public String qAddGroup() {
-        return null;
+    public String qDeleteGroupLessons() {
+        return "DELETE FROM lessons WHERE group_id='%d';";
+    }
+
+    @Override
+    public String qUpdateDepartmentMessage() {
+        return "UPDATE departments SET message='%s' WHERE tag='%s';";
+    }
+
+    @Override
+    public String qUpdateDepartmentData() {
+        return "UPDATE name, tag, message SET message='%s', tag='%s', name='%s' WHERE tag='%s';";
     }
 
     /**

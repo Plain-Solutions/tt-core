@@ -53,6 +53,9 @@ public interface AbstractSQLManager {
     void putLessonRecord(int groupID, int dateTimeID, int activityID, int subjectID, int subGroupID, int teacherID,
                          int locationID, long timestamp) throws SQLException;
 
+    void updateDepartmentMessage(String departmentTag);
+
+    void updateDepartmentInfo(String departmentName, String departmentTag, String departmentMessage, String originalTag);
 
     List<Department> getDepartments() throws SQLException;
 

@@ -77,13 +77,16 @@ public interface AbstractQueries {
 
     String qDeleteDepartment();
 
+    String qDeleteDepartmentGroups();
+
+    String qDeleteGroupSubgroups();
+
+    String qDeleteGroupLessons();
+
     String qUpdateDepartmentMessage();
 
     String qUpdateDepartmentData();
 
-    String qDeleteDepartmentGroups();
-
-    String qAddGroup();
 
     String qDepartmentExists();
 
