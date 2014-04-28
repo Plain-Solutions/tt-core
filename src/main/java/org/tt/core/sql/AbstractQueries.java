@@ -75,6 +75,8 @@ public interface AbstractQueries {
 
     String qGetTT();
 
+    String qGetLessonList();
+
     String qDeleteDepartment();
 
     String qDeleteGroup();
@@ -86,7 +88,6 @@ public interface AbstractQueries {
     String qUpdateDepartmentMessage();
 
     String qUpdateDepartmentData();
-
 
     String qDepartmentExists();
 

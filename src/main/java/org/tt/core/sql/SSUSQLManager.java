@@ -17,6 +17,7 @@ package org.tt.core.sql;
 
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.datafetcher.Lesson;
 import org.tt.core.entity.db.TTEntity;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
@@ -332,6 +333,40 @@ public class SSUSQLManager implements AbstractSQLManager {
             return result;
         } else throw new NoSuchGroupException();
 
+    }
+
+    @Override
+    public List<List<Lesson>> getLessonList(int groupID) throws SQLException, NoSuchGroupException {
+        if (groupExistsAsID(groupID)) {
+            List<List<Lesson>> result = new ArrayList<>(6);
+
+            Statement stmt = conn.createStatement();
+
+            for (int i = 0; i < 6 ;i++) {
+                List<Lesson> day = new ArrayList<>();
+
+                ResultSet rs = stmt.executeQuery((String.format(qrs.qGetLessonList(), i+1, groupID)));
+                while (rs.next()) {
+                    Lesson l = new Lesson();
+                    l.setSequence(rs.getInt("sequence"));
+                    l.setParity(rs.getString("parity"));
+                    l.setSubgroup(rs.getString("subgroup"));
+                    l.setActivity(rs.getString("activity"));
+                    l.setSubject(rs.getString("subject"));
+                    l.setTeacher(rs.getString("teacher"));
+                    l.setBuilding(rs.getString("building"));
+                    l.setRoom(rs.getString("room"));
+                    l.setTimestamp(rs.getLong("timestamp"));
+                    day.add(l);
+                }
+
+                result.add(day);
+            }
+            for (int i=0; i <6; i++) {
+                System.out.println(result.get(i).size());
+            }
+            return null;
+        } else throw  new NoSuchGroupException();
     }
 
     @Override

@@ -15,6 +15,7 @@
  */
 package org.tt.core.sql;
 
+import org.tt.core.entity.datafetcher.Lesson;
 import org.tt.core.entity.db.TTEntity;
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
@@ -74,6 +75,8 @@ public interface AbstractSQLManager {
             NoSuchDepartmentException, NoSuchGroupException;
 
     TTEntity getTT(int groupID) throws SQLException, NoSuchGroupException;
+
+    List<List<Lesson>> getLessonList(int groupID) throws SQLException, NoSuchGroupException;
 
     void deleteDepartment(Department department) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 

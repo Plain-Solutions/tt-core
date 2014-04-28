@@ -244,7 +244,9 @@ public class H2Queries implements AbstractQueries {
      * @since 2.0
      */
     @Override
-    public String qGetParityID() { return "SELECT id FROM week_states WHERE state='%s';";}
+    public String qGetParityID() {
+        return "SELECT id FROM week_states WHERE state='%s';";
+    }
 
     /**
      * Query description. Gets id of the activity type (lecture and so on) from <code>activities</code> table.
@@ -253,7 +255,9 @@ public class H2Queries implements AbstractQueries {
      * @since 2.0
      */
     @Override
-    public String qGetActivityID() { return "SELECT id FROM activities WHERE type='%s';";}
+    public String qGetActivityID() {
+        return "SELECT id FROM activities WHERE type='%s';";
+    }
 
     /**
      * Query description. Gets structured information about the whole timetable for the selected group
@@ -276,6 +280,24 @@ public class H2Queries implements AbstractQueries {
                 "JOIN teachers as t on lr.teacher_id = t.id " +
                 "JOIN locations as loc on lr.location_id = loc.id " +
                 "JOIN groups as g on g.id = lr.group_id AND g.id=%d " +
+                "ORDER BY d.id ASC, ldt.sequence ASC , sgrp.name ASC;";
+    }
+
+    @Override
+    public String qGetLessonList() {
+        return "SELECT  ldt.sequence As sequence, ws.state As parity,   sgrp.name As subgroup," +
+                "a.type As activity, s.name As subject,  " +
+                "t.name As teacher, loc.building As building, loc.room As room, lr.timestamp As timestamp " +
+                "FROM week_states as ws  " +
+                "JOIN datetimes as ldt on ldt.week_id=ws.id  " +
+                "JOIN days as d on d.id=ldt.day_id AND d.id=%d  " +
+                "JOIN lessons as lr on lr.datetime_id = ldt.id  " +
+                "JOIN activities as a on lr.activity_id = a.id  " +
+                "JOIN subjects as s on lr.subject_id = s.id   " +
+                "JOIN subgroups as sgrp on  lr.subgroup_id = sgrp.id  " +
+                "JOIN teachers as t on lr.teacher_id = t.id  " +
+                "JOIN locations as loc on lr.location_id = loc.id  " +
+                "JOIN groups as g on g.id = lr.group_id AND g.id=%d" +
                 "ORDER BY d.id ASC, ldt.sequence ASC , sgrp.name ASC;";
     }
 
