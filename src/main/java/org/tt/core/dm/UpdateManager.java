@@ -98,28 +98,36 @@ public class UpdateManager extends SSUDataManager {
     }
 
     public void checkTimetables() throws SQLException, NoSuchDepartmentException, IOException, NoSuchGroupException {
-        for (Department dep: sqlm.getDepartments()) {
-            for (Group gr: sqlm.getGroups(dep.getTag())) {
+        System.out.println("Checking timetables!");
+
+        for (Department dep : sqlm.getDepartments()) {
+            for (Group gr : sqlm.getGroups(dep.getTag())) {
                 List<List<Lesson>> ssuTT = df.getTT(dep.getTag(), gr.getName());
                 List<List<Lesson>> dbTT = sqlm.getLessonList(sqlm.getGroupID(dep.getTag(), gr.getName()));
 
                 int groupID = sqlm.getGroupID(dep.getTag(), gr.getName());
 
-                for (int i=0; i< 6 ;i++) {
-                    for (Lesson l: dbTT.get(i)) {
-                        if (!(ssuTT.get(i).contains(l))) {
-                            deleteLesson(l, i+1, groupID);
-                            System.out.println(String.format("Removed class on %d day, %d sequence and %s parity in %s@%s ",
-                                    i+1, l.getSequence(), l.getParity(), gr.getName(), dep.getTag()));
-                        }
-                    }
+                for (int i = 0; i < 6; i++) {
 
-                    for (Lesson l: ssuTT.get(i)) {
-                        if (!(dbTT.get(i).contains(l))) {
-                            putLesson(l, i+1, groupID);
-                            System.out.println(String.format("Added class on %d day, %d sequence and %s parity in %s@%s ",
-                                    i+1, l.getSequence(), l.getParity(), gr.getName(), dep.getTag()));
+                    try {
+                        for (Lesson l : dbTT.get(i)) {
+                            if (!(ssuTT.get(i).contains(l))) {
+                                deleteLesson(l, i + 1, groupID);
+                                System.out.println(String.format("Removed class on %d day, %d sequence and %s parity in %s@%s ",
+                                        i + 1, l.getSequence(), l.getParity(), gr.getName(), dep.getTag()));
+                            }
                         }
+
+
+                        for (Lesson l : ssuTT.get(i)) {
+                            if (!(dbTT.get(i).contains(l))) {
+                                putLesson(l, i + 1, groupID);
+                                System.out.println(String.format("Added class on %d day, %d sequence and %s parity in %s@%s ",
+                                        i + 1, l.getSequence(), l.getParity(), gr.getName(), dep.getTag()));
+                            }
+                        }
+                    } catch (IndexOutOfBoundsException ex) {
+                        System.out.println(i+dep.getName()+gr.getName());
                     }
                 }
             }

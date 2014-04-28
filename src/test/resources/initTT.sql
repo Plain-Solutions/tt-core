@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS datetimes(
 CREATE TABLE IF NOT EXISTS subgroups(
   id MEDIUMINT NOT NULL auto_increment,
   group_id MEDIUMINT,
-  name VARCHAR(40),
+  name VARCHAR(60),
   PRIMARY KEY (id),
   FOREIGN KEY (group_id) REFERENCES groups(id)
 );

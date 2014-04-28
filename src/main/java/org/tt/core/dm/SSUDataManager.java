@@ -89,12 +89,15 @@ public class SSUDataManager implements AbstractDataManager {
         UpdateManager updm = new UpdateManager(sqlm, new H2Queries(), df, dconv);
         try {
 //            updm.checkDepartments();
-            updm.checkGroups();
+            //updm.checkGroups();
+            updm.checkTimetables();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (NoSuchDepartmentException e) {
             e.printStackTrace();
         } catch (NoSuchGroupException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
