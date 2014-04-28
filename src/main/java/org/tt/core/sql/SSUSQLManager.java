@@ -362,10 +362,7 @@ public class SSUSQLManager implements AbstractSQLManager {
 
                 result.add(day);
             }
-            for (int i=0; i <6; i++) {
-                System.out.println(result.get(i).size());
-            }
-            return null;
+            return result;
         } else throw  new NoSuchGroupException();
     }
 
