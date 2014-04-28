@@ -3,6 +3,7 @@ package org.tt.core.dm;
 import org.tt.core.dm.convert.json.JSONConverter;
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.datafetcher.Lesson;
 import org.tt.core.fetch.AbstractDataFetcher;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
@@ -10,6 +11,7 @@ import org.tt.core.sql.H2Queries;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
@@ -81,6 +83,16 @@ public class UpdateManager extends SSUDataManager {
                     }
                 }
 
+        }
+    }
+
+    public void checkTimetables() throws SQLException, NoSuchDepartmentException, IOException, NoSuchGroupException {
+        for (Department dep: sqlm.getDepartments()) {
+            for (Group gr: sqlm.getGroups(dep.getTag())) {
+                List<List<Lesson>> ssuTT = df.getTT(dep.getTag(), gr.getName());
+                List<List<Lesson>> dbTT = sqlm.getLessonList(sqlm.getGroupID(dep.getTag(), gr.getName()));
+                
+            }
         }
     }
 
