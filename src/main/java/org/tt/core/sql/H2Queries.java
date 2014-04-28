@@ -322,6 +322,12 @@ public class H2Queries implements AbstractQueries {
     }
 
     @Override
+    public String qDeleteLessonEntry() {
+        return "DELETE FROM lessons WHERE group_id=%s AND datetime_id=%d AND activity_id=%d AND subject_id=%d AND " +
+                "subgroup_id = %d AND teacher_id=%d AND location_id=%d; ";
+    }
+
+    @Override
     public String qUpdateDepartmentMessage() {
         return "UPDATE departments SET message='%s' WHERE tag='%s';";
     }

@@ -124,4 +124,13 @@ public class Lesson {
                 room.equals("") &&
                 timestamp == -1L;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o != null && o.getClass() == Lesson.class && sequence ==((Lesson) o).getSequence()
+                && timestamp == ((Lesson) o).getTimestamp() && parity.equals(((Lesson) o).getParity()) &&
+                subgroup.equals(((Lesson) o).getSubgroup()) && activity.equals(((Lesson) o).getActivity()) &&
+                teacher.equals(((Lesson) o).getTeacher()) && building.equals(((Lesson) o).getBuilding()) &&
+                room.equals(((Lesson) o).getRoom());
+    }
 }

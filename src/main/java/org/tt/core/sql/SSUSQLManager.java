@@ -421,6 +421,16 @@ public class SSUSQLManager implements AbstractSQLManager {
         stmt.close();
     }
 
+    @Override
+    public void deleteLesson(int groupID, int dateTimeID, int activityID, int subjectID, int subGroupID, int teacherID,
+                             int locationID) throws SQLException {
+        Statement stmt = conn.createStatement();
+
+        stmt.executeUpdate(String.format(qrs.qDeleteLessonEntry(), groupID, dateTimeID, activityID, subjectID,
+                subGroupID, teacherID, locationID));
+
+    }
+
 
     @Override
     public int getParityID(String state) throws SQLException {

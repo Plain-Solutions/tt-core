@@ -88,6 +88,9 @@ public interface AbstractSQLManager {
 
     void deleteSubGroups(Department department, Group group) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
+    void deleteLesson(int groupID, int dateTimeID, int activityID, int subjectID, int subGroupID, int teacherID,
+                      int locationID) throws SQLException;
+
     int getParityID(String state) throws SQLException;
 
     int getActivityID(String type) throws SQLException;

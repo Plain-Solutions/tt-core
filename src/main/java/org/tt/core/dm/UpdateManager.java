@@ -102,10 +102,65 @@ public class UpdateManager extends SSUDataManager {
             for (Group gr: sqlm.getGroups(dep.getTag())) {
                 List<List<Lesson>> ssuTT = df.getTT(dep.getTag(), gr.getName());
                 List<List<Lesson>> dbTT = sqlm.getLessonList(sqlm.getGroupID(dep.getTag(), gr.getName()));
-                
+
+                int groupID = sqlm.getGroupID(dep.getTag(), gr.getName());
+
+                for (int i=0; i< 6 ;i++) {
+                    for (Lesson l: dbTT.get(i)) {
+                        if (!(ssuTT.get(i).contains(l))) {
+                            deleteLesson(l, i+1, groupID);
+                            System.out.println(String.format("Removed class on %d day, %d sequence and %s parity in %s@%s ",
+                                    i+1, l.getSequence(), l.getParity(), gr.getName(), dep.getTag()));
+                        }
+                    }
+
+                    for (Lesson l: ssuTT.get(i)) {
+                        if (!(dbTT.get(i).contains(l))) {
+                            putLesson(l, i+1, groupID);
+                            System.out.println(String.format("Added class on %d day, %d sequence and %s parity in %s@%s ",
+                                    i+1, l.getSequence(), l.getParity(), gr.getName(), dep.getTag()));
+                        }
+                    }
+                }
             }
         }
     }
+
+    private void deleteLesson(Lesson l, int day, int groupID) throws SQLException {
+        if (!l.isEmpty()) {
+            int sequence = l.getSequence();
+            int parityID = sqlm.getParityID(l.getParity());
+            int subgrpID = sqlm.putSubGroup(groupID, l.getSubgroup());
+            int activityID = sqlm.getActivityID(l.getActivity());
+            int subjectID = sqlm.putSubject(l.getSubject());
+            int teacherID = sqlm.putTeacher(l.getTeacher());
+            int locationID = sqlm.putLocation(l.getBuilding(), l.getRoom());
+            int datatimeID = sqlm.putDateTime(parityID, sequence, day);
+
+            sqlm.deleteLesson(groupID, datatimeID, activityID, subjectID, subgrpID, teacherID,
+                    locationID);
+        }
+    }
+
+    private void putLesson(Lesson l, int day, int groupID) throws SQLException {
+        if (!l.isEmpty()) {
+            int sequence = l.getSequence();
+            int parityID = sqlm.getParityID(l.getParity());
+            int subgrpID = sqlm.putSubGroup(groupID, l.getSubgroup());
+            int activityID = sqlm.getActivityID(l.getActivity());
+            int subjectID = sqlm.putSubject(l.getSubject());
+            int teacherID = sqlm.putTeacher(l.getTeacher());
+            int locationID = sqlm.putLocation(l.getBuilding(), l.getRoom());
+            int datatimeID = sqlm.putDateTime(parityID, sequence, day);
+
+            sqlm.putLessonRecord(groupID, datatimeID, activityID, subjectID, subgrpID, teacherID,
+                    locationID, l.getTimestamp());
+        }
+    }
+
+
+
+
 
 
 }
