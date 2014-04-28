@@ -55,11 +55,8 @@ public class Department {
 
     @Override
     public boolean equals(Object o) {
-        if (o != null && o.getClass() ==  Department.class) {
-            return tag.equals(((Department) o).getTag()) &&
-                    name.equals(((Department) o).getName());
-        }
+        return o != null && o.getClass() == Department.class && tag.equals(((Department) o).getTag()) &&
+                name.equals(((Department) o).getName());
 
-        return false;
     }
 }

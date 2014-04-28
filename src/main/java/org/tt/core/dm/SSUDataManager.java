@@ -88,7 +88,8 @@ public class SSUDataManager implements AbstractDataManager {
         //UpdateManager will be called from Timer!!
         UpdateManager updm = new UpdateManager(sqlm, new H2Queries(), df, dconv);
         try {
-            updm.checkDepartments();
+//            updm.checkDepartments();
+            updm.checkGroups();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (NoSuchDepartmentException e) {
@@ -211,7 +212,7 @@ public class SSUDataManager implements AbstractDataManager {
                 day++;
 
             }
-            System.out.println(String.format("added %s in %s", groupName, departmentTag));
+            System.out.println(String.format("added timetable for  %s@%s", groupName, departmentTag));
             result.setHttpCode(200);
             result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
         } catch (SQLException e) {

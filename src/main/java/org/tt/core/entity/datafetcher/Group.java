@@ -37,4 +37,9 @@ public class Group implements Comparable {
     public int compareTo(Object o) {
         return name.compareTo(((Group) o).getName());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o != null && o.getClass() == Group.class && name.equals(((Group) o).getName());
+    }
 }

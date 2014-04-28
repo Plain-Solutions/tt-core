@@ -22,7 +22,6 @@ import org.tt.core.entity.db.TTEntity;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,13 +61,18 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     @Override
     public void putGroups(List<Group> groups, String departmentTag) throws SQLException, NoSuchDepartmentException {
+            for (Group g : groups) {
+                putGroup(g, departmentTag);
+            }
+    }
+
+    @Override
+    public void putGroup(Group group, String departmentTag) throws SQLException, NoSuchDepartmentException {
         if (departmentExists(departmentTag)) {
             Statement stmt = conn.createStatement();
 
-            for (Group g : groups) {
-                if (!groupExistsInDepartment(departmentTag, g.getName())) {
-                    stmt.executeUpdate(String.format(qrs.qAddGroups(), departmentTag, g.getName()));
-                }
+            if (!groupExistsInDepartment(departmentTag, group.getName())) {
+                stmt.executeUpdate(String.format(qrs.qAddGroups(), departmentTag, group.getName()));
             }
 
             stmt.close();

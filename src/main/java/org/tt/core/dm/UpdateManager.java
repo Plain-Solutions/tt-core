@@ -1,19 +1,16 @@
 package org.tt.core.dm;
 
-import org.tt.core.dm.convert.json.JSONConverter;
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
 import org.tt.core.entity.datafetcher.Lesson;
 import org.tt.core.fetch.AbstractDataFetcher;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
-import org.tt.core.sql.H2Queries;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Comparator;
 import java.util.List;
 
 public class UpdateManager extends SSUDataManager {
@@ -66,19 +63,33 @@ public class UpdateManager extends SSUDataManager {
 
     public void checkGroups() throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
         for(Department dep: sqlm.getDepartments()) {
+            System.out.println("Checking groups in "+dep.getTag());
             List<Group> ssuGroups = df.getGroups(dep.getTag());
             List<Group> dbGroups = sqlm.getGroups(dep.getTag());
 
             for (Group g: dbGroups) {
-                if (!ssuGroups.contains(g)) {
-                    System.out.println("Removed: "+g.getName()+" in "+dep.getTag());
+                System.out.println(g.getName());
+            }
+
+            System.out.println("----");
+
+            for (Group g: ssuGroups) {
+                System.out.println(g.getName());
+            }
+
+            System.out.printf("-----\n");
+
+            for (Group g: dbGroups) {
+                if (!(ssuGroups.contains(g))) {
+                    System.out.println("Removed: "+g.getName()+"@"+dep.getTag());
                     sqlm.deleteGroupFromDepartment(dep, g);
                 }
             }
 
             for (Group g: ssuGroups) {
-                if (!dbGroups.contains(g)) {
-                    System.out.println("Added: "+g.getName()+" in "+dep.getTag());
+                if (!(dbGroups.contains(g))) {
+                    System.out.println("Added: "+g.getName()+"@"+dep.getTag());
+                        sqlm.putGroup(g, dep.getTag());
                         super.putTT(dep.getTag(), g.getName());
                     }
                 }

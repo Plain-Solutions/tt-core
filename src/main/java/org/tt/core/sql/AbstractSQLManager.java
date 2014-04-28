@@ -43,6 +43,8 @@ public interface AbstractSQLManager {
 
     void putGroups(List<Group> groups, String departmentTag) throws SQLException, NoSuchDepartmentException;
 
+    void putGroup(Group group, String departmentTag) throws SQLException, NoSuchDepartmentException;
+
     int putDateTime(int weekID, int sequence, int dayID) throws SQLException;
 
     int putSubject(String info) throws SQLException;
