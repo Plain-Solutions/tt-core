@@ -2,6 +2,8 @@ package org.tt.core.timer;
 
 import org.quartz.*;
 
+import java.util.TimeZone;
+
 /**
  * Copyright 2014 Plain Solutions
  * <p/>
@@ -22,6 +24,7 @@ import org.quartz.*;
 public abstract class AbstractJob implements Job {
     private JobDetail jobDetail;
     private Trigger trigger;
+    public static final TimeZone TIME_ZONE = TimeZone.getTimeZone("UTC+4");
 
     public Trigger getTrigger() {
         return trigger;

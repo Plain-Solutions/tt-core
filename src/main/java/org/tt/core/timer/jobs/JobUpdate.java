@@ -4,8 +4,6 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.tt.core.timer.AbstractJob;
 
-import java.util.TimeZone;
-
 import static org.quartz.CronScheduleBuilder.dailyAtHourAndMinute;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -38,7 +36,7 @@ public class JobUpdate extends AbstractJob {
                 .startNow()
                 .withSchedule(
                         dailyAtHourAndMinute(0, 0)
-                        .inTimeZone(TimeZone.getTimeZone("UTC+4")))
+                        .inTimeZone(TIME_ZONE))
                 .build());
     }
 
