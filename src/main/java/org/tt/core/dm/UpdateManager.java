@@ -129,6 +129,7 @@ public class UpdateManager extends SSUDataManager {
                         }
                     }
                 }
+                System.out.println(String.format("Checked %s@%s", gr.getName(), dep.getTag()));
             }
         }
         System.out.println("Finished updating timetables.");

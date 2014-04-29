@@ -40,6 +40,7 @@ public class Group implements Comparable {
 
     @Override
     public boolean equals(Object o) {
-        return o != null && o.getClass() == Group.class && name.equals(((Group) o).getName());
+        return o != null && o.getClass() == Group.class && (name.equals(((Group) o).getName())
+                || name.trim().equals(((Group) o).getName().trim()));
     }
 }
