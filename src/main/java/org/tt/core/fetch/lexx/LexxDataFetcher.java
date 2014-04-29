@@ -168,7 +168,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
                 NamedNodeMap attributes = node.getAttributes();
 
                 String eduForm = attributes.getNamedItem("edu_form").getNodeValue();
-                String name = attributes.getNamedItem("number_rus").getNodeValue();
+                String name = attributes.getNamedItem("number_rus").getNodeValue().trim();
 
                 if (eduForm.equals("1")) continue;
                 if (!name.equals(group)) continue;

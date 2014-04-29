@@ -108,8 +108,6 @@ public class UpdateManager extends SSUDataManager {
                 int groupID = sqlm.getGroupID(dep.getTag(), gr.getName());
 
                 for (int i = 0; i < 6; i++) {
-
-                    try {
                         for (Lesson l : dbTT.get(i)) {
                             if (!(ssuTT.get(i).contains(l))) {
                                 deleteLesson(l, i + 1, groupID);
@@ -118,7 +116,6 @@ public class UpdateManager extends SSUDataManager {
                             }
                         }
 
-
                         for (Lesson l : ssuTT.get(i)) {
                             if (!(dbTT.get(i).contains(l))) {
                                 putLesson(l, i + 1, groupID);
@@ -126,13 +123,10 @@ public class UpdateManager extends SSUDataManager {
                                         i + 1, l.getSequence(), l.getParity(), gr.getName(), dep.getTag()));
                             }
                         }
-                    } catch (IndexOutOfBoundsException ex) {
-                        System.out.println(i+dep.getName()+gr.getName());
                     }
                 }
             }
         }
-    }
 
     private void deleteLesson(Lesson l, int day, int groupID) throws SQLException {
         if (!l.isEmpty()) {
