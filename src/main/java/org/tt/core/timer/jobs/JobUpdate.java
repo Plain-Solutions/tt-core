@@ -17,7 +17,13 @@ package org.tt.core.timer.jobs;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.tt.core.dm.UpdateManager;
+import org.tt.core.sql.ex.NoSuchDepartmentException;
+import org.tt.core.sql.ex.NoSuchGroupException;
 import org.tt.core.timer.AbstractJob;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 import static org.quartz.CronScheduleBuilder.dailyAtHourAndMinute;
 import static org.quartz.JobBuilder.newJob;
@@ -47,6 +53,15 @@ public class JobUpdate extends AbstractJob {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        System.out.println("UPDATING");
+        System.out.println("UPDATE TIME!");
+        try {
+            UpdateManager updm = getUpdm();
+            updm.checkDepartments();
+            updm.checkGroups();
+            updm.checkTimetables();
+        } catch (SQLException | NoSuchDepartmentException | NoSuchGroupException | IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -15,6 +15,7 @@
  */
 package org.tt.core.dm;
 
+import org.quartz.SchedulerException;
 import org.tt.core.entity.datamanager.TTData;
 import org.tt.core.entity.datamanager.TTStatus;
 import org.tt.core.fetch.AbstractDataFetcher;
@@ -27,6 +28,10 @@ import org.tt.core.entity.db.TTEntity;
 import org.tt.core.sql.H2Queries;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
+import org.tt.core.timer.AbstractJob;
+import org.tt.core.timer.TimerMain;
+import org.tt.core.timer.jobs.JobDrop;
+import org.tt.core.timer.jobs.JobUpdate;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -87,19 +92,19 @@ public class SSUDataManager implements AbstractDataManager {
         //but now we put here test functions
         //UpdateManager will be called from Timer!!
         UpdateManager updm = new UpdateManager(sqlm, new H2Queries(), df, dconv);
+        AbstractJob.setUpdateManager(updm);
+
+        AbstractJob updateJob = new JobUpdate();
+        AbstractJob dropJob = new JobDrop();
+
         try {
-//            updm.checkDepartments();
-            //updm.checkGroups();
-            updm.checkTimetables();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NoSuchDepartmentException e) {
-            e.printStackTrace();
-        } catch (NoSuchGroupException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            TimerMain tm = TimerMain.getInstance(dropJob, updateJob);
+            tm.start();
+            System.out.println(updateJob.getTrigger().getNextFireTime().toString());
+        } catch (SchedulerException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
