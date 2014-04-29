@@ -135,6 +135,10 @@ public class UpdateManager extends SSUDataManager {
         System.out.println("Finished updating timetables.");
     }
 
+    public void flushDatabase() throws SQLException {
+        sqlm.flushDatabase();
+    }
+
     private void deleteLesson(Lesson l, int day, int groupID) throws SQLException {
         if (!l.isEmpty()) {
             int sequence = l.getSequence();

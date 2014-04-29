@@ -431,6 +431,20 @@ public class SSUSQLManager implements AbstractSQLManager {
 
     }
 
+    @Override
+    public void flushDatabase() throws SQLException {
+        Statement stmt = conn.createStatement();
+        String[] tables = {"lessons", "subgroups", "subjects", "teachers", "locations", "datetimes", "groups",
+                "departments"};
+        for (String t: tables) {
+            stmt.executeUpdate(String.format(qrs.qGlobalDelete(), t));
+            if (!t.equals("lessons"))
+                stmt.executeUpdate(String.format(qrs.qIDRestart(), t));
+        }
+
+        stmt.close();
+    }
+
 
     @Override
     public int getParityID(String state) throws SQLException {

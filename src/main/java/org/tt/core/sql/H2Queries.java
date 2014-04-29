@@ -328,9 +328,13 @@ public class H2Queries implements AbstractQueries {
     }
 
     @Override
-        public String qGlobalDelete() {
-            return "DELETE FROM %s;" +
-                    "ALTER TABLE %s ALTER COLUMN ID RESTART WITH 1";
+    public String qGlobalDelete() {
+        return "DELETE FROM %s;";
+    }
+
+    @Override
+    public String qIDRestart() {
+        return "ALTER TABLE %s ALTER COLUMN ID RESTART WITH 1";
     }
 
     @Override

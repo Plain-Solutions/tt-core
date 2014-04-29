@@ -89,6 +89,8 @@ public interface AbstractQueries {
 
     String qGlobalDelete();
 
+    String qIDRestart();
+
     String qUpdateDepartmentMessage();
 
     String qUpdateDepartmentData();

@@ -91,6 +91,8 @@ public interface AbstractSQLManager {
     void deleteLesson(int groupID, int dateTimeID, int activityID, int subjectID, int subGroupID, int teacherID,
                       int locationID) throws SQLException;
 
+    void flushDatabase() throws SQLException;
+
     int getParityID(String state) throws SQLException;
 
     int getActivityID(String type) throws SQLException;

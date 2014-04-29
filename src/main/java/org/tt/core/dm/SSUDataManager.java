@@ -88,9 +88,6 @@ public class SSUDataManager implements AbstractDataManager {
 
     @Override
     public TTData initUpdateJobs() {
-        //here should be job creator;
-        //but now we put here test functions
-        //UpdateManager will be called from Timer!!
         UpdateManager updm = new UpdateManager(sqlm, new H2Queries(), df, dconv);
         AbstractJob.setUpdateManager(updm);
 
@@ -106,7 +103,7 @@ public class SSUDataManager implements AbstractDataManager {
         }
 
         return null;
-    }
+/**/    }
 
     /**
      * Connect AbstractDataFetcher to get departments map and store it into DB with AbstractSQLManager.
