@@ -87,6 +87,8 @@ public interface AbstractQueries {
 
     String qDeleteLessonEntry();
 
+    String qGlobalDelete();
+
     String qUpdateDepartmentMessage();
 
     String qUpdateDepartmentData();

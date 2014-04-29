@@ -22,6 +22,10 @@ Changelog
 	+ `AbstractSQLManager`:
 		+ `getLastID` and all the checks moved to `SSUSQLManager` and became private.		
  * `org.jsoup` is no more required.
+ * Added `UpdateManager` class containing methods for performing comparsion between actual SSU database state and our database records. 
+ * Added `Timer` package for performing everyday updates and a term drops.
+ 	+ Drops are performed on `1.01 00:00 UTC-4` and `1.08 00:00 UTC-4`
+ 	+ Updates are performed daily at `00:00 UTC-4`
 		
 
 
