@@ -1,8 +1,6 @@
 package org.tt.core.timer;
 
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.*;
 
 /**
  * Copyright 2014 Plain Solutions
@@ -21,20 +19,23 @@ import org.quartz.impl.StdSchedulerFactory;
  * Author: Avetisyan Sevak
  * Date: 29.04.14.
  */
+public abstract class AbstractJob implements Job {
+    private JobDetail jobDetail;
+    private Trigger trigger;
 
-public class TimerMain {
-    private Scheduler scheduler;
-    private AbstractJob[] jobs;
-
-    public TimerMain(AbstractJob... jobs) throws SchedulerException {
-        this.scheduler = StdSchedulerFactory.getDefaultScheduler();
-        this.jobs = jobs;
+    public Trigger getTrigger() {
+        return trigger;
     }
 
-    public void start() throws SchedulerException {
-        scheduler.start();
-        for(AbstractJob job : jobs) {
-            scheduler.scheduleJob(job.getJobDetail(), job.getTrigger());
-        }
+    public JobDetail getJobDetail() {
+        return jobDetail;
+    }
+
+    public void setJobDetail(JobDetail jobDetail) {
+        this.jobDetail = jobDetail;
+    }
+
+    public void setTrigger(Trigger trigger) {
+        this.trigger = trigger;
     }
 }

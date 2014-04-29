@@ -1,6 +1,8 @@
 package org.tt.core.timer.jobs;
 
-import org.quartz.*;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.tt.core.timer.AbstractJob;
 
 import java.util.TimeZone;
 
@@ -25,31 +27,19 @@ import static org.quartz.TriggerBuilder.newTrigger;
  * Author: Avetisyan Sevak
  * Date: 29.04.14.
  */
-public class JobUpdate implements Job {
-    private JobDetail jobDetail;
-    private Trigger trigger;
-
+public class JobUpdate extends AbstractJob {
     public JobUpdate() {
-        this.jobDetail = newJob(JobUpdate.class)
-                .withIdentity("updateJob")
-                .build();
+        setJobDetail(newJob(getClass())
+                .withIdentity(getClass().getName())
+                .build());
 
-        this.trigger = newTrigger()
-                .withIdentity("updateJob")
+        setTrigger(newTrigger()
+                .withIdentity(getClass().getName())
                 .startNow()
                 .withSchedule(
                         dailyAtHourAndMinute(0, 0)
-                                .inTimeZone(TimeZone.getTimeZone("UTC+4"))
-                )
-                .build();
-    }
-
-    public Trigger getTrigger() {
-        return trigger;
-    }
-
-    public JobDetail getJobDetail() {
-        return jobDetail;
+                        .inTimeZone(TimeZone.getTimeZone("UTC+4")))
+                .build());
     }
 
     @Override
