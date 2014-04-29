@@ -3,6 +3,8 @@ package org.tt.core.timer;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
+import org.tt.core.timer.jobs.JobDrop;
+import org.tt.core.timer.jobs.JobUpdate;
 
 /**
  * Copyright 2014 Plain Solutions

@@ -1,4 +1,4 @@
-package org.tt.core.timer;
+package org.tt.core.timer.jobs;
 
 import org.quartz.*;
 
