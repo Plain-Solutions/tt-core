@@ -21,10 +21,18 @@ import java.util.TimeZone;
  * Author: Avetisyan Sevak
  * Date: 29.04.14.
  */
+
+/**
+ * AbstractJob is an abstraction which contains main code of timer jobs
+ *
+ * @see org.quartz.Job
+ * @author Avetisyan Sevak
+ * @since 1.2.4
+ */
 public abstract class AbstractJob implements Job {
+    public static final TimeZone TIME_ZONE = TimeZone.getTimeZone("UTC+4");
     private JobDetail jobDetail;
     private Trigger trigger;
-    public static final TimeZone TIME_ZONE = TimeZone.getTimeZone("UTC+4");
 
     public Trigger getTrigger() {
         return trigger;

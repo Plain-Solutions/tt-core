@@ -25,6 +25,14 @@ import static org.quartz.TriggerBuilder.newTrigger;
  * Author: Avetisyan Sevak
  * Date: 29.04.14.
  */
+
+/**
+ * JobUpdate is a class which extends AbstractJob class and implements a logic of updating database
+ *
+ * @see org.tt.core.timer.AbstractJob
+ * @author Avetisyan Sevak
+ * @since 1.2.4
+ */
 public class JobUpdate extends AbstractJob {
     public JobUpdate() {
         setJobDetail(newJob(getClass())

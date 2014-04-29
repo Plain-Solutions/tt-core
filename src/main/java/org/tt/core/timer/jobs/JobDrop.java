@@ -25,6 +25,14 @@ import static org.quartz.TriggerBuilder.newTrigger;
  * Author: Avetisyan Sevak
  * Date: 29.04.14.
  */
+
+/**
+ * JobDrop is a class which extends AbstractJob class and implements a logic of dropping database
+ *
+ * @see org.tt.core.timer.AbstractJob
+ * @author Avetisyan Sevak
+ * @since 1.2.4
+ */
 public class JobDrop extends AbstractJob {
     public JobDrop() {
         setJobDetail(newJob(getClass())

@@ -22,15 +22,34 @@ import org.quartz.impl.StdSchedulerFactory;
  * Date: 29.04.14.
  */
 
+/**
+ * TimerMain is a class which doing some the work on a schedule
+ *
+ * @see org.tt.core.timer.jobs.JobDrop
+ * @see org.tt.core.timer.jobs.JobUpdate
+ * @see org.tt.core.timer.AbstractJob
+ * @author Avetisyan Sevak
+ * @since 1.2.4
+ */
+
 public class TimerMain {
     private Scheduler scheduler;
     private AbstractJob[] jobs;
 
+    /**
+     * Constructor of TimerMain class, where initializing class-fields
+     * @param jobs list of jobs
+     * @throws SchedulerException
+     */
     public TimerMain(AbstractJob... jobs) throws SchedulerException {
         this.scheduler = StdSchedulerFactory.getDefaultScheduler();
         this.jobs = jobs;
     }
 
+    /**
+     * This method starts scheduler and add all jobs to schedule
+      * @throws SchedulerException
+     */
     public void start() throws SchedulerException {
         scheduler.start();
         for(AbstractJob job : jobs) {
