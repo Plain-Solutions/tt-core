@@ -51,7 +51,7 @@ public class JobDrop extends AbstractJob {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         System.out.println("DROP-DROP-KLADBISHE!");
-        UpdateManager updm = getUpdm();;
+        UpdateManager updm = getUpdm();
         try {
             updm.flushDatabase();
         } catch (SQLException e) {

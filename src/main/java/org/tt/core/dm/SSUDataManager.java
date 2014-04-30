@@ -97,7 +97,8 @@ public class SSUDataManager implements AbstractDataManager {
         try {
             TTTimer tm = TTTimer.getInstance(dropJob, updateJob);
             tm.start();
-            System.out.println(updateJob.getTrigger().getNextFireTime().toString());
+            System.out.println("Next update: "+updateJob.getTrigger().getNextFireTime().toString());
+            System.out.println("Next drop: "+dropJob.getTrigger().getNextFireTime().toString());
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
