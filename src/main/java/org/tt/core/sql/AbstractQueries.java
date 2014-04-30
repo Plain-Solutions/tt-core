@@ -41,18 +41,17 @@ public interface AbstractQueries {
 
     String qAddSubject();
 
+    String qAddTeacher();
+
+    String qAddLocation();
+
+    String qAddSubGroup();
+
     String qAddLessonRecord();
 
     String qGetDepartments();
 
     String qGetDepartmentTags();
-
-    String qGetDepartmentTagByID();
-
-    String qGetDepartmentNameByID();
-
-    String qGetDepartmentTagByName();
-
 
     String qGetGroups();
 
@@ -64,11 +63,43 @@ public interface AbstractQueries {
 
     String qGetSubjectID();
 
+    String qGetTeacherID();
+
+    String qGetLocationID();
+
+    String qGetSubGroupID();
+
+    String qGetParityID();
+
+    String qGetActivityID();
+
     String qGetTT();
+
+    String qGetLessonList();
+
+    String qDeleteDepartment();
+
+    String qDeleteGroup();
+
+    String qDeleteGroupSubgroups();
+
+    String qDeleteGroupLessons();
+
+    String qDeleteLessonEntry();
+
+    String qGlobalDelete();
+
+    String qIDRestart();
+
+    String qUpdateDepartmentMessage();
+
+    String qUpdateDepartmentData();
 
     String qDepartmentExists();
 
     String qGroupIDExists();
 
     String qSubjectExists();
+
+    String qGroupTTExists();
 }

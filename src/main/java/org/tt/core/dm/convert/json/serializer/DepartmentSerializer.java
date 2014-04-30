@@ -20,7 +20,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.tt.core.dm.convert.json.entity.DepartmentEntity;
+import org.tt.core.entity.datafetcher.Department;
 
 import java.lang.reflect.Type;
 
@@ -30,32 +30,32 @@ import java.lang.reflect.Type;
  * mails, phones, locations.
  * <code>    <br>
  * {"bf": <br>
- * {"name":"Some department"}, <br>
+ * {"name":"Some department", "msg":"Department message"}, <br>
  * "gf":{"name":"Another department"}} <br>
  * </code>
  *
  * @author Vlad Slepukhin
  * @since 1.2
  */
-public class DepartmentSerializer implements JsonSerializer<DepartmentEntity> {
+public class DepartmentSerializer implements JsonSerializer<Department> {
 
     /**
-     * Converts DepartmentEntity to JsonElement, saving order in information in right representation.
+     * Converts Department element to JsonElement, saving order in information in right representation.
      *
-     * @param departmentEntity         the instance of {@link org.tt.core.dm.convert.json.entity.DepartmentEntity}.
+     * @param department               the instance of {@link org.tt.core.entity.datafetcher.Department}.
      * @param type                     default GSON parameter.
      * @param jsonSerializationContext default GSON parameter.
      * @return Formatted JSON Element - sub-array with info about the department and its tag.
-     * @since 1.2
+     * @since 2.0
      */
     @Override
-    public JsonElement serialize(DepartmentEntity departmentEntity, Type type, JsonSerializationContext jsonSerializationContext) {
+    public JsonElement serialize(Department department, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject result = new JsonObject();
         JsonObject props = new JsonObject();
-        for (String data : departmentEntity.getData().keySet())
-            props.addProperty(data, departmentEntity.getData().get(data));
+        props.addProperty("name", department.getName());
+        props.addProperty("msg", department.getMessage());
 
-        result.add(departmentEntity.getTag(), props);
+        result.add(department.getTag(), props);
         return result;
     }
 }

@@ -51,7 +51,7 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qAddDepartment() {
-        return "INSERT INTO departments(name,tag) VALUES('%s','%s');";
+        return "INSERT INTO departments(name,tag, message) VALUES('%s','%s', '%s');";
     }
 
     /**
@@ -67,7 +67,7 @@ public class H2Queries implements AbstractQueries {
     }
 
     /**
-     * Query description. Adds datetime entry to <code>lessons_datetimes</code> table to handle all the variations
+     * Query description. Adds datetime entry to <code>datetimes</code> table to handle all the variations
      * of lesson parity, sequence of them and day order
      *
      * @return <code>String</code> containing SQL query.
@@ -75,7 +75,7 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qAddDateTime() {
-        return "INSERT INTO lessons_datetimes(week_id, sequence, day_id) VALUES(%d,%d,%d);";
+        return "INSERT INTO datetimes(week_id, sequence, day_id) VALUES(%d,%d,%d);";
     }
 
     /**
@@ -86,7 +86,22 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qAddSubject() {
-        return "INSERT INTO subjects(info) VALUES ('%s');";
+        return "INSERT INTO subjects(name) VALUES ('%s');";
+    }
+
+    @Override
+    public String qAddTeacher() {
+        return "INSERT INTO teachers(name) VALUES('%s');";
+    }
+
+    @Override
+    public String qAddLocation() {
+        return "INSERT INTO locations(building, room) VALUES('%s', '%s');";
+    }
+
+    @Override
+    public String qAddSubGroup() {
+        return "INSERT INTO subgroups(group_id, name) VALUES(%d, '%s');";
     }
 
     /**
@@ -98,7 +113,14 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qAddLessonRecord() {
-        return "INSERT INTO lessons_records(group_id, datetime_id,subject_id) VALUES(%d,%d,%d);";
+        return "INSERT INTO lessons  (group_id," +
+                "  datetime_id," +
+                "  activity_id," +
+                "  subject_id," +
+                "  subgroup_id," +
+                "  teacher_id," +
+                "  location_id," +
+                "  timestamp) VALUES (%d, %d, %d, %d, %d, %d, %d, %d);";
     }
 
     /**
@@ -109,7 +131,7 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qGetDepartments() {
-        return "SELECT name,tag FROM departments ORDER BY NAME;";
+        return "SELECT name,tag, message FROM departments ORDER BY NAME;";
     }
 
     /**
@@ -121,39 +143,6 @@ public class H2Queries implements AbstractQueries {
     @Override
     public String qGetDepartmentTags() {
         return "SELECT tag FROM departments;";
-    }
-
-    /**
-     * Query description. Converts department tag to the id.
-     *
-     * @return <code>String</code> containing SQL query.
-     * @since 1.0
-     */
-    @Override
-    public String qGetDepartmentTagByID() {
-        return "SELECT tag FROM departments WHERE id=%d";
-    }
-
-    /**
-     * Query description. Converts department id to the printed name
-     *
-     * @return <code>String</code> containing SQL query.
-     * @since 1.0
-     */
-    @Override
-    public String qGetDepartmentNameByID() {
-        return "SELECT name FROM departments WHERE id=%d";
-    }
-
-    /**
-     * Query description. Gets tag of the department by the name.
-     *
-     * @return <code>String</code> containing SQL query.
-     * @since 1.0
-     */
-    @Override
-    public String qGetDepartmentTagByName() {
-        return "SELECT tag FROM departments WHERE name='%s'";
     }
 
     /**
@@ -194,14 +183,14 @@ public class H2Queries implements AbstractQueries {
     }
 
     /**
-     * Query description. Gets id of the datetime record from <code>lessons_datetimes</code>.
+     * Query description. Gets id of the datetime record from <code>datetimes</code>.
      *
      * @return <code>String</code> containing SQL query.
      * @since 1.0
      */
     @Override
     public String qGetDateTimeID() {
-        return "SELECT id FROM lessons_datetimes WHERE week_id=%d AND sequence=%d AND day_id=%d;";
+        return "SELECT id FROM datetimes WHERE week_id=%d AND sequence=%d AND day_id=%d;";
     }
 
     /**
@@ -212,7 +201,62 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qGetSubjectID() {
-        return "SELECT id FROM subjects WHERE info='%s';";
+        return "SELECT id FROM subjects WHERE name='%s';";
+    }
+
+    /**
+     * Query description. Gets id of the teacher from <code>teachers</code> table.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
+    @Override
+    public String qGetTeacherID() {
+        return "SELECT id FROM teachers WHERE name='%s';";
+    }
+
+    /**
+     * Query description. Gets id of the location (building + room) from <code>locations</code> table.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
+    @Override
+    public String qGetLocationID() {
+        return "SELECT id FROM locations WHERE building='%s' AND room='%s';";
+    }
+
+    /**
+     * Query description. Gets id of the subgroup from <code>subgroups</code> table.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
+    @Override
+    public String qGetSubGroupID() {
+        return "SELECT id FROM subgroups WHERE  group_id=%d AND name='%s';";
+    }
+
+    /**
+     * Query description. Gets id of parity state from <code>week_states</code> table.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
+    @Override
+    public String qGetParityID() {
+        return "SELECT id FROM week_states WHERE state='%s';";
+    }
+
+    /**
+     * Query description. Gets id of the activity type (lecture and so on) from <code>activities</code> table.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
+    @Override
+    public String qGetActivityID() {
+        return "SELECT id FROM activities WHERE type='%s';";
     }
 
     /**
@@ -223,14 +267,84 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qGetTT() {
-        return "SELECT ws.state, d.name, ldt.sequence, s.info " +
+        return "SELECT d.name As dayName, ws.state As parity, " +
+                "ldt.sequence As seq, a.type As activity, s.name As subject, " +
+                "sgrp.name As sub, t.name As teacher, loc.building As locb, loc.room As locr " +
                 "FROM week_states as ws " +
-                "JOIN lessons_datetimes as ldt on ldt.week_id=ws.id " +
+                "JOIN datetimes as ldt on ldt.week_id=ws.id " +
                 "JOIN days as d on d.id=ldt.day_id " +
-                "JOIN lessons_records as lr on lr.datetime_id = ldt.id " +
-                "JOIN subjects as s on s.id = lr.subject_id " +
+                "JOIN lessons as lr on lr.datetime_id = ldt.id " +
+                "JOIN activities as a on lr.activity_id = a.id " +
+                "JOIN subjects as s on lr.subject_id = s.id  " +
+                "JOIN subgroups as sgrp on  lr.subgroup_id = sgrp.id " +
+                "JOIN teachers as t on lr.teacher_id = t.id " +
+                "JOIN locations as loc on lr.location_id = loc.id " +
                 "JOIN groups as g on g.id = lr.group_id AND g.id=%d " +
-                "ORDER BY d.id ASC, ldt.sequence ASC ";
+                "ORDER BY d.id ASC, ldt.sequence ASC , sgrp.name ASC;";
+    }
+
+    @Override
+    public String qGetLessonList() {
+        return "SELECT  ldt.sequence As sequence, ws.state As parity,   sgrp.name As subgroup," +
+                "a.type As activity, s.name As subject,  " +
+                "t.name As teacher, loc.building As building, loc.room As room, lr.timestamp As timestamp " +
+                "FROM week_states as ws  " +
+                "JOIN datetimes as ldt on ldt.week_id=ws.id  " +
+                "JOIN days as d on d.id=ldt.day_id AND d.id=%d  " +
+                "JOIN lessons as lr on lr.datetime_id = ldt.id  " +
+                "JOIN activities as a on lr.activity_id = a.id  " +
+                "JOIN subjects as s on lr.subject_id = s.id   " +
+                "JOIN subgroups as sgrp on  lr.subgroup_id = sgrp.id  " +
+                "JOIN teachers as t on lr.teacher_id = t.id  " +
+                "JOIN locations as loc on lr.location_id = loc.id  " +
+                "JOIN groups as g on g.id = lr.group_id AND g.id=%d" +
+                "ORDER BY d.id ASC, ldt.sequence ASC , sgrp.name ASC;";
+    }
+
+    @Override
+    public String qDeleteDepartment() {
+        return "DELETE FROM departments WHERE tag='%s';";
+    }
+
+    @Override
+    public String qDeleteGroup() {
+        return "DELETE FROM groups WHERE id=%d;";
+    }
+
+    @Override
+    public String qDeleteGroupSubgroups() {
+        return "DELETE FROM subgroups WHERE group_id=%d;";
+    }
+
+    @Override
+    public String qDeleteGroupLessons() {
+        return "DELETE FROM lessons WHERE group_id=%d;";
+    }
+
+    @Override
+    public String qDeleteLessonEntry() {
+        return "DELETE FROM lessons WHERE group_id=%s AND datetime_id=%d AND activity_id=%d AND subject_id=%d AND " +
+                "subgroup_id = %d AND teacher_id=%d AND location_id=%d; ";
+    }
+
+    @Override
+    public String qGlobalDelete() {
+        return "DELETE FROM %s;";
+    }
+
+    @Override
+    public String qIDRestart() {
+        return "ALTER TABLE %s ALTER COLUMN ID RESTART WITH 1";
+    }
+
+    @Override
+    public String qUpdateDepartmentMessage() {
+        return "UPDATE departments SET message='%s' WHERE tag='%s';";
+    }
+
+    @Override
+    public String qUpdateDepartmentData() {
+        return "UPDATE departments SET name='%s', tag='%s', message='%s'  WHERE tag='%s';";
     }
 
     /**
@@ -263,6 +377,17 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qSubjectExists() {
-        return "SELECT group_id FROM lessons_records WHERE group_id=%d AND datetime_id=%d AND subject_id=%d;";
+        return "SELECT group_id FROM lessons WHERE group_id=%d AND datetime_id=%d AND subject_id=%d;";
+    }
+
+    /**
+     * Query description. Utility. Checks if any lesson entries belong to selected group.
+     *
+     * @return <code>String</code> containing SQL query.
+     * @since 2.0
+     */
+    @Override
+    public String qGroupTTExists() {
+        return "SELECT COUNT(group_id) As result FROM lessons WHERE group_id=%d;";
     }
 }

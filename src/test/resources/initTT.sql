@@ -2,8 +2,10 @@ CREATE TABLE IF NOT EXISTS departments(
   id TINYINT auto_increment NOT NULL,
   name VARCHAR(100),
   tag CHAR(10),
-  PRIMARY KEY (id)
+  message LONGVARCHAR(5000),
+  PRIMARY KEY (id),
 );
+
 CREATE TABLE IF NOT EXISTS groups(
   id MEDIUMINT auto_increment NOT NULL,
   department_id TINYINT,
@@ -11,23 +13,39 @@ CREATE TABLE IF NOT EXISTS groups(
   PRIMARY KEY (id),
   FOREIGN KEY (department_id) REFERENCES departments(id)
 );
+
 CREATE TABLE IF NOT EXISTS week_states(
   id TINYINT NOT NULL auto_increment,
-  state CHAR(4),
+  state CHAR(5),
   PRIMARY KEY (id)
 );
+
 CREATE TABLE IF NOT EXISTS days(
   id TINYINT NOT NULL auto_increment,
   name CHAR(3),
   PRIMARY KEY (id)
 );
+
 CREATE TABLE IF NOT EXISTS subjects(
   id MEDIUMINT NOT NULL auto_increment,
-  info LONGVARCHAR(1200),
+  name VARCHAR(400),
   PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS lessons_datetimes(
+CREATE TABLE IF NOT EXISTS teachers(
+  id MEDIUMINT NOT NULL auto_increment,
+  name VARCHAR(80),
+  PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS locations(
+  id MEDIUMINT NOT NULL auto_increment,
+  building VARCHAR(50),
+  room VARCHAR(50),
+  PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS datetimes(
   id MEDIUMINT NOT NULL auto_increment,
   week_id TINYINT,
   sequence TINYINT,
@@ -38,30 +56,53 @@ CREATE TABLE IF NOT EXISTS lessons_datetimes(
   CONSTRAINT dateinfo UNIQUE (week_id, sequence, day_id)
 );
 
-CREATE TABLE IF NOT EXISTS lessons_records(
-  group_id MEDIUMINT NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS subgroups(
+  id MEDIUMINT NOT NULL auto_increment,
+  group_id MEDIUMINT,
+  name VARCHAR(60),
+  PRIMARY KEY (id),
+  FOREIGN KEY (group_id) REFERENCES groups(id)
+);
+
+CREATE TABLE IF NOT EXISTS activities(
+  id TINYINT NOT NULL auto_increment,
+  type char(10),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS lessons(
+  group_id MEDIUMINT,
   datetime_id MEDIUMINT,
+  activity_id TINYINT,
   subject_id MEDIUMINT,
+  subgroup_id MEDIUMINT,
+  teacher_id MEDIUMINT,
+  location_id MEDIUMINT,
+  timestamp BIGINT,
   FOREIGN KEY (group_id) REFERENCES groups(id),
-  FOREIGN KEY (datetime_id) REFERENCES lessons_datetimes(id),
-  FOREIGN KEY (subject_id) REFERENCES subjects(id)
+  FOREIGN KEY (datetime_id) REFERENCES datetimes(id),
+  FOREIGN KEY (subject_id) REFERENCES subjects(id),
+  FOREIGN KEY (teacher_id) REFERENCES teachers(id),
+  FOREIGN KEY (location_id) REFERENCES locations(id),
+  FOREIGN KEY (subgroup_id) REFERENCES subgroups(id),
+  FOREIGN KEY (activity_id) REFERENCES activities(id),
 );
 
 
 INSERT INTO week_states (state)
-  SELECT * FROM (SELECT 'even') AS tmp
+  SELECT * FROM (SELECT 'nom') AS tmp
   WHERE NOT EXISTS (
-      SELECT state FROM week_states WHERE state = 'even'
+      SELECT state FROM week_states WHERE state = 'nom'
   ) LIMIT 1;
 INSERT INTO week_states (state)
-  SELECT * FROM (SELECT 'odd') AS tmp
+  SELECT * FROM (SELECT 'denom') AS tmp
   WHERE NOT EXISTS (
-      SELECT state FROM week_states WHERE state = 'odd'
+      SELECT state FROM week_states WHERE state = 'denom'
   ) LIMIT 1;
 INSERT INTO week_states (state)
-  SELECT * FROM (SELECT 'all') AS tmp
+  SELECT * FROM (SELECT 'full') AS tmp
   WHERE NOT EXISTS (
-      SELECT state FROM week_states WHERE state = 'all'
+      SELECT state FROM week_states WHERE state = 'full'
   ) LIMIT 1;
 
 INSERT INTO days (name)
@@ -93,4 +134,19 @@ INSERT INTO days (name)
   SELECT * FROM (SELECT 'sat') AS tmp
   WHERE NOT EXISTS (
       SELECT name FROM days WHERE name = 'sat'
+  ) LIMIT 1;
+INSERT INTO activities (type)
+  SELECT * FROM (SELECT 'lecture') AS tmp
+  WHERE NOT EXISTS (
+      SELECT type FROM activities WHERE type = 'lecture'
+  ) LIMIT 1;
+INSERT INTO activities (type)
+  SELECT * FROM (SELECT 'practice') AS tmp
+  WHERE NOT EXISTS (
+      SELECT type FROM activities WHERE type = 'practice'
+  ) LIMIT 1;
+INSERT INTO activities (type)
+  SELECT * FROM (SELECT 'laboratory') AS tmp
+  WHERE NOT EXISTS (
+      SELECT type FROM activities WHERE type = 'laboratory'
   ) LIMIT 1;

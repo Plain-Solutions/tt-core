@@ -15,8 +15,12 @@
  */
 package org.tt.core.dm;
 
+import org.tt.core.entity.datamanager.TTStatus;
+import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.db.TTEntity;
+
 import java.util.List;
-import java.util.Map;
 
 /**
  * AbstractDataConverter is an interface, which allows to convert raw data to
@@ -37,8 +41,9 @@ public interface AbstractDataConverter {
      *
      * @param departments raw data.
      * @return String of some format.
+     * @since 1.2
      */
-    String convertDepartmentList(Map<String, Map<String, String>> departments);
+    String convertDepartmentList(List<Department> departments);
 
     /**
      * Converts raw data in Java Object, containing information about all groups of the department to
@@ -46,9 +51,9 @@ public interface AbstractDataConverter {
      *
      * @param names raw data.
      * @return String of some format.
+     * @since 1.2
      */
-    String convertGroupList(List<String> names);
-
+    String convertGroupList(List<Group> names);
 
     /**
      * General-purposed converter of <code>List<String></code> to string view.
@@ -56,25 +61,18 @@ public interface AbstractDataConverter {
      *
      * @param list raw data.
      * @return String of some format.
+     * @since 1.2
      */
     String convertAbstractList(List<String> list);
-
-    /**
-     * <code>int</code> to <code>String</code> encapsulated conversion, used internally for getting timetables
-     * by group id (faster, as it is should be a primary key). The value should be checked, no Exception is thrown.
-     *
-     * @param id some integer.
-     * @return String representation.
-     */
-    String convertGroupName(int id);
 
     /**
      * Converts list of all classes in group to formatted output.
      *
      * @param table data from database sorted by day tags, sequence of lessons and parity (even<odd).
      * @return String of some format.
+     * @since 2.0
      */
-    String convertTT(List<String[]> table);
+    String convertTT(TTEntity table);
 
     /**
      * Creates error report.
@@ -82,6 +80,7 @@ public interface AbstractDataConverter {
      * @param module failing class or module.
      * @param msg    the detailed information.
      * @return Error report.
+     * @since 1.2
      */
     String convertStatus(TTStatus module, String msg);
 
@@ -91,16 +90,7 @@ public interface AbstractDataConverter {
      * @param module failing class or module.
      * @param err    the detailed information as listed in {@link TTStatus}.
      * @return Error report.
+     * @since 1.2
      */
     String convertStatus(TTStatus module, TTStatus err);
-
-
-    /**
-     * General-purposed converter string back to <code>List<String></code>  suitable representation.
-     *
-     * @param list of some format.
-     * @return raw data.
-     */
-    List<String> reverseConvertGroup(String list);
-
 }

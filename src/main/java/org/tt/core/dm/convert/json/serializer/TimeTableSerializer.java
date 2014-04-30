@@ -16,67 +16,112 @@
 
 package org.tt.core.dm.convert.json.serializer;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import org.tt.core.dm.convert.json.entity.TimeTableEntity;
+import com.google.gson.*;
+import org.tt.core.entity.db.TTDayEntity;
+import org.tt.core.entity.db.TTEntity;
+import org.tt.core.entity.db.TTLesson;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
 
 /**
  * TimeTableSerializer is override of standard GSON <code>JsonSerializer</code> to properly create table of group.
- * It is formatted as K-V sorted by day tags with values of array of K-V with all data about lessons: parity,
- * sequence and info. It is sorted by days, then by sequence of lessons and then by parity (even<odd):
+ * It has this structure:
+ * <ul>
+ * <li>1st: array of days {"dayname": data}</li>
+ * <li>2nd: array of lessons (data) {parity, sequence, info} </li>
+ * <li>3rd: array of lessons records (info) {activity, subject, subinfo}</li>
+ * <li>4th: array of subgroup-teacher-location (subinfo) {subgroup, teacher, building, room} </li>
+ * </ul>
+ * sequence and info. It is sorted by days, then by sequence of lesson, then by parity (even<odd<full),
+ * then by subgroups (lexicographically):
  * <code>
- * {"mon":     <br>
- * [      <br>
- * {   "parity":"odd",<br>
- * "sequence":"1",    <br>
- * "info":"lecture. Calculus (II) Sakhno XII, 312"<br>
- * },                                                     <br>
- * {                                                          <br>
- * "parity":"all",                                            <br>
- * "sequence":"2",                                                <br>
- * "info":"practical. Calculus (II) Sakhno XII, 312"                  <br>
- * },                                                                         <br>
- * ...                                                                            <br>
- * ]                                                                                      <br>
- * }                                                                                               <br>
+ * { <br>
+ * "sat": [ <br>
+ * {          <br>
+ * "parity": "full", <br>
+ * "sequence": 2,        <br>
+ * "info": [                 <br>
+ * {                           <br>
+ * "activity": "practice",       <br>
+ * "subject": "Физическая культура", <br>
+ * "subinfo": [                          <br>
+ * {                                       <br>
+ * "subgroup": "",                           <br>
+ * "teacher": "Вантеева Виктория Леонидовна",    <br>
+ * "building": "12корпус Спортзал",                  <br>
+ * "room": ""                                            <br>
+ * }                                                           <br>
+ * ]                                                             <br>
+ * }                                                               <br>
+ * ]                                                                 <br>
+ * }                                                                   <br>
+ * ]                                                                     <br>
+ * }                                                                       <br>
  * </code>
  *
  * @author Vlad Slepukhin
- * @since 1.2
+ * @since 2.0
  */
-public class TimeTableSerializer implements JsonSerializer<TimeTableEntity> {
+public class TimeTableSerializer implements JsonSerializer<TTEntity> {
 
     /**
      * Converts TimeTableEntity to JsonElement, saving order in information in right representation.
      *
-     * @param tt                       an initialized entity of {@link org.tt.core.dm.convert.json.entity.TimeTableEntity}
+     * @param tt                       an datafetcher of {@link org.tt.core.entity.db.TTEntity}
      * @param type                     default GSON parameter.
      * @param jsonSerializationContext default GSON parameter.
      * @return JsonElement in a proper format.
-     * @since 1.2
+     * @since 2.0
      */
     @Override
-    public JsonElement serialize(TimeTableEntity tt, Type type, JsonSerializationContext jsonSerializationContext) {
-        JsonObject result = new JsonObject();
-        JsonObject day = new JsonObject();
+    public JsonElement serialize(TTEntity tt, Type type, JsonSerializationContext jsonSerializationContext) {
+        JsonArray result = new JsonArray();
+        List<TTDayEntity> days = tt.getTimetable();
+        //for is used instead of foreach for better performance due to high complexity O(n^4)
+        for (int i = 0; i < days.size(); i++) {
+            JsonObject day = new JsonObject();
+            List<TTLesson> lessonEntity = days.get(i).getLessons();
+            JsonArray lessons = new JsonArray();
+            for (int j = 0; j < lessonEntity.size(); j++) {
+                JsonObject entry = new JsonObject();
+                entry.addProperty("parity", lessonEntity.get(j).getParity());
+                entry.addProperty("sequence", lessonEntity.get(j).getSequence());
 
-        List<Map<String, String>> data = tt.getData();
+                JsonArray subjInfo = new JsonArray();
+                List<TTLesson.TTLessonRecord> lrs = lessonEntity.get(j).getRecords();
+                for (int k = 0; k < lrs.size(); k++) {
+                    JsonObject lrEntry = new JsonObject();
+                    lrEntry.addProperty("activity", lrs.get(k).getActivity());
+                    lrEntry.addProperty("subject", lrs.get(k).getSubject());
 
-        for (Map<String, String> aLesson : data) {
-            JsonObject lesson = new JsonObject();
-            for (String key : aLesson.keySet()) {
-                lesson.addProperty(key, aLesson.get(key));
+
+                    JsonArray creInfo = new JsonArray();
+                    List<TTLesson.TTClassRoomEntity> cres = lrs.get(k).getClassRoomEntities();
+
+
+                    for (int m = 0; m < cres.size(); m++) {
+                        JsonObject creEntry = new JsonObject();
+                        creEntry.addProperty("subgroup", cres.get(m).getSubgroup());
+                        creEntry.addProperty("teacher", cres.get(m).getTeacher());
+                        creEntry.addProperty("building", cres.get(m).getBuilding());
+                        creEntry.addProperty("room", cres.get(m).getRoom());
+                        creInfo.add(creEntry);
+                    }
+                    lrEntry.add("subgroups", creInfo);
+                    subjInfo.add(lrEntry);
+
+                }
+                entry.add("info", subjInfo);
+
+                lessons.add(entry);
             }
-            day.add(tt.getWeekday(), lesson);
+            day.add(days.get(i).getName(), lessons);
+            result.add(day);
+
         }
 
-        result.add(tt.getWeekday(), day);
+
         return result;
     }
 }

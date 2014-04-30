@@ -15,29 +15,34 @@
  */
 package org.tt.core.dm;
 
-import org.tt.core.dm.convert.json.JSONConverter;
+import org.quartz.SchedulerException;
+import org.tt.core.entity.datamanager.TTData;
+import org.tt.core.entity.datamanager.TTStatus;
 import org.tt.core.fetch.AbstractDataFetcher;
-import org.tt.core.fetch.html.HTMLCellEntity;
-import org.tt.core.fetch.html.HTMLRecord;
-import org.tt.core.fetch.html.TableParser;
+import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.datafetcher.Lesson;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
-import org.tt.core.sql.ex.EmptyTableException;
+import org.tt.core.entity.db.TTEntity;
+import org.tt.core.sql.H2Queries;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
+import org.tt.core.timer.AbstractJob;
+import org.tt.core.timer.TTTimer;
+import org.tt.core.timer.jobs.JobDrop;
+import org.tt.core.timer.jobs.JobUpdate;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * SSUDataManager is a implementation of AbstractDataManager which works with SSU schedule page.
  * It connects:
  * <ul>
  * <li>SSUSQLManager - database connection interface</li>
- * <li>SSUDataFetcher - utilities to parse HTML on SSU schedules pages</li>
+ * <li>LexxDataFetcher or similar - utilities to parse SSU timetable input (HTML pages, XML DB replica)</li>
  * </ul>
  * However, the main aim of AbstractDataManager is to manage data, especially raw data - text strings and collections of them.
  * We are trying to keep this idea working and handle string and sometimes some structures, where it seems easy,
@@ -46,14 +51,11 @@ import java.util.Map;
  * @author Vlad Slepukhin, Nickolay Yurin
  * @since 1.0
  */
+
 public class SSUDataManager implements AbstractDataManager {
-
-    private AbstractDataFetcher df;
-    private AbstractSQLManager sqlm;
-
+    protected AbstractDataFetcher df;
+    protected AbstractSQLManager sqlm;
     private AbstractDataConverter dconv;
-
-    private String scheduleURL = "";
 
     /**
      * Constructor with no params now is empty.
@@ -62,28 +64,48 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     /**
-     * Constructor with all provided entities of data suppliers.
+     * Constructor with all provided datafetcher of data suppliers.
      *
-     * @param sqlm            SQLManager instance.
-     * @param qrs             Queries for SQL instance.
-     * @param df              DataFetcher instance.
-     * @param dconv           DataConverter instance.
-     * @param globalURLString Global schedule URL to use in data fetching
+     * @param sqlm  SQLManager instance.
+     * @param qrs   Queries for SQL instance.
+     * @param df    DataFetcher instance.
+     * @param dconv DataConverter instance.
      * @see org.tt.core.sql.AbstractSQLManager
      * @see org.tt.core.sql.AbstractQueries
      * @see org.tt.core.fetch.AbstractDataFetcher
      * @see org.tt.core.dm.AbstractDataConverter
-     * @since 1.3
+     * @since 1.2
      */
     public SSUDataManager(AbstractSQLManager sqlm,
                           AbstractQueries qrs,
                           AbstractDataFetcher df,
-                          AbstractDataConverter dconv,
-                          String globalURLString) {
+                          AbstractDataConverter dconv
+    ) {
         deliverDBProvider(sqlm, qrs);
         deliverDataFetcherProvider(df);
         deliverDataConverterProvider(dconv);
-        deliverGlobalURL(globalURLString);
+    }
+
+    @Override
+    public TTData initUpdateJobs() {
+        UpdateManager updm = new UpdateManager(sqlm, new H2Queries(), df, dconv);
+        AbstractJob.setUpdateManager(updm);
+
+        AbstractJob updateJob = new JobUpdate();
+        AbstractJob dropJob = new JobDrop();
+
+        try {
+            TTTimer tm = TTTimer.getInstance(dropJob, updateJob);
+            tm.start();
+            System.out.println("Next update: "+updateJob.getTrigger().getNextFireTime().toString());
+            System.out.println("Next drop: "+dropJob.getTrigger().getNextFireTime().toString());
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+        TTData result = new TTData();
+        result.setHttpCode(200);
+        result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
+        return result;
     }
 
     /**
@@ -91,21 +113,21 @@ public class SSUDataManager implements AbstractDataManager {
      *
      * @return TTData
      * @see org.tt.core.dm.AbstractDataConverter
+     * @see org.tt.core.fetch.AbstractDataFetcher
+     * @since 1.0
      */
     @Override
     public TTData putDepartments() {
         TTData result = new TTData();
         try {
-            sqlm.putDepartments(df.getDepartments(df.fetch(scheduleURL, false)));
+            sqlm.putDepartments(df.getDepartments());
             result.setHttpCode(200);
             result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
         } catch (SQLException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
-        } catch (IOException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.IO, TTStatus.IOERR));
         }
+        System.out.println("added departments");
         return result;
     }
 
@@ -115,14 +137,14 @@ public class SSUDataManager implements AbstractDataManager {
      * @param departmentTag the tag (token) of the department.
      * @return TTData
      * @see org.tt.core.dm.AbstractDataConverter
+     * @see org.tt.core.fetch.AbstractDataFetcher
      * @since 1.0
      */
     @Override
     public TTData putDepartmentGroups(String departmentTag) {
         TTData result = new TTData();
         try {
-            String url = scheduleURL.concat("/" + departmentTag);
-            sqlm.putGroups(df.getGroups(df.fetch(url, false), departmentTag), departmentTag);
+            sqlm.putGroups(df.getGroups(departmentTag), departmentTag);
             result.setHttpCode(200);
             result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
         } catch (SQLException e) {
@@ -131,10 +153,8 @@ public class SSUDataManager implements AbstractDataManager {
         } catch (NoSuchDepartmentException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
-        } catch (IOException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.IO, TTStatus.IOERR));
         }
+        System.out.println(String.format("added %s groups", departmentTag));
         return result;
     }
 
@@ -143,6 +163,7 @@ public class SSUDataManager implements AbstractDataManager {
      *
      * @return TTData
      * @see org.tt.core.dm.AbstractDataConverter
+     * @see org.tt.core.fetch.AbstractDataFetcher
      * @since 1.0
      */
     @Override
@@ -161,84 +182,82 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     /**
-     * Adding temporary table from AbstractDataFetcher (parsed by HTML tags table) in a proper format to DB.
-     * <p/>
-     * We need to clarify one thing
-     * AbstractDataManager works only RAW data, that's why we pass RAW data to
-     * AbstractSQLManager, though we can pass Record, but
-     * the level of abstraction on DB site should be as high as it can be.
+     * Adding temporary table from AbstractDataFetcher in a proper format to DB.
      *
      * @param departmentTag the tag of the department, where the group is located (allocation check).
-     * @param groupID       the global id of group.
-     * @since 1.0
+     * @param groupName     the name of the group
+     * @return TTData with <code>httpCode</code> 200
+     * <code>module:ok</code> and empty message String in case of success or error trace.
+     * @since 2.0
      */
     @Override
-    public TTData putTT(String departmentTag, int groupID) {
+    public TTData putTT(String departmentTag, String groupName) {
         TTData result = new TTData();
         try {
-            //first, we get timetable url
-            String groupName = sqlm.getGroupName(departmentTag, groupID);
+            int groupID = sqlm.getGroupID(departmentTag, groupName);
 
-            //then we check that such group exists in the specified department
-            if (sqlm.groupExistsInDepartment(departmentTag, groupName)) {
-                //and its contents
-                df.setGlobalURL(scheduleURL);
-                URL url = df.formatURL(departmentTag, groupName);
-                String[][] table = df.getTT(df.fetch(url.toString(), false));
-                for (int i = 0; i < 8; i++) {
-                    for (int j = 0; j < 6; j++) {
-                        HTMLCellEntity ce = TableParser.parseCell(table[i][j], i, j);
-                        for (HTMLRecord r : ce.getCell()) {
-                            //skip empty classes
-                            if (r.getInfo().length() != 0) {
-                                int grpID = sqlm.getGroupID(departmentTag, groupName);
-                                int dtID = sqlm.putDateTime(r.getWeekID(), r.getSequence(), r.getDayID());
-                                int subjID = sqlm.putSubject(r.getInfo());
-                                sqlm.putLessonRecord(grpID, dtID, subjID);
-                            }
-                        }
+            int day = 1;
+            List<List<Lesson>> timetable = df.getTT(departmentTag, groupName);
+
+
+            for (List<Lesson> ls : timetable) {
+                for (Lesson l : ls) {
+                    if (!l.isEmpty()) {
+                        int sequence = l.getSequence();
+                        int parityID = sqlm.getParityID(l.getParity());
+                        int subgrpID = sqlm.putSubGroup(groupID, l.getSubgroup());
+                        int activityID = sqlm.getActivityID(l.getActivity());
+                        int subjectID = sqlm.putSubject(l.getSubject());
+                        int teacherID = sqlm.putTeacher(l.getTeacher());
+                        int locationID = sqlm.putLocation(l.getBuilding(), l.getRoom());
+                        int datatimeID = sqlm.putDateTime(parityID, sequence, day);
+
+
+                        sqlm.putLessonRecord(groupID, datatimeID, activityID, subjectID, subgrpID, teacherID,
+                                locationID, l.getTimestamp());
                     }
                 }
+                day++;
+
+            }
+            System.out.println(String.format("added timetable for  %s@%s", groupName, departmentTag));
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
+        } catch (NoSuchDepartmentException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * Adding temporary table of all groups in all the departments from AbstractDataFetcher in a proper format to DB.
+     *
+     * @return TTData with <code>httpCode</code> 200
+     * <code>module:ok</code> and empty message String in case of success or error trace.
+     * @since 2.0
+     */
+    @Override
+    public TTData putAllTT() {
+        TTData result = new TTData();
+        try {
+            for (String d : sqlm.getDepartmentTags()) {
+                for (Group grp : sqlm.getGroups(d))
+                    putTT(d, grp.getName());
             }
             result.setHttpCode(200);
             result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
         } catch (SQLException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
-        } catch (NoSuchDepartmentException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
-        } catch (NoSuchGroupException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
-        } catch (IOException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.IO, TTStatus.IOERR));
-        }
-        return result;
-    }
-
-    /**
-     * Adding temporary table from AbstractDataFetcher (parsed by HTML tags table) in a proper format to DB.
-     *
-     * @param departmentTag the tag of the department, where the group is located (allocation check).
-     * @param groupName     the name of the group
-     * @return TTData with <code>httpCode</code> 200
-     * <code>module:ok</code> and empty message String in case of success or error trace.
-     * @since 1.3
-     */
-    @Override
-    public TTData putTT(String departmentTag, String groupName) {
-        TTData result = new TTData();
-        try {
-            int id = sqlm.getGroupID(departmentTag, groupName);
-            result = putTT(departmentTag, id);
-        } catch (SQLException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
-        } catch (NoSuchGroupException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
         } catch (NoSuchDepartmentException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.DEPARTMENTERR));
@@ -252,13 +271,13 @@ public class SSUDataManager implements AbstractDataManager {
      *
      * @return TTData instance with JSON-formatted String and success/error code.
      * @see org.tt.core.dm.convert.json.serializer.DepartmentSerializer
-     * @since 1.1
+     * @since 2.0
      */
     @Override
     public TTData getDepartments() {
         TTData result = new TTData();
         try {
-            Map<String, Map<String, String>> raw = sqlm.getDepartments();
+            List<Department> raw = sqlm.getDepartments();
             result.setHttpCode(200);
             result.setMessage(dconv.convertDepartmentList(raw));
         } catch (SQLException e) {
@@ -272,6 +291,7 @@ public class SSUDataManager implements AbstractDataManager {
      * Get list of the tags for each department. TT Platform&Servlets are tied around them.
      *
      * @return JSON List of department tags.
+     * @see org.tt.core.dm.convert.json.JSONConverter
      * @since 1.0
      */
     @Override
@@ -289,18 +309,18 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     /**
-     * Get displayable group names (151, 451) as Strings (see non-numerical groups in
-     * {@link org.tt.core.fetch.SSUDataFetcher})on specified department.
+     * Gets displayable group names (151, 451) as list.
      *
      * @param departmentTag the tag of the department.
      * @return JSON List of tags.
-     * @since 1.0
+     * @see org.tt.core.dm.convert.json.serializer.GroupListSerializer
+     * @since 2.0
      */
     @Override
     public TTData getGroups(String departmentTag) {
         TTData result = new TTData();
         try {
-            List<String> raw = sqlm.getGroups(departmentTag);
+            List<Group> raw = sqlm.getGroups(departmentTag);
             result.setHttpCode(200);
             result.setMessage(dconv.convertGroupList(raw));
         } catch (SQLException e) {
@@ -314,21 +334,20 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     /**
-     * Converts name of group of the specified department (allocation check, throws NoSuchGroupException) to its global
-     * id in the database. Used by TT Platform&Servlets.
+     * Gets displayable group names (151, 451) which have timetables in the database as list.
      *
      * @param departmentTag the tag of the department.
-     * @param groupName     the displayable name.
-     * @return TTData instance with JSON-formatted String and success/error code.
-     * @since 1.0
+     * @return JSON List of tags.
+     * @see org.tt.core.dm.convert.json.serializer.GroupListSerializer
+     * @since 2.0
      */
     @Override
-    public TTData getGroupID(String departmentTag, String groupName) {
+    public TTData getNonEmptyGroups(String departmentTag) {
         TTData result = new TTData();
         try {
-            int raw = sqlm.getGroupID(departmentTag, groupName);
+            List<Group> raw = sqlm.getNonEmptyGroups(departmentTag);
             result.setHttpCode(200);
-            result.setMessage(dconv.convertGroupName(raw));
+            result.setMessage(dconv.convertGroupList(raw));
         } catch (SQLException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
@@ -338,34 +357,6 @@ public class SSUDataManager implements AbstractDataManager {
         } catch (NoSuchGroupException e) {
             result.setHttpCode(404);
             result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
-        }
-        return result;
-    }
-
-    /**
-     * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
-     *
-     * @param groupID the global id of group to get the timetable.
-     * @return TTData instance with JSON-formatted String and success/error code.
-     * @see org.tt.core.dm.convert.json.serializer.TimeTableSerializer
-     * @since 1.1
-     */
-    @Override
-    public TTData getTT(int groupID) {
-        TTData result = new TTData();
-        try {
-            List<String[]> raw = sqlm.getTT(groupID);
-            result.setHttpCode(200);
-            result.setMessage(dconv.convertTT(raw));
-        } catch (SQLException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
-        } catch (NoSuchGroupException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
-        } catch (EmptyTableException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.TABLERR));
         }
         return result;
     }
@@ -417,7 +408,7 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     /**
-     * Gets already confiugred instance and delivers it to this class.
+     * Gets already configured instance and delivers it to this class.
      *
      * @param sqlm AbstractSQLManager instance realization with pre-configured Queries
      * @since 1.3
@@ -453,17 +444,29 @@ public class SSUDataManager implements AbstractDataManager {
     }
 
     /**
-     * Providing URL to fetch data from.
+     * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
      *
-     * @param globalURLString Global schedule URL to use in data fetching
-     * @since 1.3
+     * @param groupID the global id of group to get the timetable.
+     * @return TTData instance with JSON-formatted String and success/error code.
+     * @see org.tt.core.dm.convert.json.serializer.TimeTableSerializer
+     * @since 1.1
      */
-    @Override
-    public void deliverGlobalURL(String globalURLString) {
-        scheduleURL = globalURLString;
+    private TTData getTT(int groupID) {
+        TTData result = new TTData();
+
+        try {
+            TTEntity raw = sqlm.getTT(groupID);
+            result.setHttpCode(200);
+            result.setMessage(dconv.convertTT(raw));
+        } catch (SQLException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+        } catch (NoSuchGroupException e) {
+            result.setHttpCode(404);
+            result.setMessage(dconv.convertStatus(TTStatus.TTSQL, TTStatus.GROUPERR));
+        }
+
+        return result;
     }
 
-    public JSONConverter getJSONConverter() {
-        return (JSONConverter) dconv;
-    }
 }

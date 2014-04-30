@@ -15,6 +15,7 @@
  */
 package org.tt.core.dm;
 
+import org.tt.core.entity.datamanager.TTData;
 import org.tt.core.fetch.AbstractDataFetcher;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
@@ -31,11 +32,14 @@ import org.tt.core.sql.AbstractSQLManager;
  */
 public interface AbstractDataManager {
 
+    TTData initUpdateJobs();
+
     /**
      * Fetch and put departments list with connected information to the database.
      *
      * @return TTData with <code>httpCode</code> 200
      * <code>module:ok</code> and empty message String in case of success or error trace.
+     * @since 1.0
      */
     TTData putDepartments();
 
@@ -45,6 +49,7 @@ public interface AbstractDataManager {
      * @param departmentTag the tag of the department.
      * @return TTData with <code>httpCode</code> 200
      * <code>module:ok</code> and empty message String in case of success or error trace.
+     * @since 1.0
      */
     TTData putDepartmentGroups(String departmentTag);
 
@@ -61,18 +66,6 @@ public interface AbstractDataManager {
      * Adding temporary table from AbstractDataFetcher (parsed by HTML tags table) in a proper format to DB.
      *
      * @param departmentTag the tag of the department, where the group is located (allocation check).
-     * @param groupID       the global id of group.
-     * @return TTData with <code>httpCode</code> 200
-     * <code>module:ok</code> and empty message String in case of success or error trace.
-     * @since 1.0
-     */
-    TTData putTT(String departmentTag, int groupID);
-
-
-    /**
-     * Adding temporary table from AbstractDataFetcher (parsed by HTML tags table) in a proper format to DB.
-     *
-     * @param departmentTag the tag of the department, where the group is located (allocation check).
      * @param groupName     the name of the group
      * @return TTData with <code>httpCode</code> 200
      * <code>module:ok</code> and empty message String in case of success or error trace.
@@ -81,7 +74,16 @@ public interface AbstractDataManager {
     TTData putTT(String departmentTag, String groupName);
 
     /**
-     * Get the map of stored departments.
+     * Add all the timetables like <code>putAllGroups</code>
+     *
+     * @return TTData with <code>httpCode</code> 200
+     * <code>module:ok</code> and empty message String in case of success or error trace.
+     * @since 2.0
+     */
+    TTData putAllTT();
+
+    /**
+     * Get the data about stored departments.
      *
      * @return TTData instance with JSON-formatted String and success/error code.
      * @see org.tt.core.dm.convert.json.serializer.DepartmentSerializer
@@ -98,8 +100,7 @@ public interface AbstractDataManager {
     TTData getDepartmentTags();
 
     /**
-     * Get displayable group names (151, 451) as Strings (see non-numerical groups in
-     * {@link org.tt.core.fetch.SSUDataFetcher})on specified department.
+     * Get displayable group names (151, 451) on specified department.
      *
      * @param departmentTag the tag of the department.
      * @return JSON List of tags.
@@ -108,33 +109,21 @@ public interface AbstractDataManager {
     TTData getGroups(String departmentTag);
 
     /**
-     * Converts name of group of the specified department (allocation check, throws NoSuchGroupException) to its global
-     * id in the database. Used by TT Platform&Servlets.
+     * Get displayable of groups which have actual timetable on specified department
      *
-     * @param departmentTag the tag of the department.
-     * @param groupName     the displayable name.
-     * @return TTData instance with JSON-formatted String and success/error code.
-     * @since 1.0
+     * @param departmentTag the the tag of the department.
+     * @return JSON List of tags.
+     * @since 2.0
      */
-    TTData getGroupID(String departmentTag, String groupName);
-
-    /**
-     * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
-     *
-     * @param groupID the global id of group to get the timetable.
-     * @return TTData instance with JSON-formatted String and success/error code.
-     * @see org.tt.core.dm.convert.json.serializer.TimeTableSerializer
-     * @since 1.1
-     */
-    TTData getTT(int groupID);
+    TTData getNonEmptyGroups(String departmentTag);
 
     /**
      * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
      * Method was introduced to create a TT API resembling structure.
      *
-     * @param departmentTag the tag of the department
+     * @param departmentTag the tag of the department.
      * @param groupName     the displayable name.
-     * @since 1.3
+     * @since 1.2
      */
     TTData getTT(String departmentTag, String groupName);
 
@@ -155,7 +144,7 @@ public interface AbstractDataManager {
      * Deliver a pre-configured with some kind of queries provider.
      *
      * @param sqlm AbstractSQLManager instance realization with pre-configured Queries
-     * @since 1.3
+     * @since 1.2.5
      */
     void deliverDBProvider(AbstractSQLManager sqlm);
 
@@ -179,13 +168,4 @@ public interface AbstractDataManager {
      */
     void deliverDataConverterProvider(AbstractDataConverter dconv);
 
-    /**
-     * As now we have a unified method to feth data in <code>org.tt.core.fetch.AbstractDataFetcher</code> we need to provide
-     * an URL in <code>DataManager</code> class. More, to have an opportunity to proper test our Core Lib we provide support
-     * for raw HTML strings
-     *
-     * @param globalURLString Global schedule URL to use in data fetching
-     * @since 1.3
-     */
-    void deliverGlobalURL(String globalURLString);
 }

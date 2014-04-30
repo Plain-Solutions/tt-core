@@ -1,8 +1,12 @@
 *.class
 /.idea/workspace.xml
+/.idea/dictionaries/*
 target
 target/*
 # Package Files #
 *.jar
 *.war
 *.ear
+WorkAround.java
+localtest.h2.db
+property

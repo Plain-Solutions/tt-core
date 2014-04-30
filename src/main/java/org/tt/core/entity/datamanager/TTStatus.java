@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package org.tt.core.dm;
+package org.tt.core.entity.datamanager;
 
 /**
  * TTStatus is just enum of all the messages codes for communication between modules to improve structure and

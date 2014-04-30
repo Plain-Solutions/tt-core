@@ -15,13 +15,15 @@
  */
 package org.tt.core.sql;
 
-import org.tt.core.sql.ex.EmptyTableException;
+import org.tt.core.entity.datafetcher.Lesson;
+import org.tt.core.entity.db.TTEntity;
+import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * AbstractSQLManager is one the core workers in TT Core library that serves as a bridge
@@ -35,22 +37,38 @@ import java.util.Map;
  * @since 1.0
  */
 public interface AbstractSQLManager {
-    void putDepartments(Map<String, String> departments) throws SQLException;
+    void putDepartment(Department department) throws  SQLException;
 
-    void putGroups(List<String> groups, String departmentTag) throws SQLException, NoSuchDepartmentException;
+    void putDepartments(List<Department> departments) throws SQLException;
+
+    void putGroups(List<Group> groups, String departmentTag) throws SQLException, NoSuchDepartmentException;
+
+    void putGroup(Group group, String departmentTag) throws SQLException, NoSuchDepartmentException;
 
     int putDateTime(int weekID, int sequence, int dayID) throws SQLException;
 
     int putSubject(String info) throws SQLException;
 
-    void putLessonRecord(int groupID, int dateTimeID, int subjectID) throws SQLException;
+    int putLocation(String building, String room) throws SQLException;
 
+    int putTeacher(String name) throws SQLException;
 
-    Map<String, Map<String, String>> getDepartments() throws SQLException;
+    int putSubGroup(int groupID, String name) throws SQLException;
+
+    void putLessonRecord(int groupID, int dateTimeID, int activityID, int subjectID, int subGroupID, int teacherID,
+                         int locationID, long timestamp) throws SQLException;
+
+    void updateDepartmentMessage(String departmentTag, String newMessage) throws SQLException;
+
+    void updateDepartmentInfo(String departmentName, String departmentTag, String departmentMessage, String originalTag) throws SQLException;
+
+    List<Department> getDepartments() throws SQLException;
 
     List<String> getDepartmentTags() throws SQLException;
 
-    List<String> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
+    List<Group> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
+
+    List<Group> getNonEmptyGroups(String departmentTag) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
     int getGroupID(String departmentTag, String groupName) throws SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
@@ -58,18 +76,26 @@ public interface AbstractSQLManager {
     String getGroupName(String departmentTag, int groupID) throws SQLException,
             NoSuchDepartmentException, NoSuchGroupException;
 
-    List<String[]> getTT(int groupID) throws SQLException, NoSuchGroupException, EmptyTableException;
+    TTEntity getTT(int groupID) throws SQLException, NoSuchGroupException;
 
+    List<List<Lesson>> getLessonList(int groupID) throws SQLException, NoSuchGroupException;
 
-    boolean departmentExists(String departmentTag) throws SQLException;
+    void deleteDepartment(Department department) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
-    boolean groupExistsInDepartment(String departmentTag, String groupName) throws SQLException;
+    void deleteGroupFromDepartment(Department department, Group group) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
-    boolean groupExistsAsID(int groupID) throws SQLException;
+    void deleteLessons(Department department, Group group) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
-    boolean lessonExists(int groupID, int dateTimeID, int subjectID) throws SQLException;
+    void deleteSubGroups(Department department, Group group) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
-    int getLastID(String table) throws SQLException;
+    void deleteLesson(int groupID, int dateTimeID, int activityID, int subjectID, int subGroupID, int teacherID,
+                      int locationID) throws SQLException;
+
+    void flushDatabase() throws SQLException;
+
+    int getParityID(String state) throws SQLException;
+
+    int getActivityID(String type) throws SQLException;
 
     void setQueries(AbstractQueries qrs);
 

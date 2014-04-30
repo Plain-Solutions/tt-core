@@ -1,6 +1,43 @@
 Changelog
 =========
-###TT Core 1.2.4
+###TT Core 2.0.0
+
+* Introduced `LexxDataFetcher` - an instance of ADM working with SSU internal database. 
+* `SSUDataFetcher` is deprecated and removed from distribution. We plan to bring it back as soon as we clean everything up. Or not. It cannot provide complete data in discrete format as it does LDF.
+* Refactored `SSUSQLManager` to work with objects of same structue - lsit of some compound object. Only 6 methods from version 1.0 are preserved!  
+	+ Totally reworked timetable fetching from the database. The assembly of `TTEntity`, `TTDayEntity` and `TTLesson` create transparent and clear for understanding structure of object to be converted as they are.
+	+ Updated safety checks.
+* All the entities and entity-like classes are now stored in `entity` package
+* Updated database scheme with Lexx-like structure.
+* Implemented non-empty groups fetching. Later, the respective API call will be added. It allows to fetch list of groups which have timetable filled.
+* Global updates and improvements in classes in the fashion of reducing unused and extra elements:
+	+ `AbstractDataManager`:
+		+ Removed: `getFormattedString`, `deliverGlobalURL`, `getGroupID`, `getJSONConverter`, `putTT(departmentTaag, groupID)`
+		+ `getTT(int id)` moved to `SSUDM` and became private
+	+ `AbstractDataConverter`:
+		+ `convertGroupName` - as removed `getGroupID`
+		+ raw backwards converters are also removed
+	+ `AbstractQueries`:
+		+ `qGetDepartmentTagByID` ,`...NameByID`, `TagByName` are also removed.
+	+ `AbstractSQLManager`:
+		+ `getLastID` and all the checks moved to `SSUSQLManager` and became private.		
+ * `org.jsoup` is no more required.
+ * Added `UpdateManager` class containing methods for performing comparsion between actual SSU database state and our database records. 
+ * Added `Timer` package for performing everyday updates and a term drops.
+ 	+ **Now requires `org.quartz-scheduler` >= 2.2.1**
+ 	+ Drops are performed on `1.01 00:00 UTC-4` and `1.08 00:00 UTC-4`
+ 	+ Updates are performed daily at `00:00 UTC-4`
+		
+
+
+=======
+
+###TT Core 1.2.6
+
+* Added general-purposed K-V converter (Map to some (JSON) string) to avoid extra dependencies for TT Platform
+
+
+###TT Core 1.2.5
 
 * Added adequate testing module with correct independent tests with JUnit 4.
 * TTStatus rewritten to return actual messages.
