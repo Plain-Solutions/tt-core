@@ -26,6 +26,7 @@ The whole library is built with Maven, but here is the brief list of main depend
 * Java 7 (jdk>=1.7.0)
 * Your formatting driver. For us it is gson (>=2.2.4)
 * Your database driver. For us it is **h2**>=1.3.175
+* Scheduling library: **quartz** >=2.2.1
 
 
 Status 
@@ -34,7 +35,7 @@ Concurrent Development Branch: [![Build Status](https://travis-ci.org/Plain-Solu
 
 Stable Master Branch:[![Build Status](https://travis-ci.org/Plain-Solutions/tt-core.svg?branch=master)](https://travis-ci.org/Plain-Solutions/tt-core)
 
-Current  Release: [1.2.4](https://github.com/Plain-Solutions/tt-core/releases/tag/1.2.4)
+Current  Release: [2.0.0](https://github.com/Plain-Solutions/tt-core/releases/tag/2.0.0)
 
 License
 =======
