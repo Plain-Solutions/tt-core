@@ -20,7 +20,7 @@ import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
 /**
- * TimerMain is a class which doing some the work on a schedule
+ * TTTimer is a class which doing some the work on a schedule
  *
  * @author Avetisyan Sevak
  * @see org.tt.core.timer.jobs.JobDrop
@@ -29,27 +29,27 @@ import org.quartz.impl.StdSchedulerFactory;
  * @since 2.0.0
  */
 
-public class TimerMain {
-    private static TimerMain tm;
+public class TTTimer {
+    private static TTTimer tm;
     private Scheduler scheduler;
     private AbstractJob[] jobs;
     private boolean hasStarted;
 
     /**
-     * Constructor of TimerMain class, where initializing class-fields
+     * Constructor of TTTimer class, where initializing class-fields
      *
      * @param jobs list of jobs
      * @throws SchedulerException
      */
-    private TimerMain(AbstractJob... jobs) throws SchedulerException {
+    private TTTimer(AbstractJob... jobs) throws SchedulerException {
         this.scheduler = StdSchedulerFactory.getDefaultScheduler();
         this.jobs = jobs;
         hasStarted = false;
     }
 
-    public static TimerMain getInstance(AbstractJob... jobs) throws SchedulerException {
+    public static TTTimer getInstance(AbstractJob... jobs) throws SchedulerException {
         if (tm == null) {
-            tm = new TimerMain(jobs);
+            tm = new TTTimer(jobs);
         }
 
         return tm;

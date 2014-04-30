@@ -29,7 +29,7 @@ import org.tt.core.sql.H2Queries;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 import org.tt.core.timer.AbstractJob;
-import org.tt.core.timer.TimerMain;
+import org.tt.core.timer.TTTimer;
 import org.tt.core.timer.jobs.JobDrop;
 import org.tt.core.timer.jobs.JobUpdate;
 
@@ -95,15 +95,17 @@ public class SSUDataManager implements AbstractDataManager {
         AbstractJob dropJob = new JobDrop();
 
         try {
-            TimerMain tm = TimerMain.getInstance(dropJob, updateJob);
+            TTTimer tm = TTTimer.getInstance(dropJob, updateJob);
             tm.start();
             System.out.println(updateJob.getTrigger().getNextFireTime().toString());
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
-
-        return null;
-/**/    }
+        TTData result = new TTData();
+        result.setHttpCode(200);
+        result.setMessage(dconv.convertStatus(TTStatus.OK, TTStatus.OKMSG));
+        return result;
+    }
 
     /**
      * Connect AbstractDataFetcher to get departments map and store it into DB with AbstractSQLManager.

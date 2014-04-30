@@ -27,7 +27,7 @@ public class TimerMainTest {
             AbstractJob jobUpdate = new JobUpdate();
             AbstractJob jobDrop = new JobDrop();
 
-            TimerMain timer = TimerMain.getInstance(jobUpdate, jobDrop);
+            TTTimer timer = TTTimer.getInstance(jobUpdate, jobDrop);
             timer.start();
         } catch (SchedulerException e) {
             e.printStackTrace();
