@@ -1,13 +1,13 @@
 TT Core Library
 =======
-[SSU TimeTables](http://ssutt.org) is a startup by Plain Solutions, group of several students, which is created to bring university schedules to your palm - your mobile devices.
+[SSU TimeTables](http://ssutt.org) is a project maintained by Plain Solutions, group of several students, which is created to bring university schedules to your palm - your mobile devices.
 
 General
 ================
 TT Core is a kernel of the TT Project. It connects two main structures: university website with timetables, database, containing pre-formatted entries, groups and departments lists and an interface to represent data in web-friendly format and deliver data to  [TT Platform](https://github.com/plain-solutions/tt-platform) -  servlet module.
 
 TT Core structure briefly can be described in this chart:
-![ttcore](http://i.imgur.com/LPVCZTv.jpg)
+![ttcore](http://i.imgur.com/WRQ49Y6.jpg)
 
 As you can see, all the methods described as **Abstract**. That means that TT Project can be applied nearly to any university having a website with timetables. What are the modules that can be implemented and what do they do?
 
@@ -16,6 +16,7 @@ As you can see, all the methods described as **Abstract**. That means that TT Pr
  *  `AbstractDataFetcher` - module that works with parsing stuff: getting groups and departments from university, HTML parsing and temporary DB-friendly representation of them.
  *  `AbstractDataConverter` - module that represents and converts data from the database to web-friendly format, like JSON or YAML.
  *  `AbstractDataManager` - module for unifying data between TT Core and TT Platform. Each method should return `TTData` - special structure-like class for data sharing. 
+ * `UpdateManager` and `TTTime` - modules for replica maintaining. It checks and updates timetables, list of groups, department messages and departments list every day to keep it up to date. Also is responsible for dropping database each term.
 
 This repository contains build for [SSU](http://www.sgu.ru/) for **H2DB** and **JSON** output.
 
