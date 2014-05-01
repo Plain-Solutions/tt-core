@@ -15,10 +15,13 @@
  */
 package org.tt.core.dm;
 
+import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datamanager.TTData;
 import org.tt.core.fetch.AbstractDataFetcher;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
+
+import java.util.List;
 
 /**
  * AbstractDataManager is the main external interface of TT Core Library. Actually, it represents a connector
@@ -89,7 +92,7 @@ public interface AbstractDataManager {
      * @see org.tt.core.dm.convert.json.serializer.DepartmentSerializer
      * @since 1.1
      */
-    TTData getDepartments();
+    List<Department> getDepartments();
 
     /**
      * Get list of the tags for each department. TT Platform&Servlets are tied around them.

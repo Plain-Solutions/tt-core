@@ -274,17 +274,17 @@ public class SSUDataManager implements AbstractDataManager {
      * @since 2.0
      */
     @Override
-    public TTData getDepartments() {
-        TTData result = new TTData();
+    public List<Department> getDepartments() {
+//        TTData result = new TTData();
         try {
-            List<Department> raw = sqlm.getDepartments();
-            result.setHttpCode(200);
-            result.setMessage(dconv.convertDepartmentList(raw));
+
+            return sqlm.getDepartments();
+            //result.setHttpCode(200);
+//            setHttpCode//result.setMessage(dconv.convertDepartmentList(raw));
         } catch (SQLException e) {
-            result.setHttpCode(404);
-            result.setMessage(dconv.convertStatus(TTStatus.GENSQL, e.getSQLState()));
+            return null;
         }
-        return result;
+
     }
 
     /**

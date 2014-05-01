@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS departments(
   id TINYINT auto_increment NOT NULL,
   name VARCHAR(100),
-  tag CHAR(10),
+  tag CHAR(6),
   message LONGVARCHAR(5000),
   PRIMARY KEY (id),
 );
 
 CREATE TABLE IF NOT EXISTS groups(
-  id MEDIUMINT auto_increment NOT NULL,
+  id SMALLINT auto_increment NOT NULL,
   department_id TINYINT,
   name CHAR(30),
   PRIMARY KEY (id),
@@ -27,13 +27,13 @@ CREATE TABLE IF NOT EXISTS days(
 );
 
 CREATE TABLE IF NOT EXISTS subjects(
-  id MEDIUMINT NOT NULL auto_increment,
+  id SMALLINT NOT NULL auto_increment,
   name VARCHAR(400),
   PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS teachers(
-  id MEDIUMINT NOT NULL auto_increment,
+  id SMALLINT NOT NULL auto_increment,
   name VARCHAR(80),
   PRIMARY KEY(id)
 );
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS locations(
 );
 
 CREATE TABLE IF NOT EXISTS datetimes(
-  id MEDIUMINT NOT NULL auto_increment,
+  id SMALLINT NOT NULL auto_increment,
   week_id TINYINT,
   sequence TINYINT,
   day_id TINYINT,
@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS datetimes(
 );
 
 CREATE TABLE IF NOT EXISTS subgroups(
-  id MEDIUMINT NOT NULL auto_increment,
-  group_id MEDIUMINT,
+  id SMALLINT NOT NULL auto_increment,
+  group_id SMALLINT,
   name VARCHAR(60),
   PRIMARY KEY (id),
   FOREIGN KEY (group_id) REFERENCES groups(id)
@@ -71,13 +71,13 @@ CREATE TABLE IF NOT EXISTS activities(
 );
 
 CREATE TABLE IF NOT EXISTS lessons(
-  group_id MEDIUMINT,
-  datetime_id MEDIUMINT,
+  group_id SMALLINT,
+  datetime_id SMALLINT,
   activity_id TINYINT,
-  subject_id MEDIUMINT,
-  subgroup_id MEDIUMINT,
-  teacher_id MEDIUMINT,
-  location_id MEDIUMINT,
+  subject_id SMALLINT,
+  subgroup_id SMALLINT,
+  teacher_id SMALLINT,
+  location_id SMALLINT,
   timestamp BIGINT,
   FOREIGN KEY (group_id) REFERENCES groups(id),
   FOREIGN KEY (datetime_id) REFERENCES datetimes(id),
@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS lessons(
   FOREIGN KEY (activity_id) REFERENCES activities(id),
 );
 
+CREATE INDEX IDXNAME ON DEPARTMENTS(TAG);
 
 INSERT INTO week_states (state)
   SELECT * FROM (SELECT 'nom') AS tmp
