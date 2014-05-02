@@ -15,6 +15,8 @@
 */
 package org.tt.core.fetch.lexx;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.StringUtils;
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
 import org.tt.core.entity.datafetcher.Lesson;
@@ -24,7 +26,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import sun.misc.BASE64Encoder;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -77,7 +78,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         try {
             url = new URL(link);
             conn = url.openConnection();
-            String encoded = new BASE64Encoder().encode(loginPassword.getBytes());
+            String encoded = Base64.encodeBase64String(StringUtils.getBytesUtf8(loginPassword));
             conn.setRequestProperty("Authorization", "Basic " + encoded);
         } catch (IOException e) {
             e.printStackTrace();
