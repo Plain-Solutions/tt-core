@@ -6,7 +6,6 @@ import org.tt.core.sql.AbstractSQLManager;
 
 public class TTFactory {
     private static AbstractSQLManager sqlm;
-    private static AbstractQueries qrs;
     private static AbstractDataFetcher df;
     private static TTFactory ttf;
 
@@ -21,12 +20,9 @@ public class TTFactory {
         return ttf;
     }
 
-    public void setSQLManager(AbstractSQLManager sqlm) {
+    public void setSQLManager(AbstractSQLManager sqlm, AbstractQueries qrs) {
         this.sqlm = sqlm;
-    }
-
-    public void setSQLQueries(AbstractQueries qrs) {
-        this.qrs = qrs;
+        this.sqlm.setQueries(qrs);
     }
 
     public void setDataFetcher(AbstractDataFetcher df) {
