@@ -5,22 +5,20 @@ import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
 
 public class TTFactory {
-    private AbstractSQLManager sqlm;
-    private AbstractQueries qrs;
-    private AbstractDataFetcher df;
+    private static AbstractSQLManager sqlm;
+    private static AbstractQueries qrs;
+    private static AbstractDataFetcher df;
+    private static TTFactory ttf;
 
-    public TTFactory() {
+    private TTFactory() {
     }
 
-    public TTFactory(AbstractSQLManager sqlm, AbstractQueries qrs, AbstractDataFetcher df) {
-        this.sqlm = sqlm;
-        this.qrs = qrs;
-        this.df = df;
-    }
+    public static TTFactory getInstance() {
+        if (ttf == null) {
+            ttf = new TTFactory();
+        }
 
-    public TTFactory(AbstractSQLManager sqlm, AbstractDataFetcher df) {
-        this.sqlm = sqlm;
-        this.df = df;
+        return ttf;
     }
 
     public void setSQLManager(AbstractSQLManager sqlm) {
