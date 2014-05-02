@@ -15,12 +15,20 @@
  */
 package org.tt.core.dm;
 
+import org.quartz.SchedulerException;
 import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
 import org.tt.core.entity.datamanager.TTData;
+import org.tt.core.entity.db.TTEntity;
+import org.tt.core.entity.db.TTLesson;
 import org.tt.core.fetch.AbstractDataFetcher;
 import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
+import org.tt.core.sql.ex.NoSuchDepartmentException;
+import org.tt.core.sql.ex.NoSuchGroupException;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -35,7 +43,7 @@ import java.util.List;
  */
 public interface AbstractDataManager {
 
-    TTData initUpdateJobs();
+    void initUpdateJobs() throws SchedulerException;
 
     /**
      * Fetch and put departments list with connected information to the database.
@@ -44,7 +52,7 @@ public interface AbstractDataManager {
      * <code>module:ok</code> and empty message String in case of success or error trace.
      * @since 1.0
      */
-    TTData putDepartments();
+    void putDepartments() throws SQLException;
 
     /**
      * Connect AbstractDataFetcher to get list of groups on <b>department</b> and store it into DB with AbstractSQLManager.
@@ -54,7 +62,7 @@ public interface AbstractDataManager {
      * <code>module:ok</code> and empty message String in case of success or error trace.
      * @since 1.0
      */
-    TTData putDepartmentGroups(String departmentTag);
+    void putDepartmentGroups(String departmentTag) throws NoSuchDepartmentException, SQLException;
 
     /**
      * Connect AbstractDataFetcher to get list of <b>ALL</b> groups and store it into DB.
@@ -63,7 +71,7 @@ public interface AbstractDataManager {
      * <code>module:ok</code> and empty message String in case of success or error trace.
      * @since 1.0
      */
-    TTData putAllGroups();
+    void putAllGroups() throws NoSuchDepartmentException, SQLException;
 
     /**
      * Adding temporary table from AbstractDataFetcher (parsed by HTML tags table) in a proper format to DB.
@@ -74,7 +82,7 @@ public interface AbstractDataManager {
      * <code>module:ok</code> and empty message String in case of success or error trace.
      * @since 1.3
      */
-    TTData putTT(String departmentTag, String groupName);
+    void putTT(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException, NoSuchGroupException, IOException;
 
     /**
      * Add all the timetables like <code>putAllGroups</code>
@@ -83,7 +91,7 @@ public interface AbstractDataManager {
      * <code>module:ok</code> and empty message String in case of success or error trace.
      * @since 2.0
      */
-    TTData putAllTT();
+    void putAllTT() throws SQLException, NoSuchDepartmentException, IOException, NoSuchGroupException;
 
     /**
      * Get the data about stored departments.
@@ -92,7 +100,7 @@ public interface AbstractDataManager {
      * @see org.tt.core.dm.convert.json.serializer.DepartmentSerializer
      * @since 1.1
      */
-    List<Department> getDepartments();
+    List<Department> getDepartments() throws SQLException;
 
     /**
      * Get list of the tags for each department. TT Platform&Servlets are tied around them.
@@ -100,7 +108,7 @@ public interface AbstractDataManager {
      * @return JSON List of department tags.
      * @since 1.0
      */
-    TTData getDepartmentTags();
+    List<String> getDepartmentTags() throws SQLException;
 
     /**
      * Get displayable group names (151, 451) on specified department.
@@ -109,7 +117,7 @@ public interface AbstractDataManager {
      * @return JSON List of tags.
      * @since 1.0
      */
-    TTData getGroups(String departmentTag);
+    List<Group> getGroups(String departmentTag) throws NoSuchDepartmentException, SQLException;
 
     /**
      * Get displayable of groups which have actual timetable on specified department
@@ -118,7 +126,7 @@ public interface AbstractDataManager {
      * @return JSON List of tags.
      * @since 2.0
      */
-    TTData getNonEmptyGroups(String departmentTag);
+    List<Group> getNonEmptyGroups(String departmentTag) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
     /**
      * Get nearly raw, but formatted timetable output from the database and process it to some web-friendly format.
@@ -128,7 +136,7 @@ public interface AbstractDataManager {
      * @param groupName     the displayable name.
      * @since 1.2
      */
-    TTData getTT(String departmentTag, String groupName);
+    TTEntity getTT(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException, NoSuchGroupException;
 
     /**
      * Get the provider, AbstractSQLManager requires an instance of AbstractSQLManager implementation (for instance, SSUSQLManager
@@ -159,16 +167,5 @@ public interface AbstractDataManager {
      * @since 1.1
      */
     void deliverDataFetcherProvider(AbstractDataFetcher df);
-
-
-    /**
-     * Gets the provider of data representation module. It can be json or yaml or xml, but in TT Core only JSON implemented.
-     *
-     * @param dconv a created instance of AbstractDataConverter implementation (for instance, JSONConverter)
-     * @see org.tt.core.dm.AbstractDataConverter
-     * @see org.tt.core.dm.convert.json.JSONConverter
-     * @since 1.2
-     */
-    void deliverDataConverterProvider(AbstractDataConverter dconv);
 
 }

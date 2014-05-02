@@ -30,11 +30,11 @@ import java.util.List;
 
 public class UpdateManager extends SSUDataManager {
 
-    public UpdateManager(AbstractSQLManager sqlm, AbstractQueries qrs, AbstractDataFetcher df, AbstractDataConverter dconv) {
-        super(sqlm, qrs, df, dconv);
+    public UpdateManager(AbstractSQLManager sqlm, AbstractQueries qrs, AbstractDataFetcher df) {
+        super(sqlm, qrs, df);
     }
 
-    public void checkDepartments() throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
+    public void checkDepartments() throws SQLException, NoSuchDepartmentException, NoSuchGroupException, IOException {
         System.out.println("Checking departments for update!");
 
         List<Department> ssuDeps = df.getDepartments();
@@ -77,7 +77,7 @@ public class UpdateManager extends SSUDataManager {
         System.out.println("Finished updating department data.");
     }
 
-    public void checkGroups() throws SQLException, NoSuchDepartmentException, NoSuchGroupException {
+    public void checkGroups() throws SQLException, NoSuchDepartmentException, NoSuchGroupException, IOException {
         for (Department dep : sqlm.getDepartments()) {
             System.out.println("Checking groups in " + dep.getTag());
             List<Group> ssuGroups = df.getGroups(dep.getTag());
