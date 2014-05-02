@@ -15,23 +15,88 @@
  */
 package org.tt.core.dm;
 
+import org.quartz.SchedulerException;
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
 import org.tt.core.entity.datafetcher.Lesson;
 import org.tt.core.fetch.AbstractDataFetcher;
-import org.tt.core.sql.AbstractQueries;
 import org.tt.core.sql.AbstractSQLManager;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
+import org.tt.core.timer.AbstractJob;
+import org.tt.core.timer.TTTimer;
+import org.tt.core.timer.jobs.JobDrop;
+import org.tt.core.timer.jobs.JobUpdate;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-public class TTUpdateManager extends SSUDataManager {
+public class TTUpdateManager {
+    private AbstractSQLManager sqlm;
+    private AbstractDataFetcher df;
 
-    public TTUpdateManager(AbstractSQLManager sqlm, AbstractQueries qrs, AbstractDataFetcher df) {
-        super(sqlm, qrs, df);
+    public TTUpdateManager(AbstractSQLManager sqlm, AbstractDataFetcher df) {
+        this.sqlm = sqlm;
+        this.df = df;
+    }
+
+    public void putDepartments() throws SQLException {
+        for (Department department : df.getDepartments()) {
+            putDepartment(department);
+        }
+        System.out.println("Added departments");
+    }
+
+    public void putDepartmentGroups(String departmentTag) throws NoSuchDepartmentException, SQLException {
+        sqlm.putGroups(df.getGroups(departmentTag), departmentTag);
+        System.out.println(String.format("Added groups@%s", departmentTag));
+    }
+
+    public void putAllGroups() throws NoSuchDepartmentException, SQLException {
+        for (String departmentTag : sqlm.getDepartmentTags())
+            putDepartmentGroups(departmentTag);
+    }
+
+    public void putTT(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException, NoSuchGroupException, IOException {
+        int groupID = sqlm.getGroupID(departmentTag, groupName);
+
+        int day = 1;
+        List<List<Lesson>> timetable = df.getTT(departmentTag, groupName);
+
+        for (List<Lesson> ls : timetable) {
+            for (Lesson l : ls) {
+                putLesson(l, day, groupID);
+            }
+            day++;
+        }
+
+        System.out.println(String.format("Added timetable for %s@%s", groupName, departmentTag));
+    }
+
+    public void putAllTT() throws SQLException, NoSuchDepartmentException, IOException, NoSuchGroupException {
+        for (String d : sqlm.getDepartmentTags()) {
+            for (Group grp : sqlm.getGroups(d))
+                putTT(d, grp.getName());
+        }
+    }
+
+    public void initFulfillment() throws SQLException, IOException, NoSuchGroupException, NoSuchDepartmentException {
+        putDepartments();
+        putAllGroups();
+        putAllTT();;
+    }
+
+    public void initUpdateJobs() throws SchedulerException {
+        AbstractJob.setUpdateManager(this);
+        AbstractJob updateJob = new JobUpdate();
+        AbstractJob dropJob = new JobDrop();
+
+
+        TTTimer tm = TTTimer.getInstance(dropJob, updateJob);
+        tm.start();
+        System.out.println("Next update: " + updateJob.getTrigger().getNextFireTime().toString());
+        System.out.println("Next drop: " + dropJob.getTrigger().getNextFireTime().toString());
     }
 
     public void checkDepartments() throws SQLException, NoSuchDepartmentException, NoSuchGroupException, IOException {
@@ -50,10 +115,10 @@ public class TTUpdateManager extends SSUDataManager {
         for (Department d : ssuDeps) {
             if (!dbDeps.contains(d)) {
                 System.out.println("Added: " + d.getTag());
-                sqlm.putDepartment(d);
-                super.putDepartmentGroups(d.getTag()); //needed to fetch, won't use df directly
+                putDepartment(d);
+                putDepartmentGroups(d.getTag()); //needed to fetch, won't use df directly
                 for (Group g : sqlm.getGroups(d.getTag())) { //represented in JSON format, needs conversion, accessing db
-                    super.putTT(d.getTag(), g.getName()); //same is here
+                    putTT(d.getTag(), g.getName()); //same is here
                 }
             }
         }
@@ -94,7 +159,7 @@ public class TTUpdateManager extends SSUDataManager {
                 if (!(dbGroups.contains(g))) {
                     System.out.println("Added: " + g.getName() + "@" + dep.getTag());
                     sqlm.putGroup(g, dep.getTag());
-                    super.putTT(dep.getTag(), g.getName());
+                    putTT(dep.getTag(), g.getName());
                 }
             }
 
@@ -169,5 +234,9 @@ public class TTUpdateManager extends SSUDataManager {
             sqlm.putLessonRecord(groupID, datatimeID, activityID, subjectID, subgrpID, teacherID,
                     locationID, l.getTimestamp());
         }
+    }
+
+    private void putDepartment(Department department) throws SQLException {
+        sqlm.putDepartment(department);
     }
 }
