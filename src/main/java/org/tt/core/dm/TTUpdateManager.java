@@ -28,9 +28,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UpdateManager extends SSUDataManager {
+public class TTUpdateManager extends SSUDataManager {
 
-    public UpdateManager(AbstractSQLManager sqlm, AbstractQueries qrs, AbstractDataFetcher df) {
+    public TTUpdateManager(AbstractSQLManager sqlm, AbstractQueries qrs, AbstractDataFetcher df) {
         super(sqlm, qrs, df);
     }
 
