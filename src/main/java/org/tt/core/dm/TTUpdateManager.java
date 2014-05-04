@@ -172,6 +172,7 @@ public class TTUpdateManager {
 
         for (Department dep : sqlm.getDepartments()) {
             for (Group gr : sqlm.getGroups(dep.getTag())) {
+                System.out.println(String.format("Checking %s@%s", gr.getName(), dep.getTag()));
                 List<List<Lesson>> ssuTT = df.getTT(dep.getTag(), gr.getName());
                 List<List<Lesson>> dbTT = sqlm.getLessonList(sqlm.getGroupID(dep.getTag(), gr.getName()));
 

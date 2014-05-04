@@ -131,9 +131,11 @@ public class LexxDataFetcher implements AbstractDataFetcher {
                 NamedNodeMap attributes = node.getAttributes();
 
                 String name = attributes.getNamedItem("number_rus").getNodeValue();
-                String type = attributes.getNamedItem("edu_form").getNodeValue();
+                String eduForm = attributes.getNamedItem("edu_form").getNodeValue();
+                String groupType = attributes.getNamedItem("grp_type").getNodeValue();
 
-                if (type.equals("1")) continue;
+                if (eduForm.equals("1")||(eduForm.equals("2")&&groupType.equals("1"))) continue;
+
                 groups.add(new Group(name));
             }
         } catch (SAXException | IOException | ParserConfigurationException e) {
