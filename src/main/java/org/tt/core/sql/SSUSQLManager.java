@@ -231,9 +231,9 @@ public class SSUSQLManager implements AbstractSQLManager {
     }
 
     @Override
-    public String getDepartmentMessage(String departmentTag) throws SQLException {
+    public String getDepartmentMessage(String departmentTag) throws SQLException, NoSuchDepartmentException {
         String result = "";
-
+        if (departmentExists(departmentTag)) {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(String.format(qrs.qGetDepartmentMessage(), departmentTag));
 
@@ -242,6 +242,7 @@ public class SSUSQLManager implements AbstractSQLManager {
         }
 
         return result;
+        } else throw new NoSuchDepartmentException();
     }
 
     @Override

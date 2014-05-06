@@ -66,7 +66,7 @@ public interface AbstractSQLManager {
 
     List<String> getDepartmentTags() throws SQLException;
 
-    String getDepartmentMessage(String departmentTag) throws SQLException;
+    String getDepartmentMessage(String departmentTag) throws SQLException, NoSuchDepartmentException;
 
     List<Group> getGroups(String departmentTag) throws SQLException, NoSuchDepartmentException;
 
