@@ -10,10 +10,10 @@ Roadmap
 * [Ć] - cancelled.
 
 ============
-##Tasks for 2.3
+##Tasks for 2.2
 
 1. **[A]** Introduce teacher timetable getting.
-2. **[T]** Introduce VK markup output.
+2. **[A]** Introduce VK markup output.
 
 =======
 ##Tasks for 3.0+
