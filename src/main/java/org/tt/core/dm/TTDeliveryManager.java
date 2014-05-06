@@ -26,6 +26,8 @@ public class TTDeliveryManager {
         return sqlm.getDepartmentTags();
     }
 
+    public String getDepartmentMessage(String departmentTag) throws SQLException { return sqlm.getDepartmentMessage(departmentTag);}
+
     public List<Group> getGroups(String departmentTag) throws NoSuchDepartmentException, SQLException {
         return sqlm.getGroups(departmentTag);
     }

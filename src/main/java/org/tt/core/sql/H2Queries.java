@@ -131,7 +131,7 @@ public class H2Queries implements AbstractQueries {
      */
     @Override
     public String qGetDepartments() {
-        return "SELECT name,tag, message FROM departments ORDER BY NAME;";
+        return "SELECT name,tag FROM departments ORDER BY NAME;";
     }
 
     /**
@@ -143,6 +143,11 @@ public class H2Queries implements AbstractQueries {
     @Override
     public String qGetDepartmentTags() {
         return "SELECT tag FROM departments;";
+    }
+
+    @Override
+    public String qGetDepartmentMessage() {
+        return "SELECT message FROM departments WHERE tag='%s';";
     }
 
     /**

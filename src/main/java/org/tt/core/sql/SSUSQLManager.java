@@ -208,7 +208,7 @@ public class SSUSQLManager implements AbstractSQLManager {
             Department d = new Department();
             d.setName(rs.getString("name"));
             d.setTag(rs.getString("tag"));
-            d.setMessage(rs.getString("message"));
+            d.setMessage("");
             result.add(d);
         }
 
@@ -227,6 +227,20 @@ public class SSUSQLManager implements AbstractSQLManager {
             result.add(rs.getString("tag"));
 
         stmt.close();
+        return result;
+    }
+
+    @Override
+    public String getDepartmentMessage(String departmentTag) throws SQLException {
+        String result = "";
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetDepartmentMessage(), departmentTag));
+
+        while(rs.next()) {
+            result = rs.getString("message");
+        }
+
         return result;
     }
 
