@@ -32,8 +32,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,8 +49,8 @@ import java.util.Properties;
  * @since 2.0
  */
 public class LexxDataFetcher implements AbstractDataFetcher {
-    private static final String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
-    private static final String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
+    protected static String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
+    protected static String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
     private String loginPassword = "";
 
     public LexxDataFetcher() {
@@ -71,7 +73,15 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         this.loginPassword = loginPassword;
     }
 
-    private URLConnection getConnection(String link) {
+    protected static void setGlobDepartmentsURL(String globDepartmentsURL) {
+        LexxDataFetcher.globDepartmentsURL = globDepartmentsURL;
+    }
+
+    protected static void setDepartmentURLTemplate(String departmentURLTemplate) {
+        LexxDataFetcher.departmentURLTemplate = departmentURLTemplate;
+    }
+
+    protected InputStream parseURL(String link) throws IOException {
         URL url;
         URLConnection conn = null;
 
@@ -84,7 +94,11 @@ public class LexxDataFetcher implements AbstractDataFetcher {
             e.printStackTrace();
         }
 
-        return conn;
+        if (conn != null) {
+            return conn.getInputStream();
+        }
+        else
+            throw new UnknownHostException();
     }
 
     @Override
@@ -94,7 +108,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(getConnection(globDepartmentsURL).getInputStream());
+            Document doc = builder.parse(parseURL(globDepartmentsURL));
 
             NodeList nodeList = doc.getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
@@ -123,7 +137,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(getConnection(String.format(departmentURLTemplate, department)).getInputStream());
+            Document document = builder.parse(parseURL(String.format(departmentURLTemplate, department)));
 
             NodeList nodeList = document.getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
@@ -134,7 +148,9 @@ public class LexxDataFetcher implements AbstractDataFetcher {
                 String eduForm = attributes.getNamedItem("edu_form").getNodeValue();
                 String groupType = attributes.getNamedItem("grp_type").getNodeValue();
 
-                if (eduForm.equals("1")||(eduForm.equals("2")&&groupType.equals("1"))) continue;
+                if (eduForm.equals("1")||(eduForm.equals("2")&&groupType.equals("1"))) {
+                    continue;
+                }
 
                 groups.add(new Group(name.trim()));
             }
@@ -163,7 +179,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(getConnection(String.format(departmentURLTemplate, department)).getInputStream());
+            Document document = builder.parse(parseURL(String.format(departmentURLTemplate, department)));
 
             NodeList nodeList = document.getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
