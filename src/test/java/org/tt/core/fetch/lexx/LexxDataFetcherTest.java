@@ -11,9 +11,11 @@ import java.util.List;
  * Created by fau on 07/05/14.
  */
 public class LexxDataFetcherTest  {
-    //@Test
+    @Test
     public void testGetDepartmentsWithMessage() throws Exception {
-        TestLDF ldf = new TestLDF("mockpass");
+        LexxDataFetcher ldf = new LexxDataFetcher("azaza");
+        LexxDataFetcher.setGlobDepartmentsURL("./src/test/resources/departments.xml");
+        LexxDataFetcher.setDepartmentURLTemplate("./src/test/resources/dep-test-%s.xml");
         List<Department> result = ldf.getDepartments();
         String expected = "";
         for (Department d: result) {

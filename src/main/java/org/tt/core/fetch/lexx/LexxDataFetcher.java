@@ -30,6 +30,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,8 +50,8 @@ import java.util.Properties;
  * @since 2.0
  */
 public class LexxDataFetcher implements AbstractDataFetcher {
-    protected static String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
-    protected static String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
+    private static String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
+    private static String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
     private String loginPassword = "";
 
     public LexxDataFetcher() {
@@ -73,16 +74,19 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         this.loginPassword = loginPassword;
     }
 
-    protected static void setGlobDepartmentsURL(String globDepartmentsURL) {
+    public static void setGlobDepartmentsURL(String globDepartmentsURL) {
         LexxDataFetcher.globDepartmentsURL = globDepartmentsURL;
     }
 
-    protected static void setDepartmentURLTemplate(String departmentURLTemplate) {
+    public static void setDepartmentURLTemplate(String departmentURLTemplate) {
         LexxDataFetcher.departmentURLTemplate = departmentURLTemplate;
     }
 
     protected InputStream parseURL(String link) throws IOException {
         URL url;
+        if (link.contains("./src/test/resources")) {
+            return new FileInputStream(new File(link));
+        }
         URLConnection conn = null;
 
         try {
