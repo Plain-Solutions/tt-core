@@ -1,0 +1,7 @@
+<departments>
+    <department id="bf" name="Biology House" grid_type_id="1">
+        <titletext>
+            Some useful information
+        </titletext>
+    </department>
+</departments>

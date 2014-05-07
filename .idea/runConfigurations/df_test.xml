@@ -4,8 +4,8 @@
     <module name="tt-core" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
-    <option name="PACKAGE_NAME" value="org.tt.core.fetch" />
-    <option name="MAIN_CLASS_NAME" value="org.tt.core.fetch.SSUDataFetcherTest" />
+    <option name="PACKAGE_NAME" value="org.tt.core.fetch.lexx" />
+    <option name="MAIN_CLASS_NAME" value="org.tt.core.fetch.lexx.LexxDataFetcherTest" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="class" />
     <option name="VM_PARAMETERS" value="-ea" />
