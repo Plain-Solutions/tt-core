@@ -136,7 +136,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
 
                 if (eduForm.equals("1")||(eduForm.equals("2")&&groupType.equals("1"))) continue;
 
-                groups.add(new Group(name));
+                groups.add(new Group(name.trim()));
             }
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
