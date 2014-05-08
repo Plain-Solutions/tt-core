@@ -127,41 +127,48 @@ public class LDFTestWrapper extends LexxDataFetcher {
         Element root = doc.createElement("schedule");
         doc.appendChild(root);
 
-        Element firstGroup = doc.createElement("group");
+        Element group = doc.createElement("group");
 
         String[] grParams = {"inner_group_id", "number", "number_rus", "edu_form", "grp_type"};
         String[] grValues = {"450", "111", "111", "0", "0"};
         for (int i = 0; i < grParams.length; i++) {
-            firstGroup.setAttribute(grParams[i], grValues[i]);
+            group.setAttribute(grParams[i], grValues[i]);
         }
 
-        root.appendChild(firstGroup);
+        root.appendChild(group);
 
         Element monday = doc.createElement("day");
         monday.setAttribute("id", "1");
-        firstGroup.appendChild(monday);
+        group.appendChild(monday);
 
         Element lessons = doc.createElement("lessons");
 
-        Element firstClass = doc.createElement("lesson");
+        lessons.appendChild(aClass(doc));
+        lessons.appendChild(shouldNotBeFetchedClass(doc));
 
+        monday.appendChild(lessons);
+        return doc;
+    }
+
+    private static Element aClass(Document doc) {
+        Element result = doc.createElement("lesson");
         String[] lessonParams = {"type", "weektype", "num", "updated", "date_begin", "date_end"};
-        String[] lessonValues = {"practice", "full", "1", "1393931864", "", ""};
+        String[] lessonValues = {"practice", "full", "1", "3", "", ""};
         for (int i = 0; i < lessonParams.length; i++) {
-            firstClass.setAttribute(lessonParams[i],lessonValues[i]);
+            result.setAttribute(lessonParams[i], lessonValues[i]);
         }
 
         Element name = doc.createElement("name");
         name.setTextContent("Calculus");
-        firstClass.appendChild(name);
+        result.appendChild(name);
 
         Element place = doc.createElement("place");
         place.setTextContent("B3 room 100");
-        firstClass.appendChild(place);
+        result.appendChild(place);
 
         //leave it empty;
         Element subgroup = doc.createElement("subgroup");
-        firstClass.appendChild(subgroup);
+        result.appendChild(subgroup);
 
         Element teacher = doc.createElement("teacher");
         teacher.setAttribute("id", "1");
@@ -183,11 +190,23 @@ public class LDFTestWrapper extends LexxDataFetcher {
         teacher.appendChild(patr);
         teacher.appendChild(comp);
 
-        firstClass.appendChild(teacher);
+        result.appendChild(teacher);
 
-        lessons.appendChild(firstClass);
+        return result;
+    }
 
-        monday.appendChild(lessons);
-        return doc;
+    private static Element shouldNotBeFetchedClass(Document doc) {
+        Element result = doc.createElement("lesson");
+        String[] lessonParams = {"type", "weektype", "num", "updated", "date_begin", "date_end"};
+        String[] lessonValues = {"practice", "full", "2", "3", "1", "2"};
+        for (int i = 0; i < lessonParams.length; i++) {
+            result.setAttribute(lessonParams[i], lessonValues[i]);
+        }
+
+        Element name = doc.createElement("name");
+        name.setTextContent("Empty");
+        result.appendChild(name);
+
+        return result;
     }
 }

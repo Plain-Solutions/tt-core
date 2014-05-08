@@ -3,6 +3,7 @@ package org.tt.core.fetch.lexx;
 import org.junit.Test;
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.datafetcher.Lesson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,15 +132,24 @@ public class LexxDataFetcherTest {
 
     }
 
-    /*@Test
+    @Test
     public void testGetTT() throws Exception {
         LDFTestWrapper ldf = new LDFTestWrapper();
         List<List<Lesson>> result = ldf.getTT("test", "111");
 
-        for (List<Lesson> ll: result) {
-            for (Lesson l: ll) {
+        List<List<Lesson>> expected = new ArrayList<>();
+        List<Lesson> day = new ArrayList<>();
+        day.add(new Lesson(1, "full", "", "practice", "Calculus",
+                "Sakhno Ludmila Vladimirovna", "B3 room 100", "", 3000));
+        expected.add(day);
+
+        for (List<Lesson> ll : result) {
+            for (Lesson l : ll) {
                 System.out.println(l.toString());
             }
         }
-    } */
+
+        assertTrue("Timetables getting failed", expected.equals(result));
+
+    }
 }
