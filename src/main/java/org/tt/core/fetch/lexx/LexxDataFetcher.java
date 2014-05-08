@@ -52,6 +52,7 @@ import java.util.Properties;
 public class LexxDataFetcher implements AbstractDataFetcher {
     private static String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
     private static String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
+    private static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     private String loginPassword = "";
 
     public LexxDataFetcher() {
@@ -82,13 +83,10 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         LexxDataFetcher.departmentURLTemplate = departmentURLTemplate;
     }
 
-    protected InputStream parseURL(String link) throws IOException {
+    protected Document getDocFromURL(String link) throws IOException, SAXException, ParserConfigurationException {
+        DocumentBuilder builder = factory.newDocumentBuilder();
         URL url;
-        if (link.contains("./src/test/resources")) {
-            return new FileInputStream(new File(link));
-        }
         URLConnection conn = null;
-
         try {
             url = new URL(link);
             conn = url.openConnection();
@@ -99,7 +97,7 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         }
 
         if (conn != null) {
-            return conn.getInputStream();
+            return builder.parse(conn.getInputStream());
         }
         else
             throw new UnknownHostException();
@@ -108,24 +106,21 @@ public class LexxDataFetcher implements AbstractDataFetcher {
     @Override
     public List<Department> getDepartments() {
         List<Department> departments = new ArrayList<>();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(parseURL(globDepartmentsURL));
-
-            NodeList nodeList = doc.getDocumentElement().getChildNodes();
+            NodeList nodeList = getDocFromURL(globDepartmentsURL).getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
                 NamedNodeMap attributes = node.getAttributes();
 
-                String name = attributes.getNamedItem("name").getNodeValue();
-                String tag = attributes.getNamedItem("id").getNodeValue();
-                Node child = node.getFirstChild().getFirstChild();
-                String message = child == null ? "" : child.getNodeValue();
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    String name = attributes.getNamedItem("name").getNodeValue();
+                    String tag = attributes.getNamedItem("id").getNodeValue();
+                    Node child = node.getFirstChild().getFirstChild();
+                    String message = child == null ? "" : child.getNodeValue();
 
-                if (tag.equals("kgl") || tag.equals("cre")) continue;
-                departments.add(new Department(name, tag, message));
+                    if (tag.equals("kgl") || tag.equals("cre")) continue;
+                    departments.add(new Department(name, tag, message));
+                }
             }
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
@@ -137,13 +132,8 @@ public class LexxDataFetcher implements AbstractDataFetcher {
     @Override
     public List<Group> getGroups(String department) {
         List<Group> groups = new ArrayList<>();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(parseURL(String.format(departmentURLTemplate, department)));
-
-            NodeList nodeList = document.getDocumentElement().getChildNodes();
+            NodeList nodeList = getDocFromURL(String.format(departmentURLTemplate, department)).getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
                 NamedNodeMap attributes = node.getAttributes();
@@ -179,13 +169,9 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         String room = "";
         long timestamp = -1L;
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(parseURL(String.format(departmentURLTemplate, department)));
-
-            NodeList nodeList = document.getDocumentElement().getChildNodes();
+            NodeList nodeList = getDocFromURL(String.format(departmentURLTemplate, department)).getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
                 NamedNodeMap attributes = node.getAttributes();
