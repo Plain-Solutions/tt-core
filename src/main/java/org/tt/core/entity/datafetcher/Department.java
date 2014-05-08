@@ -59,4 +59,9 @@ public class Department {
                 name.equals(((Department) o).getName());
 
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append(name).append(" ").append(tag).append(" ").append(message).toString();
+    }
 }
