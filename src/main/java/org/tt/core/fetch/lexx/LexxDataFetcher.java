@@ -112,15 +112,15 @@ public class LexxDataFetcher implements AbstractDataFetcher {
                 Node node = nodeList.item(i);
                 NamedNodeMap attributes = node.getAttributes();
 
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
                     String name = attributes.getNamedItem("name").getNodeValue();
                     String tag = attributes.getNamedItem("id").getNodeValue();
                     Node child = node.getFirstChild().getFirstChild();
+
                     String message = child == null ? "" : child.getNodeValue();
 
                     if (tag.equals("kgl") || tag.equals("cre")) continue;
                     departments.add(new Department(name, tag, message));
-                }
+
             }
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
