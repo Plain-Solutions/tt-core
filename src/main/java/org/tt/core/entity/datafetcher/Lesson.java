@@ -118,7 +118,7 @@ public class Lesson {
                 parity.equals("") &&
                 subgroup.equals("") &&
                 activity.equals("") &&
-                subgroup.equals("") &&
+                subject.equals("") &&
                 teacher.equals("") &&
                 building.equals("") &&
                 room.equals("") &&
@@ -127,10 +127,23 @@ public class Lesson {
 
     @Override
     public boolean equals(Object o) {
-        return o != null && o.getClass() == Lesson.class && sequence ==((Lesson) o).getSequence()
-                && timestamp == ((Lesson) o).getTimestamp() && parity.equals(((Lesson) o).getParity()) &&
-                subgroup.equals(((Lesson) o).getSubgroup()) && activity.equals(((Lesson) o).getActivity()) &&
+        return o != null && o.getClass() == Lesson.class && sequence == ((Lesson) o).getSequence() &&
+                subject.equals(((Lesson) o).getSubject()) && timestamp == ((Lesson) o).getTimestamp() &&
+                parity.equals(((Lesson) o).getParity()) && subgroup.equals(((Lesson) o).getSubgroup()) && activity.equals(((Lesson) o).getActivity()) &&
                 teacher.equals(((Lesson) o).getTeacher()) && building.equals(((Lesson) o).getBuilding()) &&
                 room.equals(((Lesson) o).getRoom());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Sequence: %d\n" +
+                "Parity: %s\n" +
+                "Activity: %s\n" +
+                "Subject: %s\n" +
+                "Teacher: %s\n" +
+                "Subgroup: %s\n" +
+                "Building: %s\n" +
+                "Room: %s\n" +
+                "Timestamp: %d\n", sequence, parity, activity, subject, teacher, subgroup, building, room, timestamp);
     }
 }
