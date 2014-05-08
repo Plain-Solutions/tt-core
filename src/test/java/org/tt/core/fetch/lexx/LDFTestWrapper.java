@@ -1,7 +1,5 @@
 package org.tt.core.fetch.lexx;
 
-import org.tt.core.entity.datafetcher.Department;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -15,9 +13,19 @@ import java.io.IOException;
  * Created by fau on 08/05/14.
  */
 public class LDFTestWrapper extends LexxDataFetcher {
+    private static DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+    private static DocumentBuilder docBuilder;
+
+
     public LDFTestWrapper() {
         super("test");
         LexxDataFetcher.setGlobDepartmentsURL("departments");
+        LexxDataFetcher.setDepartmentURLTemplate("department-%s");
+        try {
+            docBuilder = docFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -25,13 +33,13 @@ public class LDFTestWrapper extends LexxDataFetcher {
         if (link.equals("departments")) {
             return mockAllDepartmentsXMLFile();
         }
-        return null;
+        if (link.equals("groups")) {
+            return mockGroupFile();
+        }
+        return mockTTXMLFile();
     }
 
     private Document mockAllDepartmentsXMLFile() throws ParserConfigurationException {
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
         Document doc = docBuilder.newDocument();
         Element root = doc.createElement("departments");
         doc.appendChild(root);
@@ -60,7 +68,126 @@ public class LDFTestWrapper extends LexxDataFetcher {
         return doc;
     }
 
+    //just a TT file, without any non-used information
+    private Document mockGroupFile() {
+        Document doc = docBuilder.newDocument();
+        Element root = doc.createElement("schedule");
+        doc.appendChild(root);
+
+        Element firstGroup = doc.createElement("group");
+
+        String[] grParams = {"inner_group_id", "number", "number_rus", "edu_form", "grp_type"};
+        String[] grValues = {"450", "111", "111", "0", "0"};
+        for (int i = 0; i < grParams.length; i++) {
+            firstGroup.setAttribute(grParams[i], grValues[i]);
+        }
+        root.appendChild(firstGroup);
+
+
+        Element secondGroup = doc.createElement("group");
+
+        grValues = new String[]{"451", "123", "123", "0", "1"};
+        for (int i = 0; i < grParams.length; i++) {
+            secondGroup.setAttribute(grParams[i], grValues[i]);
+        }
+        root.appendChild(secondGroup);
+
+
+        Element shouldNotBeParsed = doc.createElement("group");
+
+        grValues = new String[]{"452", "224", "224", "1", "0"};
+        for (int i = 0; i < grParams.length; i++) {
+            shouldNotBeParsed.setAttribute(grParams[i], grValues[i]);
+        }
+
+        root.appendChild(shouldNotBeParsed);
+
+        Element shouldNotBeParsedToo = doc.createElement("group");
+
+        grValues = new String[]{"453", "224", "224", "2", "1"};
+        for (int i = 0; i < grParams.length; i++) {
+            shouldNotBeParsedToo.setAttribute(grParams[i], grValues[i]);
+        }
+
+        root.appendChild(shouldNotBeParsedToo);
+
+        Element stringGroup = doc.createElement("group");
+
+        grValues = new String[]{"454", "String%2CName", "String Name", "0", "0"};
+        for (int i = 0; i < grParams.length; i++) {
+            stringGroup.setAttribute(grParams[i], grValues[i]);
+        }
+        root.appendChild(stringGroup);
+
+        return doc;
+    }
+
     private Document mockTTXMLFile() {
-        return null;
+        Document doc = docBuilder.newDocument();
+        Element root = doc.createElement("schedule");
+        doc.appendChild(root);
+
+        Element firstGroup = doc.createElement("group");
+
+        String[] grParams = {"inner_group_id", "number", "number_rus", "edu_form", "grp_type"};
+        String[] grValues = {"450", "111", "111", "0", "0"};
+        for (int i = 0; i < grParams.length; i++) {
+            firstGroup.setAttribute(grParams[i], grValues[i]);
+        }
+
+        root.appendChild(firstGroup);
+
+        Element monday = doc.createElement("day");
+        monday.setAttribute("id", "1");
+        firstGroup.appendChild(monday);
+
+        Element lessons = doc.createElement("lessons");
+
+        Element firstClass = doc.createElement("lesson");
+
+        String[] lessonParams = {"type", "weektype", "num", "updated", "date_begin", "date_end"};
+        String[] lessonValues = {"practice", "full", "1", "1393931864", "", ""};
+        for (int i = 0; i < lessonParams.length; i++) {
+            firstClass.setAttribute(lessonParams[i],lessonValues[i]);
+        }
+
+        Element name = doc.createElement("name");
+        name.setTextContent("Calculus");
+        firstClass.appendChild(name);
+
+        Element place = doc.createElement("place");
+        place.setTextContent("B3 room 100");
+        firstClass.appendChild(place);
+
+        //leave it empty;
+        Element subgroup = doc.createElement("subgroup");
+        firstClass.appendChild(subgroup);
+
+        Element teacher = doc.createElement("teacher");
+        teacher.setAttribute("id", "1");
+
+        Element lastName = doc.createElement("lastname");
+        lastName.setTextContent("Sakhno");
+
+        Element tName = doc.createElement("name");
+        tName.setTextContent("Ludmila");
+
+        Element patr = doc.createElement("patronim");
+        patr.setTextContent("Vladimirovna");
+
+        Element comp = doc.createElement("compiled_fio");
+        comp.setTextContent("Sakhno Ludmila Vladimirovna");
+
+        teacher.appendChild(lastName);
+        teacher.appendChild(tName);
+        teacher.appendChild(patr);
+        teacher.appendChild(comp);
+
+        firstClass.appendChild(teacher);
+
+        lessons.appendChild(firstClass);
+
+        monday.appendChild(lessons);
+        return doc;
     }
 }

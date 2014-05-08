@@ -4,10 +4,10 @@ import org.junit.Test;
 import org.tt.core.entity.datafetcher.Department;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Created by fau on 07/05/14.
@@ -73,16 +73,19 @@ public class LexxDataFetcherTest {
         assertEquals("Empty message getting failed", "", actual);
     }
 
-//    @Test
-//    public void testGetDepartments() throws Exception {
-//        LDFTestWrapper ldf = new LDFTestWrapper();
-//        List<Department> result = ldf.getDepartments();
-//
-//        Department[] expected = {new Department("bf", "Biology House", "Crucial Information"),
-//                new Department("gf", "Geography House", "")};
-//
-//        assertArrayEquals("Department getting failed", expected, result.toArray());
-//    }
+    @Test
+    public void testGetDepartments() throws Exception {
+        LDFTestWrapper ldf = new LDFTestWrapper();
+        List<Department> result = ldf.getDepartments();
+
+        List<Department> expected = Arrays.asList(new Department("Biology House", "bf", "Crucial Information"),
+                new Department("Geography House", "gf", ""));
+
+        assertTrue("Deparments getting failed"+
+                        "\n  'result'        = "+result+
+                        "\n  'expected' = "+expected,
+                expected.equals(result));
+    }
 
 
     @Test
@@ -90,8 +93,15 @@ public class LexxDataFetcherTest {
 
     }
 
-    @Test
+    /*@Test
     public void testGetTT() throws Exception {
+        LDFTestWrapper ldf = new LDFTestWrapper();
+        List<List<Lesson>> result = ldf.getTT("test", "111");
 
-    }
+        for (List<Lesson> ll: result) {
+            for (Lesson l: ll) {
+                System.out.println(l.toString());
+            }
+        }
+    } */
 }
