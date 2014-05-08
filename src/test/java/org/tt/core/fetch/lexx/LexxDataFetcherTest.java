@@ -2,6 +2,7 @@ package org.tt.core.fetch.lexx;
 
 import org.junit.Test;
 import org.tt.core.entity.datafetcher.Department;
+import org.tt.core.entity.datafetcher.Group;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class LexxDataFetcherTest {
         LDFTestWrapper ldf = new LDFTestWrapper();
         List<Department> result = ldf.getDepartments();
 
-        String[] expected = {"bf","gf"};
+        String[] expected = {"bf", "gf"};
 
         List<String> actualTags = new ArrayList<>();
         for (Department d : result) {
@@ -81,15 +82,52 @@ public class LexxDataFetcherTest {
         List<Department> expected = Arrays.asList(new Department("Biology House", "bf", "Crucial Information"),
                 new Department("Geography House", "gf", ""));
 
-        assertTrue("Deparments getting failed"+
-                        "\n  'result'        = "+result+
-                        "\n  'expected' = "+expected,
-                expected.equals(result));
+        assertTrue("Departments getting failed" +
+                        "\n  'result'        = " + result +
+                        "\n  'expected' = " + expected,
+                expected.equals(result)
+        );
     }
 
 
     @Test
+    public void testGetUnusedGroups() throws Exception {
+        LDFTestWrapper ldf = new LDFTestWrapper();
+        List<Group> result = ldf.getGroups("groups");
+
+        List<Group> expected = Arrays.asList(new Group("224"), new Group("234"));
+
+        assertFalse("Unused groups were fetched. Failed" +
+                        "\n  'result'        = " + result +
+                        "\n  'expected' = " + expected,
+                expected.equals(result)
+        );
+
+    }
+
+    @Test
+    public void testGetStringGroups() throws Exception {
+        LDFTestWrapper ldf = new LDFTestWrapper();
+        List<Group> result = ldf.getGroups("groups");
+
+        Group expected = new Group("String Name");
+
+        assertTrue("String groups getting failed", result.contains(expected));
+
+    }
+
+    @Test
     public void testGetGroups() throws Exception {
+        LDFTestWrapper ldf = new LDFTestWrapper();
+        List<Group> result = ldf.getGroups("groups");
+
+        List<Group> expected = Arrays.asList(new Group("111"), new Group("123"), new Group("String Name"));
+
+        assertTrue("Groups getting failed" +
+                        "\n  'result'        = " + result +
+                        "\n  'expected' = " + expected,
+                expected.equals(result)
+        );
 
     }
 

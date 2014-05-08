@@ -20,7 +20,7 @@ public class LDFTestWrapper extends LexxDataFetcher {
     public LDFTestWrapper() {
         super("test");
         LexxDataFetcher.setGlobDepartmentsURL("departments");
-        LexxDataFetcher.setDepartmentURLTemplate("department-%s");
+        LexxDataFetcher.setDepartmentURLTemplate("%s");
         try {
             docBuilder = docFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
@@ -95,7 +95,7 @@ public class LDFTestWrapper extends LexxDataFetcher {
 
         Element shouldNotBeParsed = doc.createElement("group");
 
-        grValues = new String[]{"452", "224", "224", "1", "0"};
+        grValues = new String[]{"452", "234", "234", "1", "0"};
         for (int i = 0; i < grParams.length; i++) {
             shouldNotBeParsed.setAttribute(grParams[i], grValues[i]);
         }
