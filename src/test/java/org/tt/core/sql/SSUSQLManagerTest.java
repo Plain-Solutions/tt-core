@@ -15,7 +15,6 @@
 */
 package org.tt.core.sql;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.JdbcDatabaseTester;
 import org.dbunit.dataset.IDataSet;
@@ -33,6 +32,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -85,6 +85,15 @@ public class SSUSQLManagerTest {
 
     @Test
     public void testGetDepartmentTags() throws Exception {
+        AbstractSQLManager sqlm = new SSUSQLManager(getConnection(), new H2Queries());
+        List<String> result = sqlm.getDepartmentTags();
+        List<String> expected = Arrays.asList("bf", "gf");
+
+        assertTrue("Department tags getting failed" +
+                        "\n  'result'        = " + result +
+                        "\n  'expected' = " + expected,
+                expected.equals(result)
+        );
 
     }
 
