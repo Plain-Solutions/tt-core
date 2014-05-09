@@ -54,7 +54,7 @@ public class TTDeliveryManager {
     /**
      * Get list of departments from the database. Used in <code>/departments</code> call.
      *
-     * @return List of {@link org.tt.core.entity.datafetcher.Department} containing all data: names, tags and messages.
+     * @return List of {@link org.tt.core.entity.datafetcher.Department} containing <b>ONLY</b> tags and names.
      * @throws SQLException
      * @since 2.1.0
      */
