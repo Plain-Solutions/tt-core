@@ -1,4 +1,7 @@
 <dataset>
     <departments name="Biology House" tag="bf" message="Crucial Information!"/>
-    <departments name="Geography House" tag="gf" message="TEST"/>
+    <departments name="Geography House" tag="gf" message=" "/>
+    <groups department_id="1" name="111" />
+    <groups department_id="1" name="String name" />
+    <groups department_id="2" name="222" />
 </dataset>
