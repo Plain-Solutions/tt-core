@@ -32,15 +32,45 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * TTUpdateManager is a class responsible for initial filling of the database and watching after
+ * updates from its source. It is the result of split
+ * AbstractDataManager from 1.0-1.2.x and 2.0 versions of TT Core.
+ *
+ * @author Vlad Slepukhin
+ * @snce 2.1.0
+ */
 public class TTUpdateManager {
+    /**
+     * Local instance of configured {@link org.tt.core.sql.AbstractSQLManager} to provide
+     * access to the database.
+     */
     private AbstractSQLManager sqlm;
+    /**
+     * Local instance of configured {@link org.tt.core.fetch.AbstractDataFetcher} to provide
+     * access to the university data (website, database, etc).
+     */
     private AbstractDataFetcher df;
 
+    /**
+     * Constructor.
+     *
+     * @param sqlm Instance of {@link org.tt.core.sql.AbstractSQLManager}
+     * @param df   Instance of {@link org.tt.core.fetch.AbstractDataFetcher}
+     * @since 2.1.0
+     */
     public TTUpdateManager(AbstractSQLManager sqlm, AbstractDataFetcher df) {
         this.sqlm = sqlm;
         this.df = df;
     }
 
+    /**
+     * Fetch departments from the university and add them to the database.
+     *
+     * @throws SQLException in case of general SQL error.
+     * @see org.tt.core.entity.datafetcher.Department
+     * @since 2.0.0
+     */
     public void putDepartments() throws SQLException {
         for (Department department : df.getDepartments()) {
             putDepartment(department);
@@ -48,16 +78,44 @@ public class TTUpdateManager {
         System.out.println("Added departments");
     }
 
+    /**
+     * Fetch groups of some department and add them to the database.
+     *
+     * @param departmentTag The department abbreviation.
+     * @throws NoSuchDepartmentException in case of bad DB creation.
+     * @throws SQLException              in case of general SQL error.
+     * @see org.tt.core.entity.datafetcher.Group
+     * @since 1.0.0
+     */
     public void putDepartmentGroups(String departmentTag) throws NoSuchDepartmentException, SQLException {
         sqlm.putGroups(df.getGroups(departmentTag), departmentTag);
         System.out.println(String.format("Added groups@%s", departmentTag));
     }
 
+    /**
+     * Fetch groups of all departments and add them to the database.
+     *
+     * @throws NoSuchDepartmentException in case of bad DB creation.
+     * @throws SQLException              in case of general SQL error.
+     * @since 1.2.0
+     */
     public void putAllGroups() throws NoSuchDepartmentException, SQLException {
         for (String departmentTag : sqlm.getDepartmentTags())
             putDepartmentGroups(departmentTag);
     }
 
+    /**
+     * Fetch timetable from the university source and add it to the database.
+     *
+     * @param departmentTag The department abbreviation.
+     * @param groupName     The group name.
+     * @throws SQLException              in case of general SQL error.
+     * @throws NoSuchDepartmentException in case of bad DB creation or malformed parameter.
+     * @throws NoSuchGroupException      in case of bad DB creation or malformed parameter.
+     * @throws IOException               in case of some {@link org.tt.core.fetch.AbstractDataFetcher} error.
+     * @see org.tt.core.entity.datafetcher.Lesson
+     * @since 2.0.0
+     */
     public void putTT(String departmentTag, String groupName) throws SQLException, NoSuchDepartmentException, NoSuchGroupException, IOException {
         int groupID = sqlm.getGroupID(departmentTag, groupName);
 
@@ -74,19 +132,43 @@ public class TTUpdateManager {
         System.out.println(String.format("Added timetable for %s@%s", groupName, departmentTag));
     }
 
-    public void putAllTT() throws SQLException, NoSuchDepartmentException, IOException, NoSuchGroupException {
+    /**
+     * Fetch all the timetables in the university and add them to the database.
+     *
+     * @throws SQLException              in case of general SQL error.
+     * @throws NoSuchDepartmentException in case of bad DB creation or malformed parameter.
+     * @throws NoSuchGroupException      in case of bad DB creation or malformed parameter.
+     * @throws IOException               in case of some {@link org.tt.core.fetch.AbstractDataFetcher} error.
+     * @since 2.0.0
+     */
+    public void putAllTT() throws SQLException, NoSuchDepartmentException, NoSuchGroupException, IOException {
         for (String d : sqlm.getDepartmentTags()) {
             for (Group grp : sqlm.getGroups(d))
                 putTT(d, grp.getName());
         }
     }
 
-    public void initFulfillment() throws SQLException, IOException, NoSuchGroupException, NoSuchDepartmentException {
+
+    /**
+     * Method to unite all the initial fetching and adding processes.
+     *
+     * @throws SQLException              in case of general SQL error.
+     * @throws NoSuchDepartmentException in case of bad DB creation or malformed parameter.
+     * @throws NoSuchGroupException      in case of bad DB creation or malformed parameter.
+     * @throws IOException               in case of some {@link org.tt.core.fetch.AbstractDataFetcher} error.
+     * @since 2.1.0
+     */
+    public void initFulfillment() throws SQLException, NoSuchGroupException, NoSuchDepartmentException, IOException {
         putDepartments();
         putAllGroups();
-        putAllTT();;
+        putAllTT();
     }
 
+    /**
+     * Start the {@link org.tt.core.timer.TTTimer} to update timetables each night.
+     *
+     * @throws SchedulerException in case of some problem with {@link org.tt.core.timer.TTTimer}
+     */
     public void initUpdateJobs() throws SchedulerException {
         AbstractJob.setUpdateManager(this);
         AbstractJob updateJob = new JobUpdate();
@@ -99,6 +181,17 @@ public class TTUpdateManager {
         System.out.println("Next drop: " + dropJob.getTrigger().getNextFireTime().toString());
     }
 
+    /**
+     * Update system. Checks the department list and updates it. Also checks for message updates explicitly.
+     *
+     * @throws SQLException              in case of general SQL error.
+     * @throws NoSuchDepartmentException in case of bad DB creation.
+     * @throws NoSuchGroupException      in case of bad DB creation.
+     * @throws IOException               in case of some {@link org.tt.core.fetch.AbstractDataFetcher} error.
+     * @see org.tt.core.fetch.AbstractDataFetcher
+     * @see org.tt.core.entity.datafetcher.Department
+     * @since 2.1.0
+     */
     public void checkDepartments() throws SQLException, NoSuchDepartmentException, NoSuchGroupException, IOException {
         System.out.println("Checking departments for update!");
 
@@ -117,8 +210,8 @@ public class TTUpdateManager {
                 System.out.println("Added: " + d.getTag());
                 putDepartment(d);
                 putDepartmentGroups(d.getTag()); //needed to fetch, won't use df directly
-                for (Group g : sqlm.getGroups(d.getTag())) { //represented in JSON format, needs conversion, accessing db
-                    putTT(d.getTag(), g.getName()); //same is here
+                for (Group g : sqlm.getGroups(d.getTag())) {
+                    putTT(d.getTag(), g.getName());
                 }
             }
         }
@@ -142,6 +235,18 @@ public class TTUpdateManager {
         System.out.println("Finished updating department data.");
     }
 
+    /**
+     * Update system. Checks group list in each department and updates it.
+     *
+     * @throws SQLException              in case of general SQL error.
+     * @throws NoSuchDepartmentException in case of bad DB creation.
+     * @throws NoSuchGroupException      in case of bad DB creation.
+     * @throws IOException               in case of some {@link org.tt.core.fetch.AbstractDataFetcher} error.
+     * @see org.tt.core.fetch.AbstractDataFetcher
+     * @see org.tt.core.entity.datafetcher.Department
+     * @see org.tt.core.entity.datafetcher.Group
+     * @since 2.1.0
+     */
     public void checkGroups() throws SQLException, NoSuchDepartmentException, NoSuchGroupException, IOException {
         for (Department dep : sqlm.getDepartments()) {
             System.out.println("Checking groups in " + dep.getTag());
@@ -167,7 +272,21 @@ public class TTUpdateManager {
         System.out.println("Finished updating groups data.");
     }
 
-    public void checkTimetables() throws SQLException, NoSuchDepartmentException, IOException, NoSuchGroupException {
+    /**
+     * Update system. Check each lesson of each day of each group of each department and updates it.
+     *
+     * @throws SQLException              in case of general SQL error.
+     * @throws NoSuchDepartmentException in case of bad DB creation.
+     * @throws NoSuchGroupException      in case of bad DB creation.
+     * @throws IOException               in case of some {@link org.tt.core.fetch.AbstractDataFetcher} error.
+     * @see org.tt.core.fetch.AbstractDataFetcher
+     * @see org.tt.core.entity.datafetcher.Department
+     * @see org.tt.core.entity.datafetcher.Group
+     * @see org.tt.core.entity.datafetcher.Lesson
+     * @see org.tt.core.sql.AbstractSQLManager#getLessonList(int)
+     * @since 2.1.0
+     */
+    public void checkTimetables() throws SQLException, NoSuchDepartmentException, NoSuchGroupException, IOException {
         System.out.println("Checking timetables!");
 
         for (Department dep : sqlm.getDepartments()) {
@@ -201,10 +320,26 @@ public class TTUpdateManager {
         System.out.println("Finished updating timetables.");
     }
 
+    /**
+     * The total flush (happens once each term) call. Like Ktulhu.
+     *
+     * @throws SQLException in case of general SQL error.
+     * @since 2.0.0
+     */
     public void flushDatabase() throws SQLException {
         sqlm.flushDatabase();
     }
 
+    /**
+     * Utility method. Deletes all the information connected with the lesson (due to widely used FOREIGN KEYS)
+     *
+     * @param l       The lesson to be removed.
+     * @param day     The day of the week (due to architectural difference
+     *                between {@link org.tt.core.entity.datafetcher.Lesson} and {@link org.tt.core.entity.db.TTLesson}.
+     * @param groupID The ID of the group, due to the same difference.
+     * @throws SQLException in case of general SQL error.
+     * @since 2.1.0
+     */
     private void deleteLesson(Lesson l, int day, int groupID) throws SQLException {
         if (!l.isEmpty()) {
             int sequence = l.getSequence();
@@ -221,6 +356,16 @@ public class TTUpdateManager {
         }
     }
 
+    /**
+     * Utility method. Adds all the information about the lesson to the database.
+     *
+     * @param l       The lesson to be removed.
+     * @param day     The day of the week (due to architectural difference
+     *                between {@link org.tt.core.entity.datafetcher.Lesson} and {@link org.tt.core.entity.db.TTLesson}.
+     * @param groupID The ID of the group, due to the same difference.
+     * @throws SQLException in case of general SQL error.
+     * @since 2.1.0
+     */
     private void putLesson(Lesson l, int day, int groupID) throws SQLException {
         if (!l.isEmpty()) {
             int sequence = l.getSequence();
@@ -237,6 +382,13 @@ public class TTUpdateManager {
         }
     }
 
+    /**
+     * Utility method. Adds a department to the database.
+     *
+     * @param department A fetched instance of {@link org.tt.core.entity.datafetcher.Department}
+     * @throws SQLException in case of general SQL error.
+     * @since 2.1.0
+     */
     private void putDepartment(Department department) throws SQLException {
         sqlm.putDepartment(department);
     }
