@@ -15,31 +15,79 @@
 */
 package org.tt.core.entity.datafetcher;
 
+/**
+ * Group is an entity to store fetched data about each group in the database and
+ * return it to the users. Actually it is a wrapper around simple string to keep the same
+ * design project-wide.
+ *
+ * @author Vlad Slepukhin
+ * @since 2.0.0
+ */
 public class Group implements Comparable {
+    /**
+     * The name of the group.
+     */
     String name;
 
+    /**
+     * Empty constructor.
+     *
+     * @since 2.0.0
+     */
     public Group() {
     }
 
+    /**
+     * Configured constructor.
+     *
+     * @param name a {@link org.tt.core.entity.datafetcher.Group#name} of the group.
+     * @since 2.0.0
+     */
     public Group(String name) {
         this.name = name;
     }
 
+    /**
+     * Get the name.
+     *
+     * @return {@link org.tt.core.entity.datafetcher.Group#name}.
+     * @since 2.0.0
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name.
+     *
+     * @param name A {@link org.tt.core.entity.datafetcher.Group#name}.
+     * @since 2.0.0
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Used in update comparing.
+     *
+     * @param group A instance of this class.
+     * @return 0 if <code>equals</code>.
+     * @since 2.0.0
+     */
     @Override
-    public int compareTo(Object o) {
-        return name.compareTo(((Group) o).getName());
+    public int compareTo(Object group) {
+        return name.compareTo(((Group) group).getName());
     }
 
+    /**
+     * Used in fetching comparing.
+     *
+     * @param group A instance of this class.
+     * @return <code>true</code> if equals, otherwise <code>false</code>.
+     * @since 2.0.0
+     */
     @Override
-    public boolean equals(Object o) {
-        return o != null && o.getClass() == Group.class && (name.equals(((Group) o).getName()));
+    public boolean equals(Object group) {
+        return group != null && group.getClass() == Group.class && (name.equals(((Group) group).getName()));
     }
 }

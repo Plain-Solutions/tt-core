@@ -19,14 +19,43 @@ package org.tt.core.entity.db;
 import java.util.ArrayList;
 import java.util.List;
 
-public class     TTDayEntity {
+/**
+ * TTDayEntity is an entity, required for formatting {@link org.tt.core.entity.db.TTEntity}. It
+ * contains the name of the day and list of all lessons which are on that day.
+ * <p/>
+ * Don't mess up {@link org.tt.core.entity.db.TTEntity} and {@link org.tt.core.entity.datafetcher.Lesson}. Here
+ * the <b>first</b> is used.
+ *
+ * @author Vlad Slpeukhin
+ * @since 2.0.0
+ */
+public class TTDayEntity {
+    /**
+     * The name of the day.
+     */
     private String name;
+    /**
+     * The list of the lessons this day.
+     */
     private List<TTLesson> lessons;
 
+    /**
+     * Empty constructor.
+     *
+     * @since 2.0.0
+     */
     public TTDayEntity() {
         lessons = new ArrayList<>();
     }
 
+    /**
+     * Configured constructor.
+     *
+     * @param name    The name of the day.
+     * @param lessons The list of the lessons.
+     * @see org.tt.core.entity.db.TTLesson
+     * @since 2.0.0
+     */
     public TTDayEntity(String name, List<TTLesson> lessons) {
         lessons = new ArrayList<>();
 
@@ -46,10 +75,22 @@ public class     TTDayEntity {
         return lessons;
     }
 
+    /**
+     * Set the whole list of lessons.
+     *
+     * @param lessons The list of the lessons.
+     * @since 2.0.0
+     */
     public void setLessons(List<TTLesson> lessons) {
         this.lessons = lessons;
     }
 
+    /**
+     * Append a lesson.
+     *
+     * @param lesson The instance of {@link org.tt.core.entity.db.TTLesson}.
+     * @see org.tt.core.entity.db.TTLesson
+     */
     public void append(TTLesson lesson) {
         lessons.add(lesson);
     }

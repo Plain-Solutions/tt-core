@@ -15,15 +15,50 @@
 */
 package org.tt.core.entity.datafetcher;
 
+/**
+ * Lesson is a entity, containing all the required parameters of any lesson.
+ *
+ * @author Vlad Slepukhin
+ * @author Sevak Avetisyan
+ * @since 2.0.0
+ */
 public class Lesson {
+    /**
+     * The order during the day from 1st class till the end.
+     */
     private int sequence;
+    /**
+     * The week order: even, odd (nominator or denominator) or both (full).
+     */
     private String parity;
+    /**
+     * A subgroup of the lesson.
+     */
     private String subgroup;
+    /**
+     * Performed activity: lecture, practice or laboratory.
+     */
     private String activity;
+    /**
+     * The name of the subject.
+     */
     private String subject;
+    /**
+     * Compiled name of the teacher.
+     */
     private String teacher;
+    /**
+     * Building (part of location).
+     */
     private String building;
+    /**
+     * Room or auditory (part of location).
+     */
     private String room;
+    /**
+     * Update information. Required for updating only lessons, which were changed with
+     * faster analysis.
+     */
     private long timestamp;
 
     public Lesson() {
@@ -113,6 +148,11 @@ public class Lesson {
         this.timestamp = timestamp;
     }
 
+    /**
+     * Check for emptiness. Used in fetching even empty lessons, but not storing them.
+     * @return <code>true</code> if contains no data, otherwise <code>false</code>.
+     * @since 2.0.0
+     */
     public boolean isEmpty() {
         return sequence == -1 &&
                 parity.equals("") &&
@@ -125,15 +165,26 @@ public class Lesson {
                 timestamp == -1L;
     }
 
+    /**
+     * Checking for equality. Used in updating.
+     * @param l The checked lesson.
+     * @return <code>true</code> if equals, otherwise <code>false</code>.
+     * @since 2.0.0
+     */
     @Override
-    public boolean equals(Object o) {
-        return o != null && o.getClass() == Lesson.class && sequence == ((Lesson) o).getSequence() &&
-                subject.equals(((Lesson) o).getSubject()) && timestamp == ((Lesson) o).getTimestamp() &&
-                parity.equals(((Lesson) o).getParity()) && subgroup.equals(((Lesson) o).getSubgroup()) && activity.equals(((Lesson) o).getActivity()) &&
-                teacher.equals(((Lesson) o).getTeacher()) && building.equals(((Lesson) o).getBuilding()) &&
-                room.equals(((Lesson) o).getRoom());
+    public boolean equals(Object l) {
+        return l != null && l.getClass() == Lesson.class && timestamp == ((Lesson) l).getTimestamp() && sequence == ((Lesson) l).getSequence() &&
+                subject.equals(((Lesson) l).getSubject()) &&
+                parity.equals(((Lesson) l).getParity()) && subgroup.equals(((Lesson) l).getSubgroup()) && activity.equals(((Lesson) l).getActivity()) &&
+                teacher.equals(((Lesson) l).getTeacher()) && building.equals(((Lesson) l).getBuilding()) &&
+                room.equals(((Lesson) l).getRoom());
     }
 
+    /**
+     * Fancy output for tracing.
+     * @return All the fields of the calls formatted as <code>Name: value\n</code>
+     * @since 2.1.0
+     */
     @Override
     public String toString() {
         return String.format("Sequence: %d\n" +

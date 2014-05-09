@@ -38,7 +38,7 @@ import java.util.List;
  * AbstractDataManager from 1.0-1.2.x and 2.0 versions of TT Core.
  *
  * @author Vlad Slepukhin
- * @snce 2.1.0
+ * @since 2.1.0
  */
 public class TTUpdateManager {
     /**
