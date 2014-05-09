@@ -30,10 +30,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
@@ -50,11 +48,27 @@ import java.util.Properties;
  * @since 2.0
  */
 public class LexxDataFetcher implements AbstractDataFetcher {
-    private static String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
+    /**
+     * The address of SSU exchange endpoint for departments information: name, tags and messages.
+     */
+    private static String globalDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
+    /**
+     * The address of SSU exchange endpoint for specific department.
+     */
     private static String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
+    /**
+     * The factory of XML parsers.
+     */
     private static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    /**
+     * Credential for endpoint.
+     */
     private String loginPassword = "";
 
+    /**
+     * Constructor for test.
+     * @since 2.0.0-rc
+     */
     public LexxDataFetcher() {
         try {
             Properties properties = new Properties();
@@ -65,6 +79,11 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         }
     }
 
+    /**
+     * Production constructor.
+     * @param loginPassword The endpoint credentials.
+     * @since 2.0.0
+     */
     public LexxDataFetcher(String loginPassword) { this.loginPassword = loginPassword; }
 
     public String getLoginPassword() {
@@ -75,14 +94,30 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         this.loginPassword = loginPassword;
     }
 
-    public static void setGlobDepartmentsURL(String globDepartmentsURL) {
-        LexxDataFetcher.globDepartmentsURL = globDepartmentsURL;
+    /**
+     * Used for testing.
+     * @param globalDepartmentsURL The endpoint address.
+     */
+    public static void setGlobalDepartmentsURL(String globalDepartmentsURL) {
+        LexxDataFetcher.globalDepartmentsURL = globalDepartmentsURL;
     }
 
+    /**
+     * Used for testing.
+     * @param departmentURLTemplate The endpoint address.
+     */
     public static void setDepartmentURLTemplate(String departmentURLTemplate) {
         LexxDataFetcher.departmentURLTemplate = departmentURLTemplate;
     }
 
+    /**
+     * Parsing method. It is dedicated to be able to override it in the test method.
+     * @param link The link to the SSU endpoint.
+     * @return DOM-parsed XML file.
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
     protected Document getDocFromURL(String link) throws IOException, SAXException, ParserConfigurationException {
         DocumentBuilder builder = factory.newDocumentBuilder();
         URL url;
@@ -103,11 +138,15 @@ public class LexxDataFetcher implements AbstractDataFetcher {
             throw new UnknownHostException();
     }
 
+    /**
+     * @see org.tt.core.fetch.AbstractDataFetcher#getDepartments()
+     * @return List of {@link org.tt.core.entity.datafetcher.Department}
+     */
     @Override
     public List<Department> getDepartments() {
         List<Department> departments = new ArrayList<>();
         try {
-            NodeList nodeList = getDocFromURL(globDepartmentsURL).getDocumentElement().getChildNodes();
+            NodeList nodeList = getDocFromURL(globalDepartmentsURL).getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
                 NamedNodeMap attributes = node.getAttributes();
@@ -129,6 +168,10 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         return departments;
     }
 
+    /**
+     * @see org.tt.core.fetch.AbstractDataFetcher#getGroups(String)
+     * @return List of {@link org.tt.core.entity.datafetcher.Group}
+     */
     @Override
     public List<Group> getGroups(String department) {
         List<Group> groups = new ArrayList<>();
@@ -156,6 +199,10 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         return groups;
     }
 
+    /**
+     * @see org.tt.core.fetch.AbstractDataFetcher#getTT(String, String)
+     * @return List of List {@link org.tt.core.entity.datafetcher.Lesson}
+     */
     public List<List<Lesson>> getTT(String department, String group) {
         List<List<Lesson>> tt = new ArrayList<>();
 

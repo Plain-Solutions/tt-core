@@ -19,7 +19,7 @@ public class LDFTestWrapper extends LexxDataFetcher {
 
     public LDFTestWrapper() {
         super("test");
-        LexxDataFetcher.setGlobDepartmentsURL("departments");
+        LexxDataFetcher.setGlobalDepartmentsURL("departments");
         LexxDataFetcher.setDepartmentURLTemplate("%s");
         try {
             docBuilder = docFactory.newDocumentBuilder();
