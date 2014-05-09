@@ -124,7 +124,7 @@ public class SSUSQLManagerTest {
     }
 
 
-   // @Test
+   //@Test
     public void testGetGroups() throws Exception {
         AbstractSQLManager sqlm = new SSUSQLManager(getConnection(), new H2Queries());
         List<Group> result = sqlm.getGroups("bf");
@@ -201,7 +201,7 @@ public class SSUSQLManagerTest {
         IDatabaseTester databaseTester = new JdbcDatabaseTester(JDBCDRIVER, JDBCPATH, DBLOGIN, DBPASS);
         databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
         databaseTester.setDataSet(dataSet);
-        //RunScript.execute(JDBCPATH, DBLOGIN, DBPASS, "./src/test/resources/testAdjustment.sql", DBCS, false);
+        RunScript.execute(JDBCPATH, DBLOGIN, DBPASS, "./src/test/resources/testAdjustment.sql", DBCS, false);
         databaseTester.onSetup();
     }
 
