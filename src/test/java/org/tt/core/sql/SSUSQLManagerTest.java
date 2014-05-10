@@ -18,7 +18,9 @@ package org.tt.core.sql;
 import org.junit.Test;
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
+import org.tt.core.entity.datafetcher.Lesson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,11 +32,25 @@ public class SSUSQLManagerTest {
 
     @Test
     public void testUpdateDepartmentMessage() throws Exception {
+        AbstractSQLManager sqlm = SQLMTestWrapper.produceNewManager();
+        sqlm.updateDepartmentMessage("gf", "Add info");
 
+        assertEquals("Message update failed", "Add info", sqlm.getDepartmentMessage("gf"));
     }
 
     @Test
     public void testUpdateDepartmentInfo() throws Exception {
+        AbstractSQLManager sqlm = SQLMTestWrapper.produceNewManager();
+        sqlm.updateDepartmentInfo("CS&IT", "knt", "Test", "bf");
+
+        Department result = new Department();
+        for (Department d : sqlm.getDepartments()) {
+            if (d.getTag().equals("knt")) {
+                result = d;
+            }
+        }
+
+        assertEquals("Department update failed", new Department("CS&IT", "knt", "Test"), result);
 
     }
 
@@ -86,7 +102,7 @@ public class SSUSQLManagerTest {
     }
 
 
-   @Test
+    @Test
     public void testGetGroups() throws Exception {
         AbstractSQLManager sqlm = SQLMTestWrapper.produceNewManager();
         List<Group> result = sqlm.getGroups("bf");
@@ -103,46 +119,99 @@ public class SSUSQLManagerTest {
 
     @Test
     public void testGetNonEmptyGroups() throws Exception {
+        AbstractSQLManager sqlm = SQLMTestWrapper.produceNewManager();
+        List<Group> result = sqlm.getNonEmptyGroups("bf");
+        List<Group> expected = Arrays.asList(new Group("111"));
 
-    }
-
-    @Test
-    public void testGetTT() throws Exception {
+        assertTrue("Non-empty groups getting failed" +
+                        "\n  'result'        = " + result +
+                        "\n  'expected' = " + expected,
+                expected.equals(result)
+        );
 
     }
 
     @Test
     public void testGetLessonList() throws Exception {
+        //getTT is equal to it, but TTEntity has no compare algorithm.
+        AbstractSQLManager sqlm = SQLMTestWrapper.produceNewManager();
+        List<List<Lesson>> result = sqlm.getLessonList(sqlm.getGroupID("bf", "111"));
+
+        List<List<Lesson>> expected = new ArrayList<>(6);
+
+        while (expected.size() <= 6) expected.add(new ArrayList<Lesson>());
+
+        List<Lesson> day = new ArrayList<>();
+
+        Lesson aLesson = new Lesson();
+        aLesson.setParity("nom");
+        aLesson.setSequence(1);
+        aLesson.setSubgroup("1st");
+        aLesson.setSubject("Calculus");
+        aLesson.setActivity("lecture");
+        aLesson.setBuilding("B1");
+        aLesson.setRoom("Default");
+        aLesson.setTeacher("Sakhno L.V.");
+        aLesson.setTimestamp(12345);
+
+        day.add(aLesson);
+        expected.set(0, day);
+
+        boolean flag = true;
+
+        //check with day order
+        for (int i = 0; i < 6; i++) {
+            for (Lesson l : expected.get(i)) {
+                if (!(result.get(i).contains(l))) {
+                    flag = false;
+                }
+            }
+        }
+
+
+        assertTrue("Getting TT failed", flag);
 
     }
 
     @Test
     public void testDeleteDepartment() throws Exception {
+        AbstractSQLManager sqlm =SQLMTestWrapper.produceNewManager();
+        sqlm.deleteDepartment(new Department("Geography House", "gf", ""));
+
+        List<Department> result = sqlm.getDepartments();
+        List<Department> expected = java.util.Arrays.asList(new Department("Biology House", "bf", "Crucial Information!"));
+
+        assertTrue("Departments removing failed" +
+                        "\n  'result'        = " + result +
+                        "\n  'expected' = " + expected,
+                expected.equals(result)
+        );
 
     }
 
     @Test
     public void testDeleteGroupFromDepartment() throws Exception {
+        AbstractSQLManager sqlm =SQLMTestWrapper.produceNewManager();
+        sqlm.deleteGroupFromDepartment(new Department("Biology House", "bf", "Crucial Information!"),
+                new Group("111"));
 
-    }
+        List<Group> resultOne = sqlm.getGroups("bf");
+        List<Group> resultTwo = sqlm.getNonEmptyGroups("bf");
 
-    @Test
-    public void testDeleteLessons() throws Exception {
+        List<Group> expectedOne = Arrays.asList(new Group("String name"));
+        List<Group> expectedTwo = new ArrayList<>();
 
-    }
+        assertTrue("Groups removing failed: record about group not removed" +
+                        "\n  'result'        = " + resultOne +
+                        "\n  'expected' = " + expectedOne,
+                expectedOne.equals(resultOne)
+        );
 
-    @Test
-    public void testDeleteSubGroups() throws Exception {
-
-    }
-
-    @Test
-    public void testDeleteLesson() throws Exception {
-
-    }
-
-    @Test
-    public void testFlushDatabase() throws Exception {
+        assertTrue("Groups removing failed: group data (lessons, subgroups) not removed" +
+                        "\n  'result'        = " + resultTwo +
+                        "\n  'expected' = " + expectedTwo,
+                expectedTwo.equals(resultTwo)
+        );
 
     }
 }

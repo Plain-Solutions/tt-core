@@ -48,8 +48,6 @@ public abstract class SQLMTestWrapper {
         dataSource.setURL(localPath);
         dataSource.setUser(DBLOGIN);
         dataSource.setPassword(DBPASS);
-
-        System.out.println(dataSource.getURL());
         try {
             RunScript.execute(localPath, DBLOGIN, DBPASS, DBSCHEME, DBCS, false);
             RunScript.execute(localPath, DBLOGIN, DBPASS, DBTESTSCHEME, DBCS, false);
