@@ -18,13 +18,39 @@ package org.tt.core.entity.db;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The entity which formats DB output to easily serializable format.
+ *
+ * Refer TT Project <a href=https://github.com/Plain-Solutions/tt-platform/blob/master/docs/API%20Reference.md>API</a>
+ *
+ * @author Vlad Slepukhin
+ * @since 2.0.0
+ */
 public class TTEntity {
+    /**
+     * The list of lessons, sorted by days.
+     */
     private List<TTDayEntity> timetable;
 
+    /**
+     * Constructor. Initialises the list.
+     */
     public TTEntity() {
         timetable = new ArrayList<>();
     }
 
+    /**
+     * Add a lesson
+     * @param day Name of the weekday.
+     * @param parity Name of parity state.
+     * @param seq The order during the day.
+     * @param activity Performed activity.
+     * @param subject Name of subject.
+     * @param subgroup Name of subgroup.
+     * @param teacher Name of teacher.
+     * @param building Name of building.
+     * @param room Name of room.
+     */
     public void append(String day, String parity, int seq, String activity, String subject, String subgroup,
                        String teacher, String building, String room) {
         for (int i = 0; i < timetable.size(); i++) {
@@ -52,6 +78,18 @@ public class TTEntity {
 
     }
 
+    /**
+     * Utility method.
+     * @param parity Name of parity state.
+     * @param seq The order during the day.
+     * @param activity Performed activity.
+     * @param subject Name of subject.
+     * @param subgroup Name of subgroup.
+     * @param teacher Name of teacher.
+     * @param building Name of building.
+     * @param room Name of room.
+     * @return A prepared instance of {@link org.tt.core.entity.db.TTLesson}
+     */
     private TTLesson createLesson(String parity, int seq, String activity, String subject, String subgroup,
                                   String teacher, String building, String room)                          {
         TTLesson aLesson = new TTLesson();

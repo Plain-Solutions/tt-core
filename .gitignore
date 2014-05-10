@@ -10,3 +10,5 @@ target/*
 WorkAround.java
 localtest.h2.db
 property
+ssutt.h2.db
+ssutt.lock.db

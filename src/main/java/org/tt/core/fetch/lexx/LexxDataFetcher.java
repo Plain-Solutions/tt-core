@@ -15,6 +15,8 @@
 */
 package org.tt.core.fetch.lexx;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.StringUtils;
 import org.tt.core.entity.datafetcher.Department;
 import org.tt.core.entity.datafetcher.Group;
 import org.tt.core.entity.datafetcher.Lesson;
@@ -24,7 +26,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import sun.misc.BASE64Encoder;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,6 +34,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,10 +48,27 @@ import java.util.Properties;
  * @since 2.0
  */
 public class LexxDataFetcher implements AbstractDataFetcher {
-    private static final String globDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
-    private static final String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
+    /**
+     * The address of SSU exchange endpoint for departments information: name, tags and messages.
+     */
+    private static String globalDepartmentsURL = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php";
+    /**
+     * The address of SSU exchange endpoint for specific department.
+     */
+    private static String departmentURLTemplate = "http://www.sgu.ru/exchange/schedule_ssu_4vlad.php?dep=%s";
+    /**
+     * The factory of XML parsers.
+     */
+    private static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    /**
+     * Credential for endpoint.
+     */
     private String loginPassword = "";
 
+    /**
+     * Constructor for test.
+     * @since 2.0.0-rc
+     */
     public LexxDataFetcher() {
         try {
             Properties properties = new Properties();
@@ -60,6 +79,11 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         }
     }
 
+    /**
+     * Production constructor.
+     * @param loginPassword The endpoint credentials.
+     * @since 2.0.0
+     */
     public LexxDataFetcher(String loginPassword) { this.loginPassword = loginPassword; }
 
     public String getLoginPassword() {
@@ -70,43 +94,72 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         this.loginPassword = loginPassword;
     }
 
-    private URLConnection getConnection(String link) {
+    /**
+     * Used for testing.
+     * @param globalDepartmentsURL The endpoint address.
+     */
+    public static void setGlobalDepartmentsURL(String globalDepartmentsURL) {
+        LexxDataFetcher.globalDepartmentsURL = globalDepartmentsURL;
+    }
+
+    /**
+     * Used for testing.
+     * @param departmentURLTemplate The endpoint address.
+     */
+    public static void setDepartmentURLTemplate(String departmentURLTemplate) {
+        LexxDataFetcher.departmentURLTemplate = departmentURLTemplate;
+    }
+
+    /**
+     * Parsing method. It is dedicated to be able to override it in the test method.
+     * @param link The link to the SSU endpoint.
+     * @return DOM-parsed XML file.
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
+    protected Document getDocFromURL(String link) throws IOException, SAXException, ParserConfigurationException {
+        DocumentBuilder builder = factory.newDocumentBuilder();
         URL url;
         URLConnection conn = null;
-
         try {
             url = new URL(link);
             conn = url.openConnection();
-            String encoded = new BASE64Encoder().encode(loginPassword.getBytes());
+            String encoded = Base64.encodeBase64String(StringUtils.getBytesUtf8(loginPassword));
             conn.setRequestProperty("Authorization", "Basic " + encoded);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return conn;
+        if (conn != null) {
+            return builder.parse(conn.getInputStream());
+        }
+        else
+            throw new UnknownHostException();
     }
 
+    /**
+     * @see org.tt.core.fetch.AbstractDataFetcher#getDepartments()
+     * @return List of {@link org.tt.core.entity.datafetcher.Department}
+     */
     @Override
     public List<Department> getDepartments() {
         List<Department> departments = new ArrayList<>();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(getConnection(globDepartmentsURL).getInputStream());
-
-            NodeList nodeList = doc.getDocumentElement().getChildNodes();
+            NodeList nodeList = getDocFromURL(globalDepartmentsURL).getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
                 NamedNodeMap attributes = node.getAttributes();
 
-                String name = attributes.getNamedItem("name").getNodeValue();
-                String tag = attributes.getNamedItem("id").getNodeValue();
-                Node child = node.getFirstChild().getFirstChild();
-                String message = child == null ? "" : child.getNodeValue();
+                    String name = attributes.getNamedItem("name").getNodeValue();
+                    String tag = attributes.getNamedItem("id").getNodeValue();
+                    Node child = node.getFirstChild().getFirstChild();
 
-                if (tag.equals("kgl") || tag.equals("cre")) continue;
-                departments.add(new Department(name, tag, message));
+                    String message = child == null ? "" : child.getNodeValue();
+
+                    if (tag.equals("kgl") || tag.equals("cre")) continue;
+                    departments.add(new Department(name, tag, message));
+
             }
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
@@ -115,25 +168,28 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         return departments;
     }
 
+    /**
+     * @see org.tt.core.fetch.AbstractDataFetcher#getGroups(String)
+     * @return List of {@link org.tt.core.entity.datafetcher.Group}
+     */
     @Override
     public List<Group> getGroups(String department) {
         List<Group> groups = new ArrayList<>();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(getConnection(String.format(departmentURLTemplate, department)).getInputStream());
-
-            NodeList nodeList = document.getDocumentElement().getChildNodes();
+            NodeList nodeList = getDocFromURL(String.format(departmentURLTemplate, department)).getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
                 NamedNodeMap attributes = node.getAttributes();
 
                 String name = attributes.getNamedItem("number_rus").getNodeValue();
-                String type = attributes.getNamedItem("edu_form").getNodeValue();
+                String eduForm = attributes.getNamedItem("edu_form").getNodeValue();
+                String groupType = attributes.getNamedItem("grp_type").getNodeValue();
 
-                if (type.equals("1")) continue;
-                groups.add(new Group(name));
+                if (eduForm.equals("1")||(eduForm.equals("2")&&groupType.equals("1"))) {
+                    continue;
+                }
+
+                groups.add(new Group(name.trim()));
             }
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
@@ -143,6 +199,10 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         return groups;
     }
 
+    /**
+     * @see org.tt.core.fetch.AbstractDataFetcher#getTT(String, String)
+     * @return List of List {@link org.tt.core.entity.datafetcher.Lesson}
+     */
     public List<List<Lesson>> getTT(String department, String group) {
         List<List<Lesson>> tt = new ArrayList<>();
 
@@ -156,21 +216,18 @@ public class LexxDataFetcher implements AbstractDataFetcher {
         String room = "";
         long timestamp = -1L;
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(getConnection(String.format(departmentURLTemplate, department)).getInputStream());
-
-            NodeList nodeList = document.getDocumentElement().getChildNodes();
+            NodeList nodeList = getDocFromURL(String.format(departmentURLTemplate, department)).getDocumentElement().getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
                 NamedNodeMap attributes = node.getAttributes();
 
                 String eduForm = attributes.getNamedItem("edu_form").getNodeValue();
                 String name = attributes.getNamedItem("number_rus").getNodeValue().trim();
+                String groupType = attributes.getNamedItem("grp_type").getNodeValue();
 
-                if (eduForm.equals("1")) continue;
+                if (eduForm.equals("1")||(eduForm.equals("2")&&groupType.equals("1"))) continue;
                 if (!name.equals(group)) continue;
 
                 NodeList days = node.getChildNodes();

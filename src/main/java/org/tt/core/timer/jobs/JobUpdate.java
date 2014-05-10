@@ -17,7 +17,7 @@ package org.tt.core.timer.jobs;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.tt.core.dm.UpdateManager;
+import org.tt.core.dm.TTUpdateManager;
 import org.tt.core.sql.ex.NoSuchDepartmentException;
 import org.tt.core.sql.ex.NoSuchGroupException;
 import org.tt.core.timer.AbstractJob;
@@ -55,7 +55,7 @@ public class JobUpdate extends AbstractJob {
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         System.out.println("UPDATE TIME!");
         try {
-            UpdateManager updm = getUpdm();
+            TTUpdateManager updm = getUpdm();
             updm.checkDepartments();
             updm.checkGroups();
             updm.checkTimetables();

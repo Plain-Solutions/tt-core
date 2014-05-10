@@ -18,15 +18,43 @@ package org.tt.core.entity.db;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TTLesson is a entity to provide data from the database to the end-user in a format, which can be
+ * easily serialised.
+ *
+ * @author Vlad Slepukhin
+ * @since 2.0.0
+ */
 public class TTLesson {
+    /**
+     * The parity name: nominator, denominator (even/odd) or full (both).
+     */
     private String parity;
+    /**
+     * The order of the class during the day.
+     */
     private int sequence;
 
+    /**
+     * The list of lesson records.
+     */
     private List<TTLessonRecord> records;
 
+    /**
+     * The data which is common for the lessons <b>independent from subgroups or location splitting</b>.
+     */
     public class TTLessonRecord {
+        /**
+         * The type of the activity: lecture, practice or laboratory.
+         */
         private String activity;
+        /**
+         * The name of the subject.
+         */
         private String subject;
+        /**
+         * The list of teachers, subgroups and locations.
+         */
         private List<TTClassRoomEntity> classRoomEntities;
 
         private TTLessonRecord() {
@@ -64,10 +92,13 @@ public class TTLesson {
         }
 
         public void appendClassRoomEntity(TTClassRoomEntity cre) {
-           classRoomEntities.add(cre);
+            classRoomEntities.add(cre);
         }
     }
 
+    /**
+     * The subgroup-dependent information. Contains teacher name, location and the subgroup.
+     */
     public class TTClassRoomEntity {
         private String subgroup;
         private String teacher;
@@ -144,10 +175,21 @@ public class TTLesson {
         this.sequence = sequence;
     }
 
+    /**
+     * Add a lesson to the list during this day.
+     *
+     * @param activity Performed activity.
+     * @param subject  Subject name.
+     * @param subgroup Subgroup name.
+     * @param teacher  Teacher name.
+     * @param building Building (part of location).
+     * @param room     Room (part of location).
+     * @since 2.0.0
+     */
     public void append(String activity, String subject, String subgroup, String teacher, String building, String room) {
         //optimizing
 
-        for (int i=0; i < records.size(); i++) {
+        for (int i = 0; i < records.size(); i++) {
             if (records.get(i).getSubject().equals(subject)) {
                 records.get(i).appendClassRoomEntity(createCRE(subgroup, teacher, building, room));
                 return;
@@ -161,6 +203,16 @@ public class TTLesson {
         records.add(record);
     }
 
+    /**
+     * Utility method.
+     *
+     * @param subgroup Subgroup name.
+     * @param teacher  Teacher name.
+     * @param building Building (part of location).
+     * @param room     Room (part of location).
+     * @return the instance of {@link org.tt.core.entity.db.TTLesson.TTClassRoomEntity}
+     * @since 2.0.0
+     */
     private TTClassRoomEntity createCRE(String subgroup, String teacher, String building, String room) {
         TTClassRoomEntity cre = new TTClassRoomEntity();
         cre.setSubgroup(subgroup);

@@ -16,7 +16,7 @@
 package org.tt.core.timer;
 
 import org.quartz.*;
-import org.tt.core.dm.UpdateManager;
+import org.tt.core.dm.TTUpdateManager;
 
 import java.util.TimeZone;
 
@@ -32,7 +32,7 @@ public abstract class AbstractJob implements Job {
     private JobDetail jobDetail;
     private Trigger trigger;
 
-    private static UpdateManager updm;
+    private static TTUpdateManager updm;
 
     public Trigger getTrigger() {
         return trigger;
@@ -50,11 +50,11 @@ public abstract class AbstractJob implements Job {
         this.trigger = trigger;
     }
 
-    public static void setUpdateManager(UpdateManager updm) {
+    public static void setUpdateManager(TTUpdateManager updm) {
         AbstractJob.updm = updm;
     }
 
-    public static UpdateManager getUpdm() {
+    public static TTUpdateManager getUpdm() {
         return updm;
     }
 }

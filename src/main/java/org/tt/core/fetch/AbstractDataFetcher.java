@@ -42,7 +42,7 @@ public interface AbstractDataFetcher {
      *
      * @return List of departments
      * @see org.tt.core.fetch.lexx.LexxDataFetcher
-     * @since 1.3
+     * @since 2.0.0
      */
     List<Department> getDepartments();
 
@@ -52,7 +52,7 @@ public interface AbstractDataFetcher {
      * @param department department name
      * @return List of group names.
      * @see org.tt.core.fetch.lexx.LexxDataFetcher
-     * @since 1.3
+     * @since 2.0.0
      */
     List<Group> getGroups(String department);
 
@@ -64,7 +64,7 @@ public interface AbstractDataFetcher {
      * @return List of List of Lessons
      * @throws IOException
      * @see org.tt.core.fetch.lexx.LexxDataFetcher
-     * @since 1.0
+     * @since 2.0.0
      */
     List<List<Lesson>> getTT(String department, String group) throws IOException;
 }

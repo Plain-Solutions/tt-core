@@ -1,5 +1,25 @@
 Changelog
 =========
+
+###TT Core 2.1.0
+
+* **`AbstractDataConverter` and `JSONConverter` are moved to TT Platform.**
+* Splitting `AbstractDataManager` into two classes for providing better performance:
+    * `TTDeliveryManager` has all the methods for delivering data to TT Platform. As a result it only requires `AbstractSQLManager` as a constructor parameter.
+    * `TTUpdateManager` handles initial filling of database, updating it and keeping up-to-date. As a result it requires both `AbstractSQLManager` and `AbstractDataFetcher`.
+* `TTFactory` - in fact it was moved here from TT Platform and it can create both update and delivery managers with pre-passed parameters. 
+* `TTStatus` is deprected.
+* `TTUpdateManager` (known before as `UpdateManager`):
+    * All methods now throw exceptions to handle on a higher level.
+    * All methods are `void` now.
+* `TTDeliveryManager` (known before as `Abstract/SSUDataManager`):
+    * All methods now throw exceptions to handle on a higher level.
+    * All methods return Java Objects now: `List` of `Department`/`Group` or instance of `TTEntity`.
+* Completed global refactoring #11. 
+* Added getting department messages in a dedicated method and removed them from `getDepartments` to provide better performance.
+* High unit-testing code coverage. 
+* Completed and updated JavaDoc to actual state. 
+
 ###TT Core 2.0.0
 
 * Introduced `LexxDataFetcher` - an instance of ADM working with SSU internal database. 

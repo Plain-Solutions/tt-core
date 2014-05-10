@@ -17,7 +17,7 @@ package org.tt.core.timer.jobs;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.tt.core.dm.UpdateManager;
+import org.tt.core.dm.TTUpdateManager;
 import org.tt.core.timer.AbstractJob;
 
 import java.sql.SQLException;
@@ -51,7 +51,7 @@ public class JobDrop extends AbstractJob {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         System.out.println("DROP-DROP-KLADBISHE!");
-        UpdateManager updm = getUpdm();
+        TTUpdateManager updm = getUpdm();
         try {
             updm.flushDatabase();
         } catch (SQLException e) {

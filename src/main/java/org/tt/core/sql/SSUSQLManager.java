@@ -208,7 +208,7 @@ public class SSUSQLManager implements AbstractSQLManager {
             Department d = new Department();
             d.setName(rs.getString("name"));
             d.setTag(rs.getString("tag"));
-            d.setMessage(rs.getString("message"));
+            d.setMessage("");
             result.add(d);
         }
 
@@ -228,6 +228,21 @@ public class SSUSQLManager implements AbstractSQLManager {
 
         stmt.close();
         return result;
+    }
+
+    @Override
+    public String getDepartmentMessage(String departmentTag) throws SQLException, NoSuchDepartmentException {
+        String result = "";
+        if (departmentExists(departmentTag)) {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(String.format(qrs.qGetDepartmentMessage(), departmentTag));
+
+        while(rs.next()) {
+            result = rs.getString("message");
+        }
+
+        return result;
+        } else throw new NoSuchDepartmentException();
     }
 
     @Override
@@ -316,23 +331,6 @@ public class SSUSQLManager implements AbstractSQLManager {
                 );
 
             }
-//            for (TTDayEntity ttde: result.getTimetable()) {
-//                System.out.println(ttde.getName());
-//                for (TTLesson ttl: ttde.getLessons()) {
-//                        for (TTLesson.TTLessonRecord ttlrd: ttl.getRecords()) {
-//                            System.out.print(
-//                                    ttl.getParity() + " " +
-//                                            ttl.getSequence() + " " + ttlrd.getActivity() + " " + ttlrd.getSubject()
-//                            );
-//                            for (TTLesson.TTClassRoomEntity ttcre: ttlrd.getClassRoomEntities()) {
-//                                System.out.print(" " + ttcre.getTeacher()+ " "+ttcre.getSubgroup()+" "+ttcre.getBuilding());
-//                            }
-//                            System.out.println();
-//                        }
-//                    System.out.println();
-//                    }
-//                System.out.println();
-//                }
 
             return result;
         } else throw new NoSuchGroupException();
