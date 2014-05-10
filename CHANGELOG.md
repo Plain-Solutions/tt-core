@@ -15,6 +15,10 @@ Changelog
 * `TTDeliveryManager` (known before as `Abstract/SSUDataManager`):
     * All methods now throw exceptions to handle on a higher level.
     * All methods return Java Objects now: `List` of `Department`/`Group` or instance of `TTEntity`.
+* Completed global refactoring #11. 
+* Added getting department messages in a dedicated method and removed them from `getDepartments` to provide better performance.
+* High unit-testing code coverage. 
+* Completed and updated JavaDoc to actual state. 
 
 ###TT Core 2.0.0
 

@@ -4,12 +4,13 @@ TT Core Library
 
 General
 ================
+TT Project structure briefly can be described in this chart:
+![ttcore](http://i.imgur.com/uYwrfDe.jpg)
+
 TT Core is a kernel of the TT Project. It connects two main structures: university website with timetables, database, containing pre-formatted entries, groups and departments lists and an interface to represent data in web-friendly format and deliver data to  [TT Platform](https://github.com/plain-solutions/tt-platform) -  servlet module.
 
-TT Core structure briefly can be described in this chart:
-![ttcore]()
 
-As you can see, all the methods described as **Abstract**. That means that TT Project can be applied nearly to any university having a website with timetables. What are the modules that can be implemented and what do they do?
+As you can see, we have a lot interfaces starting with **Abstract**. That means that TT Project can be applied nearly to any university having some source of timetables. Also it can be converted into a internal module of timetables engine in the universite. What are the modules that can be implemented and what do they do?
 
  * `AbstractSQLManager` - module that executes queries and works with storage: getting and putting department list, group list and timetables.
  * `AbstractQueries` - definition of SQL queries, executed by `AbstractSQLManager` implementation. This allows different SQL providers usage.
