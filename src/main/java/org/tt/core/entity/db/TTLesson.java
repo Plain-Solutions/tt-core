@@ -56,6 +56,10 @@ public class TTLesson {
          * The list of teachers, subgroups and locations.
          */
         private List<TTClassRoomEntity> classRoomEntities;
+        /**
+         * Parity for API v2
+         */
+        private String parity;
 
         private TTLessonRecord() {
             classRoomEntities = new ArrayList<>();
@@ -65,6 +69,7 @@ public class TTLesson {
             classRoomEntities = new ArrayList<>();
             this.activity = activity;
             this.subject = subject;
+            this.parity = null;
         }
 
         public String getActivity() {
@@ -89,6 +94,14 @@ public class TTLesson {
 
         public void setClassRoomEntities(List<TTClassRoomEntity> classRoomEntities) {
             this.classRoomEntities = classRoomEntities;
+        }
+
+        public String getParity() {
+            return parity;
+        }
+
+        public void setParity(String parity) {
+            this.parity = parity;
         }
 
         public void appendClassRoomEntity(TTClassRoomEntity cre) {
@@ -200,6 +213,15 @@ public class TTLesson {
         record.setActivity(activity);
         record.setSubject(subject);
         record.appendClassRoomEntity(createCRE(subgroup, teacher, building, room));
+        records.add(record);
+    }
+
+    /**
+     * Add a lesson to the list during this day in faster way.
+     * @param record The whole information.
+     * @since 2.1.1
+     */
+    public void append (TTLessonRecord record) {
         records.add(record);
     }
 

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+###TT Core 2.1.1
+
+* A slight fix on internal data entities to provide support for correct API v2. See the issue in 2.1.4 release of TT Platform.
+
 ###TT Core 2.1.0
 
 * **`AbstractDataConverter` and `JSONConverter` are moved to TT Platform.**
